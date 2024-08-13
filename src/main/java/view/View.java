@@ -25,6 +25,14 @@ public class View {
         return Utility.insertInt("***SCEGLI L'OPZIONE***");
     }
 
+    public int readChooseMenu(){
+        System.out.println("***SCEGLI MENU***");
+        System.out.println("1) Menu locale");
+        System.out.println("2) Menu con database");
+
+        return Utility.insertInt("***SCEGLI L'OPZIONE***");
+    }
+
     public void maskInsertCategoria(Categoria c){
         c.setNome(Utility.insertString("Inserisci il nome categoria"));
         c.setCount();
