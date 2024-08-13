@@ -45,5 +45,10 @@ public class CategoriaRepository implements CRUD {
         }
     }
 
+    @Override
+    public boolean deleteCategoria(Integer id) {
+        return categorie.remove(id) != null;
+    }
+
 
 }

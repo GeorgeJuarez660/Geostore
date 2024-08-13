@@ -12,5 +12,6 @@ public interface CRUD {
     public HashMap<Integer, Categoria> getCategorie();
     public Categoria getCategoria(String nome);
     public void updateCategoria(Integer id, Categoria newC);
+    public boolean deleteCategoria(Integer id);
 
 }

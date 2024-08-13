@@ -22,7 +22,7 @@ public class AppTerminal {
                     valueInput = view.readMenu();
                     switch(valueInput){
                          case 0:
-                              Utility.msgInf("GEOSTORE", "nulla");
+                              Utility.msgInf("GEOSTORE", "Nessun operazione");
                               break;
                          case 1:
                               Utility.msgInf("GEOSTORE", "Visualizzazione delle categorie");
@@ -36,15 +36,46 @@ public class AppTerminal {
                               break;
                          case 3:
                               Utility.msgInf("GEOSTORE", "Aggiornamento categoria");
-                              num = 1;
-                              Utility.msgInf("PROVA", "per cui il numero è: " + num);
+                              c = cr.getCategoria(Utility.insertString("Inserisci il nome categoria: "));
+
+                              if(c != null){
+                                   Utility.msgInf("GEOSTORE", "Categoria trovata");
+                                   view.printCategoria(c);
+                                   Categoria cNew = view.maskUpdateCategoria(c, new Categoria());
+
+                                   cr.updateCategoria(cNew.getId(), cNew);
+                              }
+                              else{
+                                   Utility.msgErr("GEOSTORE", "Categoria non trovata");
+                              }
+
+                              break;
+                         case 4:
+                              Utility.msgInf("GEOSTORE", "Eliminazione categoria");
+                              c = cr.getCategoria(Utility.insertString("Inserisci il nome categoria: "));
+
+                              if(c != null){
+                                   Utility.msgInf("GEOSTORE", "Categoria trovata");
+                                   view.printCategoria(c);
+                                   if(Utility.insertString("Sei sicuro di voler eliminare questa categoria?").equalsIgnoreCase("s")){
+                                        cr.deleteCategoria(c.getId());
+                                        Utility.msgInf("GEOSTORE", "Categoria eliminata");
+                                   }
+                                   else{
+                                        Utility.msgInf("GEOSTORE", "Operazione annullata");
+                                   }
+                              }
+                              else{
+                                   Utility.msgErr("GEOSTORE", "Categoria non trovata");
+                              }
+
                               break;
                          default:
-                              Utility.msgErr("PROVA", "non so cosa hai inserito");
+                              Utility.msgErr("GEOSTORE", "Non so cosa hai inserito");
                               break;
                     }
 
-                    if(Utility.insertString("VUOI RIPROVARE?").equalsIgnoreCase("s")){
+                    if(Utility.insertString("VUOI ANDARE AVANTI?").equalsIgnoreCase("s")){
                          flag = true;
                          System.out.println("***VA BENE***");
                     }
@@ -58,7 +89,7 @@ public class AppTerminal {
                System.out.println("***OK COME VUOI***");
           }
 
-          System.out.println("***GRAZIE PER AVER PROVATO IL MENU GEOSTORE***");
+          Utility.msgInf("GEOSTORE","***GRAZIE PER AVER PROVATO IL MENU***");
 
      }
 }

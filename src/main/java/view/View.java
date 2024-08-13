@@ -59,4 +59,8 @@ public class View {
             System.out.println("ID: " + categoria.getId() + ", Nome: " + categoria.getNome());
         }
     }
+
+    public void printCategoria(Categoria categoria){
+        System.out.println("ID: " + categoria.getId() + ", Nome: " + categoria.getNome());
+    }
 }
