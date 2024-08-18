@@ -4,11 +4,8 @@ import src.main.java.utility.CRUD;
 import src.main.java.utility.DBConnection;
 import src.main.java.utility.Utility;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.HashMap;
-import java.sql.Statement;
 
 public class CategoriaRepository implements CRUD {
 
@@ -67,28 +64,34 @@ public class CategoriaRepository implements CRUD {
     public HashMap<Integer, Categoria> getCategorieWithDB() {
         String sql = "SELECT * FROM Categorie c";
         Connection connection = null;
-        Statement statement = null;
+        PreparedStatement preparedStatement = null;
         ResultSet rs = null;
 
         try{
             //Connessione al db
             connection = DBConnection.sqlConnect();
-            statement = connection.createStatement();
-            rs = statement.executeQuery(sql);
+            preparedStatement = connection.prepareStatement(sql);
+            rs = preparedStatement.executeQuery();
+            Categoria cat;
 
             while(rs.next()){
                 Utility.msgInf("GEOSTORE", "ID: " + rs.getInt("id") +
                         ", Nome: " + rs.getString("nome"));
+                cat = new Categoria();
+                cat.setId(rs.getInt("id"));
+                cat.setNome(rs.getString("nome"));
+
+                categorie.put(cat.getId(), cat);
             }
             //chiudi la connessione
             rs.close();
-            statement.close();
+            preparedStatement.close();
             connection.close();
         }catch(SQLException e){
             Utility.msgErr("GEOSTORE", "Errore nel getCategorieWithDB: " + e.getMessage());
         }
 
-        return null;
+        return categorie;
     }
 
     @Override
