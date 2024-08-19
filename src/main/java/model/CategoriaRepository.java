@@ -1,13 +1,13 @@
 package src.main.java.model;
 
-import src.main.java.utility.CRUD;
+import src.main.java.utility.categorieCRUD;
 import src.main.java.utility.DBConnection;
 import src.main.java.utility.Utility;
 
 import java.sql.*;
 import java.util.HashMap;
 
-public class CategoriaRepository implements CRUD {
+public class CategoriaRepository implements categorieCRUD {
 
     private HashMap<Integer, Categoria> categorie = new HashMap<>();
 

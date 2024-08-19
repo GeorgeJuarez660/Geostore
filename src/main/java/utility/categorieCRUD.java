@@ -4,7 +4,7 @@ import src.main.java.model.Categoria;
 
 import java.util.HashMap;
 
-public interface CRUD {
+public interface categorieCRUD {
 
     //Interfaccia dove dichiaro metodi astratti che mi serviranno per andare a implementarli nella classe CategoriaRepository
 
