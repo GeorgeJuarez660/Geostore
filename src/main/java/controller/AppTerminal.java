@@ -105,18 +105,19 @@ public class AppTerminal {
                                    Utility.msgInf("GEOSTORE", "Inserimento categoria");
                                    c = new Categoria();
                                    view.maskInsertCategoria(c);
-                                   cr.insertCategoria(c.getId(), c);
+                                   cr.insertCategoriaWithDB(c.getId(), c);
                                    break;
                               case 3:
                                    Utility.msgInf("GEOSTORE", "Aggiornamento categoria");
-                                   c = cr.getCategoria(Utility.insertString("Inserisci il nome categoria: "));
+                                   c = cr.getCategoriaWithDB(Utility.insertString("Inserisci il nome categoria: "));
 
                                    if(c != null){
                                         Utility.msgInf("GEOSTORE", "Categoria trovata");
                                         view.printCategoria(c);
                                         Categoria cNew = view.maskUpdateCategoria(c, new Categoria());
 
-                                        cr.updateCategoria(cNew.getId(), cNew);
+                                        cr.updateCategoriaWithDB(cNew.getId(), cNew);
+                                        Utility.msgErr("GEOSTORE", "Categoria modificata");
                                    }
                                    else{
                                         Utility.msgErr("GEOSTORE", "Categoria non trovata");
@@ -125,13 +126,13 @@ public class AppTerminal {
                                    break;
                               case 4:
                                    Utility.msgInf("GEOSTORE", "Eliminazione categoria");
-                                   c = cr.getCategoria(Utility.insertString("Inserisci il nome categoria: "));
+                                   c = cr.getCategoriaWithDB(Utility.insertString("Inserisci il nome categoria: "));
 
                                    if(c != null){
                                         Utility.msgInf("GEOSTORE", "Categoria trovata");
                                         view.printCategoria(c);
                                         if(Utility.insertString("Sei sicuro di voler eliminare questa categoria?").equalsIgnoreCase("s")){
-                                             cr.deleteCategoria(c.getId());
+                                             cr.deleteCategoriaWithDB(c.getId());
                                              Utility.msgInf("GEOSTORE", "Categoria eliminata");
                                         }
                                         else{

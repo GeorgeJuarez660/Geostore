@@ -57,7 +57,25 @@ public class CategoriaRepository implements CRUD {
 
     @Override
     public void insertCategoriaWithDB(Integer id, Categoria c) {
+        String sql = "INSERT INTO `categorie`(`nome`) VALUES (?) ";
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
 
+        try{
+            //Connessione al db
+            connection = DBConnection.sqlConnect();
+            preparedStatement = connection.prepareStatement(sql);
+            //int num = 0;
+
+            preparedStatement.setString(1, c.getNome());
+            preparedStatement.executeUpdate();
+            Utility.msgInf("GEOSTORE", "Nuova categoria aggiunta");
+            //chiudi la connessione
+            preparedStatement.close();
+            connection.close();
+        }catch(SQLException e){
+            Utility.msgErr("GEOSTORE", "Errore nel insertCategoriaWithDB: " + e.getMessage());
+        }
     }
 
     @Override
@@ -66,6 +84,7 @@ public class CategoriaRepository implements CRUD {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet rs = null;
+        categorie = new HashMap<>();
 
         try{
             //Connessione al db
@@ -96,17 +115,79 @@ public class CategoriaRepository implements CRUD {
 
     @Override
     public Categoria getCategoriaWithDB(String nome) {
-        return null;
+        String sql = "SELECT * FROM Categorie c WHERE c.NOME = ?";
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet rs = null;
+        Categoria cat = null;
+
+        try{
+            //Connessione al db
+            connection = DBConnection.sqlConnect();
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, nome);
+            rs = preparedStatement.executeQuery();
+
+            while(rs.next()){
+                Utility.msgInf("GEOSTORE", "ID: " + rs.getInt("id") +
+                        ", Nome: " + rs.getString("nome"));
+                cat = new Categoria();
+                cat.setId(rs.getInt("id"));
+                cat.setNome(rs.getString("nome"));
+            }
+            //chiudi la connessione
+            rs.close();
+            preparedStatement.close();
+            connection.close();
+        }catch(SQLException e){
+            Utility.msgErr("GEOSTORE", "Errore nel getCategoriaWithDB: " + e.getMessage());
+        }
+        return cat;
     }
 
     @Override
-    public void updateCategoriaDB(Integer id, Categoria newC) {
+    public void updateCategoriaWithDB(Integer id, Categoria newC) {
+        String sql = "UPDATE `categorie` SET `nome` = ? WHERE id = ? ";
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
 
+        try{
+            //Connessione al db
+            connection = DBConnection.sqlConnect();
+            preparedStatement = connection.prepareStatement(sql);
+            //int num = 0;
+
+            preparedStatement.setString(1, newC.getNome());
+            preparedStatement.setInt(2, id);
+            preparedStatement.executeUpdate();
+            //chiudi la connessione
+            preparedStatement.close();
+            connection.close();
+        }catch(SQLException e){
+            Utility.msgErr("GEOSTORE", "Errore nel updateCategoriaWithDB: " + e.getMessage());
+        }
     }
 
     @Override
-    public boolean deleteCategoriaDB(Integer id) {
-        return false;
+    public void deleteCategoriaWithDB(Integer id) {
+        String sql = "DELETE FROM `categorie` WHERE id = ? ";
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        try{
+            //Connessione al db
+            connection = DBConnection.sqlConnect();
+            preparedStatement = connection.prepareStatement(sql);
+            //int num = 0;
+
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
+            //chiudi la connessione
+            preparedStatement.close();
+            connection.close();
+        }catch(SQLException e){
+            Utility.msgErr("GEOSTORE", "Errore nel deleteCategoriaWithDB: " + e.getMessage());
+        }
     }
 
 
