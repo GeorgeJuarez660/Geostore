@@ -15,8 +15,6 @@ public class View {
         return Utility.insertString("Vuoi andare avanti?");
     }
 
-    public
-
     public int readMenu(){
         System.out.println("***MENU GEOSTORE***");
         System.out.println("1) Visualizza categorie");
