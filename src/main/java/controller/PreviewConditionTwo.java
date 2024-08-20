@@ -5,7 +5,7 @@ import src.main.java.model.CategoriaRepository;
 import src.main.java.utility.Utility;
 import src.main.java.view.View;
 
-public class AppTerminal {
+public class PreviewConditionTwo {
 
      public static void main(String[] args){
 
@@ -16,7 +16,7 @@ public class AppTerminal {
           CategoriaRepository cr = new CategoriaRepository();
           Categoria c;
 
-          valueInput = view.readAdminOrUserMenu();
+          preValueInput = view.readPreMenu();
           if(preValueInput.equalsIgnoreCase("s")){
                chooseValue = view.readChooseMenu();
                if(chooseValue == 1){

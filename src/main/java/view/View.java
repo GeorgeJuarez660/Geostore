@@ -1,6 +1,7 @@
 package src.main.java.view;
 
 import src.main.java.model.Categoria;
+import src.main.java.model.Cliente;
 import src.main.java.utility.Utility;
 
 import java.util.HashMap;
@@ -13,6 +14,8 @@ public class View {
 
         return Utility.insertString("Vuoi andare avanti?");
     }
+
+    public
 
     public int readMenu(){
         System.out.println("***MENU GEOSTORE***");
@@ -31,6 +34,24 @@ public class View {
         System.out.println("2) Menu con database");
 
         return Utility.insertInt("***SCEGLI L'OPZIONE***");
+    }
+
+    public int readAdminOrUserMenu(){
+        System.out.println("***BENVENUTO***\n\n");
+        System.out.println("***SEI UN CLIENTE O ADMIN?***");
+        System.out.println("1) Cliente");
+        System.out.println("2) Admin");
+
+        return Utility.insertInt("***A TUA SCELTA***");
+    }
+
+    public void maskCheckCliente(Cliente c){
+        c.setEmail(Utility.insertString("Inserisci l'email cliente"));
+    }
+
+    public void maskCheckAdmin(Cliente c){
+        c.setEmail(Utility.insertString("Inserisci l'email cliente"));
+        c.setCodeAdmin(Utility.insertString("Inserisci il codice amministratore"));
     }
 
     public void maskInsertCategoria(Categoria c){
