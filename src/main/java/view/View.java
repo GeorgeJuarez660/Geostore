@@ -1,55 +1,77 @@
 package src.main.java.view;
 
+import src.main.java.model.Amministratore;
 import src.main.java.model.Categoria;
 import src.main.java.model.Cliente;
+import src.main.java.model.Oggetto;
 import src.main.java.utility.Utility;
 
 import java.util.HashMap;
 
 public class View {
 
+    public int readMenuCliente(){
+        System.out.println("***MENU GEOSTORE***\n");
+        System.out.println("1) Visualizza oggetti");
+        System.out.println("2) Ordina oggetto");
+        System.out.println("3) Visualizza ordini");
+        System.out.println("4) Elimina ordine");
+        System.out.println("5) Visualizza categorie");
+        System.out.println("6) Visualizza materie");
+        System.out.println("7) Visualizza ordini totali giornalieri");
 
-    public String readPreMenu(){
-        System.out.println("***BENVENUTO***");
-
-        return Utility.insertString("Vuoi andare avanti?");
-    }
-
-    public int readMenu(){
-        System.out.println("***MENU GEOSTORE***");
-        System.out.println("1) Visualizza categorie");
-        System.out.println("2) Inserisci categoria");
-        System.out.println("3) Modifica categoria");
-        System.out.println("4) Elimina categoria");
         System.out.println("0) ESCI");
 
-        return Utility.insertInt("***SCEGLI L'OPZIONE***");
+        return Utility.insertInt("******");
     }
 
-    public int readChooseMenu(){
-        System.out.println("***SCEGLI MENU***");
-        System.out.println("1) Menu locale");
-        System.out.println("2) Menu con database");
+    public int readMenuAdmin(){
+        System.out.println("***MENU GEOSTORE***\n");
+        System.out.println("1) Visualizza oggetti");
+        System.out.println("2) Ordina oggetto");
+        System.out.println("3) Visualizza ordini");
+        System.out.println("4) Elimina ordine");
+        System.out.println("5) Visualizza categorie");
+        System.out.println("6) Crea/Modifica/Elimina categoria");
+        System.out.println("7) Visualizza materie");
+        System.out.println("8) Crea/Modifica/Elimina materia");
+        System.out.println("9) Visualizza ordini totali giornalieri");
 
-        return Utility.insertInt("***SCEGLI L'OPZIONE***");
+        System.out.println("0) ESCI");
+
+        return Utility.insertInt("******");
     }
 
     public int readAdminOrUserMenu(){
-        System.out.println("***BENVENUTO***\n\n");
+        System.out.println("***BENVENUTO SU GEOSTORE***\n");
         System.out.println("***SEI UN CLIENTE O ADMIN?***");
         System.out.println("1) Cliente");
         System.out.println("2) Admin");
 
-        return Utility.insertInt("***A TUA SCELTA***");
+        return Utility.insertInt("******");
     }
 
-    public void maskCheckCliente(Cliente c){
-        c.setEmail(Utility.insertString("Inserisci l'email cliente"));
-    }
+    public void maskCheckUser(Cliente c){
+        String email = Utility.insertString("Inserisci l'email cliente:");
 
-    public void maskCheckAdmin(Cliente c){
-        c.setEmail(Utility.insertString("Inserisci l'email cliente"));
-        c.setCodeAdmin(Utility.insertString("Inserisci il codice amministratore"));
+        if(!email.isEmpty()){
+            c.setEmail(email);
+        }
+        else{
+            c.setEmail(null);
+        }
+
+        if(c instanceof Amministratore){
+            Amministratore aC = (Amministratore) c;
+            String codeAdmin = Utility.insertString("Inserisci il codice amministratore:");
+
+            if(!codeAdmin.isEmpty()){
+                aC.setCodeAdmin(codeAdmin);
+            }
+            else{
+                aC.setCodeAdmin(null);
+            }
+        }
     }
 
     public void maskInsertCategoria(Categoria c){
@@ -84,6 +106,14 @@ public class View {
 
         for(Categoria categoria : categorie.values()){
             System.out.println("ID: " + categoria.getId() + ", Nome: " + categoria.getNome());
+        }
+    }
+
+    public void printOggetti(HashMap<Integer, Oggetto> oggetti){
+        System.out.println("***PRODOTTI PRESENTI NEL GEOSTORE***\n\n");
+
+        for(Oggetto oggetto : oggetti.values()){
+            System.out.println("ID: " + oggetto.getId() + ", Nome: " + oggetto.getNome() + ", Prezzo: " + oggetto.getPrezzo()+ ", Disponibilità: " + oggetto.getDisponibilita().getCode() + ", Categoria: " + oggetto.getCategoria().getNome() + ", Materia: " + oggetto.getMateria().getNome() + ", Quantità disponibile: " + oggetto.getQuantita_disp());
         }
     }
 

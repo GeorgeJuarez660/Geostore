@@ -11,7 +11,6 @@ public class Cliente {
     private String email;
     private String telefono;
     private String indirizzo;
-    private String codeAdmin;
 
     public Integer getId() {
         return id;
@@ -66,14 +65,6 @@ public class Cliente {
         this.indirizzo = indirizzo;
     }
 
-    public String getCodeAdmin() {
-        return codeAdmin;
-    }
-
-    public void setCodeAdmin(String codeAdmin) {
-        this.codeAdmin = codeAdmin;
-    }
-
     public Cliente() {
     }
 
@@ -82,22 +73,21 @@ public class Cliente {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Cliente cliente = (Cliente) o;
-        return Objects.equals(id, cliente.id) && Objects.equals(nome, cliente.nome) && Objects.equals(cognome, cliente.cognome) && Objects.equals(email, cliente.email) && Objects.equals(telefono, cliente.telefono) && Objects.equals(indirizzo, cliente.indirizzo) && Objects.equals(codeAdmin, cliente.codeAdmin);
+        return Objects.equals(id, cliente.id) && Objects.equals(nome, cliente.nome) && Objects.equals(cognome, cliente.cognome) && Objects.equals(email, cliente.email) && Objects.equals(telefono, cliente.telefono) && Objects.equals(indirizzo, cliente.indirizzo);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nome, cognome, email, telefono, indirizzo, codeAdmin);
+        return Objects.hash(id, nome, cognome, email, telefono, indirizzo);
     }
 
-    public Cliente(Integer id, String nome, String cognome, String email, String telefono, String indirizzo, String codeAdmin) {
+    public Cliente(Integer id, String nome, String cognome, String email, String telefono, String indirizzo) {
         this.id = id;
         this.nome = nome;
         this.cognome = cognome;
         this.email = email;
         this.telefono = telefono;
         this.indirizzo = indirizzo;
-        this.codeAdmin = codeAdmin;
     }
 
     @Override
@@ -109,7 +99,6 @@ public class Cliente {
                 ", email='" + email + '\'' +
                 ", telefono='" + telefono + '\'' +
                 ", indirizzo='" + indirizzo + '\'' +
-                ", codeAdmin='" + codeAdmin + '\'' +
                 '}';
     }
 }

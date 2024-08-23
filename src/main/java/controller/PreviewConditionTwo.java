@@ -3,7 +3,7 @@ package src.main.java.controller;
 import src.main.java.model.Categoria;
 import src.main.java.model.CategoriaRepository;
 import src.main.java.utility.Utility;
-import src.main.java.view.View;
+import src.main.java.view.PreviewView;
 
 public class PreviewConditionTwo {
 
@@ -12,29 +12,29 @@ public class PreviewConditionTwo {
           int num = 0, valueInput = 0, chooseValue = 0;
           boolean flag;
           String preValueInput = "";
-          View view = new View();
+          PreviewView previewView = new PreviewView();
           CategoriaRepository cr = new CategoriaRepository();
           Categoria c;
 
-          preValueInput = view.readPreMenu();
+          preValueInput = previewView.readPreMenu();
           if(preValueInput.equalsIgnoreCase("s")){
-               chooseValue = view.readChooseMenu();
+               chooseValue = previewView.readChooseMenu();
                if(chooseValue == 1){
                     Utility.msgInf("GEOSTORE", "Hai scelto il menu locale\n\n");
                     do{
-                         valueInput = view.readMenu();
+                         valueInput = previewView.readMenu();
                          switch(valueInput){
                               case 0:
                                    Utility.msgInf("GEOSTORE", "Nessun operazione");
                                    break;
                               case 1:
                                    Utility.msgInf("GEOSTORE", "Visualizzazione delle categorie");
-                                   view.printCategorie(cr.getCategorie());
+                                   previewView.printCategorie(cr.getCategorie());
                                    break;
                               case 2:
                                    Utility.msgInf("GEOSTORE", "Inserimento categoria");
                                    c = new Categoria();
-                                   view.maskInsertCategoria(c);
+                                   previewView.maskInsertCategoria(c);
                                    cr.insertCategoria(c.getId(), c);
                                    break;
                               case 3:
@@ -43,8 +43,8 @@ public class PreviewConditionTwo {
 
                                    if(c != null){
                                         Utility.msgInf("GEOSTORE", "Categoria trovata");
-                                        view.printCategoria(c);
-                                        Categoria cNew = view.maskUpdateCategoria(c, new Categoria());
+                                        previewView.printCategoria(c);
+                                        Categoria cNew = previewView.maskUpdateCategoria(c, new Categoria());
 
                                         cr.updateCategoria(cNew.getId(), cNew);
                                    }
@@ -59,7 +59,7 @@ public class PreviewConditionTwo {
 
                                    if(c != null){
                                         Utility.msgInf("GEOSTORE", "Categoria trovata");
-                                        view.printCategoria(c);
+                                        previewView.printCategoria(c);
                                         if(Utility.insertString("Sei sicuro di voler eliminare questa categoria?").equalsIgnoreCase("s")){
                                              cr.deleteCategoria(c.getId());
                                              Utility.msgInf("GEOSTORE", "Categoria eliminata");
@@ -92,19 +92,19 @@ public class PreviewConditionTwo {
                     System.out.println(System.getProperty("java.class.path"));
                     Utility.msgInf("GEOSTORE", "Hai scelto il menu con database\n\n");
                     do{
-                         valueInput = view.readMenu();
+                         valueInput = previewView.readMenu();
                          switch(valueInput){
                               case 0:
                                    Utility.msgInf("GEOSTORE", "Nessun operazione");
                                    break;
                               case 1:
                                    Utility.msgInf("GEOSTORE", "Visualizzazione delle categorie");
-                                   view.printCategorie(cr.getCategorieWithDB());
+                                   previewView.printCategorie(cr.getCategorieWithDB());
                                    break;
                               case 2:
                                    Utility.msgInf("GEOSTORE", "Inserimento categoria");
                                    c = new Categoria();
-                                   view.maskInsertCategoria(c);
+                                   previewView.maskInsertCategoria(c);
                                    cr.insertCategoriaWithDB(c.getId(), c);
                                    break;
                               case 3:
@@ -113,8 +113,8 @@ public class PreviewConditionTwo {
 
                                    if(c != null){
                                         Utility.msgInf("GEOSTORE", "Categoria trovata");
-                                        view.printCategoria(c);
-                                        Categoria cNew = view.maskUpdateCategoria(c, new Categoria());
+                                        previewView.printCategoria(c);
+                                        Categoria cNew = previewView.maskUpdateCategoria(c, new Categoria());
 
                                         cr.updateCategoriaWithDB(cNew.getId(), cNew);
                                         Utility.msgErr("GEOSTORE", "Categoria modificata");
@@ -130,7 +130,7 @@ public class PreviewConditionTwo {
 
                                    if(c != null){
                                         Utility.msgInf("GEOSTORE", "Categoria trovata");
-                                        view.printCategoria(c);
+                                        previewView.printCategoria(c);
                                         if(Utility.insertString("Sei sicuro di voler eliminare questa categoria?").equalsIgnoreCase("s")){
                                              cr.deleteCategoriaWithDB(c.getId());
                                              Utility.msgInf("GEOSTORE", "Categoria eliminata");

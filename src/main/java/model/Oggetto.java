@@ -9,7 +9,7 @@ public class Oggetto {
     private String nome;
     private BigDecimal prezzo;
     private Disponibilita disponibilita;
-    private String materia;
+    private Materia materia;
     private Categoria categoria;
     private Integer quantita_disp;
 
@@ -50,11 +50,11 @@ public class Oggetto {
         this.disponibilita = disponibilita;
     }
 
-    public String getMateria() {
+    public Materia getMateria() {
         return materia;
     }
 
-    public void setMateria(String materia) {
+    public void setMateria(Materia materia) {
         this.materia = materia;
     }
 
@@ -90,7 +90,7 @@ public class Oggetto {
     public Oggetto() {
     }
 
-    public Oggetto(Integer id, String nome, BigDecimal prezzo, Disponibilita disponibilita, String materia, Categoria categoria, Integer quantita_disp) {
+    public Oggetto(Integer id, String nome, BigDecimal prezzo, Disponibilita disponibilita, Materia materia, Categoria categoria, Integer quantita_disp) {
         this.id = id;
         this.nome = nome;
         this.prezzo = prezzo;
