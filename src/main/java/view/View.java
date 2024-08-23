@@ -16,9 +16,10 @@ public class View {
         System.out.println("2) Ordina oggetto");
         System.out.println("3) Visualizza ordini");
         System.out.println("4) Elimina ordine");
-        System.out.println("5) Visualizza categorie");
-        System.out.println("6) Visualizza materie");
-        System.out.println("7) Visualizza ordini totali giornalieri");
+        System.out.println("5) Visualizza oggetti per categoria");
+        System.out.println("6) Visualizza oggetti per materia");
+        System.out.println("7) Visualizza oggetti disponibili");
+        System.out.println("8) Visualizza ordini totali giornalieri");
 
         System.out.println("0) ESCI");
 
@@ -31,11 +32,12 @@ public class View {
         System.out.println("2) Ordina oggetto");
         System.out.println("3) Visualizza ordini");
         System.out.println("4) Elimina ordine");
-        System.out.println("5) Visualizza categorie");
-        System.out.println("6) Crea/Modifica/Elimina categoria");
-        System.out.println("7) Visualizza materie");
-        System.out.println("8) Crea/Modifica/Elimina materia");
-        System.out.println("9) Visualizza ordini totali giornalieri");
+        System.out.println("5) Visualizza oggetti per categoria");
+        System.out.println("6) Visualizza oggetti per materia");
+        System.out.println("7) Visualizza oggetti disponibili");
+        System.out.println("8) Crea/Modifica/Elimina categoria");
+        System.out.println("9) Crea/Modifica/Elimina materia");
+        System.out.println("10) Visualizza ordini totali giornalieri");
 
         System.out.println("0) ESCI");
 
@@ -72,6 +74,18 @@ public class View {
                 aC.setCodeAdmin(null);
             }
         }
+    }
+
+    public void maskObjViaCat(Categoria c){
+        String nome = Utility.insertString("Inserisci il nome categoria:");
+
+        if(!nome.isEmpty()){
+            c.setNome(nome);
+        }
+        else{
+            c.setNome(null);
+        }
+
     }
 
     public void maskInsertCategoria(Categoria c){
