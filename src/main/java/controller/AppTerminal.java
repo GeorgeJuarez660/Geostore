@@ -16,6 +16,7 @@ public class AppTerminal {
           ClienteRepository cr = new ClienteRepository();
           Cliente c;
           Categoria cat;
+          Materia m;
 
           valueInput = view.readAdminOrUserMenu();
           if(valueInput == 1){
@@ -43,10 +44,10 @@ public class AppTerminal {
                                    view.printOggetti(or.getOggettiViaCategoriaWithDB(cat.getNome()));
                                    break;
                               case 6:
-                                   Utility.msgInf("GEOSTORE", "Elenco oggetti per categoria\n\n");
-                                   cat = new Categoria();
-                                   view.maskObjViaCat(cat);
-                                   view.printOggetti(or.getOggettiViaCategoriaWithDB(cat.getNome()));
+                                   Utility.msgInf("GEOSTORE", "Elenco oggetti per materia\n\n");
+                                   m = new Materia();
+                                   view.maskObjViaMat(m);
+                                   view.printOggetti(or.getOggettiViaMateriaWithDB(m.getNome()));
                                    break;
                               case 7:
                                    Utility.msgInf("GEOSTORE", "Elenco oggetti dispobili\n\n");
@@ -85,6 +86,18 @@ public class AppTerminal {
                          case 1:
                               Utility.msgInf("GEOSTORE", "Elenco oggetti\n\n");
                               view.printOggetti(or.getOggettiWithDB());
+                              break;
+                         case 5:
+                              Utility.msgInf("GEOSTORE", "Elenco oggetti per categoria\n\n");
+                              cat = new Categoria();
+                              view.maskObjViaCat(cat);
+                              view.printOggetti(or.getOggettiViaCategoriaWithDB(cat.getNome()));
+                              break;
+                         case 6:
+                              Utility.msgInf("GEOSTORE", "Elenco oggetti per materia\n\n");
+                              m = new Materia();
+                              view.maskObjViaMat(m);
+                              view.printOggetti(or.getOggettiViaMateriaWithDB(m.getNome()));
                               break;
                          case 7:
                               Utility.msgInf("GEOSTORE", "Elenco oggetti dispobili\n\n");

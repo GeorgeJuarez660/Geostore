@@ -1,9 +1,6 @@
 package src.main.java.view;
 
-import src.main.java.model.Amministratore;
-import src.main.java.model.Categoria;
-import src.main.java.model.Cliente;
-import src.main.java.model.Oggetto;
+import src.main.java.model.*;
 import src.main.java.utility.Utility;
 
 import java.util.HashMap;
@@ -84,6 +81,18 @@ public class View {
         }
         else{
             c.setNome(null);
+        }
+
+    }
+
+    public void maskObjViaMat(Materia m){
+        String nome = Utility.insertString("Inserisci il nome materia:");
+
+        if(!nome.isEmpty()){
+            m.setNome(nome);
+        }
+        else{
+            m.setNome(null);
         }
 
     }

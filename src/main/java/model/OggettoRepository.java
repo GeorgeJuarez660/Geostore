@@ -161,6 +161,54 @@ public class OggettoRepository implements oggettiCRUD {
         return oggetti;
     }
 
+    public HashMap<Integer, Oggetto> getOggettiViaMateriaWithDB(String nomeMat) {
+        String sql = "select o.id, o.nome, o.prezzo, d.code as disponibilita_code, c.nome as categoria_code, m.nome as materia_code, o.quantita_disp \n" +
+                "from oggetti o join Disponibilita d on (o.disponibilita = d.id)\n" +
+                "join Materie m on (o.materia = m.id)\n" +
+                "join Categorie c on (o.categoria = c.id)\n" +
+                "where materia_code = ?";
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet rs = null;
+        oggetti = new HashMap<>();
+
+        try{
+            //Connessione al db
+            connection = DBConnection.sqlConnect();
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, nomeMat);
+            rs = preparedStatement.executeQuery();
+            Oggetto ogg;
+
+            while(rs.next()){
+                ogg = new Oggetto();
+                ogg.setId(rs.getInt("id"));
+                ogg.setNome(rs.getString("nome"));
+                ogg.setPrezzo(rs.getBigDecimal("prezzo"));
+                Disponibilita disponibilita = new Disponibilita();
+                disponibilita.setCode(rs.getString("disponibilita_code"));
+                ogg.setDisponibilita(disponibilita);
+                Categoria categoria = new Categoria();
+                categoria.setNome(rs.getString("categoria_code"));
+                ogg.setCategoria(categoria);
+                Materia materia = new Materia();
+                materia.setNome(rs.getString("materia_code"));
+                ogg.setMateria(materia);
+                ogg.setQuantita_disp(rs.getInt("quantita_disp"));
+
+                oggetti.put(ogg.getId(), ogg);
+            }
+            //chiudi la connessione
+            rs.close();
+            preparedStatement.close();
+            connection.close();
+        }catch(SQLException e){
+            Utility.msgErr("GEOSTORE", "Errore nel getOggettiViaMateriaWithDB: " + e.getMessage());
+        }
+
+        return oggetti;
+    }
+
     @Override
     public Oggetto getOggettoWithDB(String nome) {
         return null;
