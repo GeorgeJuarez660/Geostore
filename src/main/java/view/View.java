@@ -13,14 +13,15 @@ public class View {
 
     public int readMenuCliente(){
         System.out.println("***MENU GEOSTORE***\n");
-        System.out.println("1) Visualizza oggetti");
-        System.out.println("2) Ordina oggetto");
-        System.out.println("3) Visualizza ordini");
-        System.out.println("4) Elimina ordine");
-        System.out.println("5) Visualizza oggetti per categoria");
-        System.out.println("6) Visualizza oggetti per materia");
-        System.out.println("7) Visualizza oggetti disponibili");
-        System.out.println("8) Visualizza ordini totali giornalieri");
+        System.out.println("1) Profilo utente");
+        System.out.println("2) Visualizza oggetti");
+        System.out.println("3) Ordina oggetto");
+        System.out.println("4) Visualizza i tuoi ordini");
+        System.out.println("5) Elimina ordine");
+        System.out.println("6) Visualizza oggetti per categoria");
+        System.out.println("7) Visualizza oggetti per materia");
+        System.out.println("8) Visualizza oggetti disponibili");
+        System.out.println("9) Visualizza i tuoi ordini totali giornalieri");
 
         System.out.println("0) ESCI");
 
@@ -31,14 +32,16 @@ public class View {
         System.out.println("***MENU GEOSTORE***\n");
         System.out.println("1) Visualizza oggetti");
         System.out.println("2) Ordina oggetto");
-        System.out.println("3) Visualizza ordini");
-        System.out.println("4) Elimina ordine");
-        System.out.println("5) Visualizza oggetti per categoria");
-        System.out.println("6) Visualizza oggetti per materia");
-        System.out.println("7) Visualizza oggetti disponibili");
-        System.out.println("8) Crea/Modifica/Elimina categoria");
-        System.out.println("9) Crea/Modifica/Elimina materia");
-        System.out.println("10) Visualizza ordini totali giornalieri");
+        System.out.println("3) Visualizza i tuoi ordini");
+        System.out.println("4) Visualizza gli ordini");
+        System.out.println("5) Elimina ordine");
+        System.out.println("6) Modifica ordine");
+        System.out.println("7) Visualizza oggetti per categoria");
+        System.out.println("8) Visualizza oggetti per materia");
+        System.out.println("9) Visualizza oggetti disponibili");
+        System.out.println("10) Crea/Modifica/Elimina categoria");
+        System.out.println("11) Crea/Modifica/Elimina materia");
+        System.out.println("12) Visualizza ordini totali giornalieri");
 
         System.out.println("0) ESCI");
 
@@ -102,11 +105,10 @@ public class View {
     }
 
     public void maskInsertOrdine(Ordine o, Cliente cliente){
-        //o.setData_ordine(OffsetDateTime.now());
         LocalDateTime localDateTime = LocalDateTime.now();
-
         // Estrazione di LocalDate da LocalDateTime
         LocalDate localDate = localDateTime.toLocalDate();
+
         o.setData_ordine(Date.valueOf(localDate));
         Stato stato = new Stato();
         stato.setId(1);
@@ -161,7 +163,20 @@ public class View {
         }
     }
 
+    public void printOrdini(HashMap<Integer, Ordine> ordini){
+        System.out.println("***ORDINI EFFETTUATI NEL GEOSTORE***\n\n");
+
+        for(Ordine ordine : ordini.values()){
+            System.out.println("ID: " + ordine.getId() + ", Nome cliente: " + ordine.getCliente().getNome() + ", Cognome cliente: " + ordine.getCliente().getCognome() + ", Nome prodotto: " + ordine.getOggetto().getNome() + ", Data ordine: " + ordine.getData_ordine() + ", Quantità ordinata: " + ordine.getQuantita() + ", Prezzo unitario: " + ordine.getPrezzo_unitario()+ ", Stato ordine: " + ordine.getStato().getCode());
+        }
+    }
+
     public void printCategoria(Categoria categoria){
         System.out.println("ID: " + categoria.getId() + ", Nome: " + categoria.getNome());
+    }
+
+    public void printUtente(Cliente cliente){
+        System.out.println("***PROFILO UTENTE GEOSTORE***\n");
+        System.out.println("ID: " + cliente.getId() + ", Nome: " + cliente.getNome() + ", Cognome: " + cliente.getCognome()+ ", Email: " + cliente.getEmail()+ ", Telefono: " + cliente.getTelefono()+ ", Indirizzo: " + cliente.getIndirizzo());
     }
 }

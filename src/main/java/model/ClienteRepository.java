@@ -27,7 +27,36 @@ public class ClienteRepository implements clientiCRUD {
 
     @Override
     public Cliente getClienteWithDB(String nome) {
-        return null;
+        String sql = "select * from clienti c where c.nome = ? ";
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet rs = null;
+        Cliente foundCliente = new Cliente();
+        try{
+            //Connessione al db
+            connection = DBConnection.sqlConnect();
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, nome);
+            rs = preparedStatement.executeQuery();
+
+            while(rs.next()){
+                foundCliente.setId(rs.getInt("id"));
+                foundCliente.setNome(rs.getString("nome"));
+                foundCliente.setCognome(rs.getString("cognome"));
+                foundCliente.setEmail(rs.getString("email"));
+                foundCliente.setIndirizzo(rs.getString("indirizzo"));
+                foundCliente.setTelefono(rs.getString("telefono"));
+
+            }
+            //chiudi la connessione
+            rs.close();
+            preparedStatement.close();
+            connection.close();
+        }catch(SQLException e){
+            Utility.msgErr("GEOSTORE", "Errore nel getClienteWithDB: " + e.getMessage());
+        }
+
+        return foundCliente;
     }
 
     public Cliente checkUser(String email) {

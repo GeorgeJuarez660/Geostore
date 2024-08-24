@@ -49,6 +49,99 @@ public class OrdineRepository implements ordiniCRUD {
         return null;
     }
 
+    public HashMap<Integer, Ordine> getOrdiniByUserWithDB(String nomeCliente) {
+        String sql = "SELECT o.id, c.nome AS nome_cliente, c.cognome AS cognome_cliente, og.nome AS nome_oggetto, o.data_ordine, o.quantita, o.prezzo_unitario, s.code AS stato FROM ordini o JOIN clienti c ON(o.cliente_id =c.id )\n" +
+                "JOIN oggetti og ON(o.oggetto_id =og.id )\n" +
+                "JOIN stato s ON(o.stato_id =s.id )\n" +
+                "WHERE nome_cliente = ?";
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet rs = null;
+        ordini = new HashMap<>();
+
+        try{
+            //Connessione al db
+            connection = DBConnection.sqlConnect();
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, nomeCliente);
+            rs = preparedStatement.executeQuery();
+            Ordine ord;
+
+            while(rs.next()){
+                ord = new Ordine();
+                ord.setId(rs.getInt("id"));
+                Cliente cliente = new Cliente();
+                cliente.setNome(rs.getString("nome_cliente"));
+                cliente.setCognome(rs.getString("cognome_cliente"));
+                ord.setCliente(cliente);
+                Oggetto oggetto = new Oggetto();
+                oggetto.setNome(rs.getString("nome_oggetto"));
+                ord.setOggetto(oggetto);
+                ord.setData_ordine(rs.getDate("data_ordine"));
+                ord.setQuantita(rs.getInt("quantita"));
+                ord.setPrezzo_unitario(rs.getBigDecimal("prezzo_unitario"));
+                Stato stato = new Stato();
+                stato.setCode(rs.getString("stato"));
+                ord.setStato(stato);
+
+                ordini.put(ord.getId(), ord);
+            }
+            //chiudi la connessione
+            rs.close();
+            preparedStatement.close();
+            connection.close();
+        }catch(SQLException e){
+            Utility.msgErr("GEOSTORE", "Errore nel getOrdiniByUserWithDB: " + e.getMessage());
+        }
+
+        return ordini;
+    }
+
+    public Ordine getOrdineByUserAndObjNameWithDB(String nomeCliente, Integer idOrdine) {
+        String sql = "SELECT o.id, c.nome AS nome_cliente, c.cognome AS cognome_cliente, og.nome AS nome_oggetto, o.data_ordine, o.quantita, o.prezzo_unitario, s.code AS stato FROM ordini o JOIN clienti c ON(o.cliente_id =c.id )\n" +
+                "JOIN oggetti og ON(o.oggetto_id =og.id )\n" +
+                "JOIN stato s ON(o.stato_id =s.id )\n" +
+                "WHERE nome_cliente = ? AND o.id = ?";
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet rs = null;
+        Ordine ordine = new Ordine();
+
+        try{
+            //Connessione al db
+            connection = DBConnection.sqlConnect();
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, nomeCliente);
+            preparedStatement.setInt(2, idOrdine);
+            rs = preparedStatement.executeQuery();
+
+            while(rs.next()){
+                ordine.setId(rs.getInt("id"));
+                Cliente cliente = new Cliente();
+                cliente.setNome(rs.getString("nome_cliente"));
+                cliente.setCognome(rs.getString("cognome_cliente"));
+                ordine.setCliente(cliente);
+                Oggetto oggetto = new Oggetto();
+                oggetto.setNome(rs.getString("nome_oggetto"));
+                ordine.setOggetto(oggetto);
+                ordine.setData_ordine(rs.getDate("data_ordine"));
+                ordine.setQuantita(rs.getInt("quantita"));
+                ordine.setPrezzo_unitario(rs.getBigDecimal("prezzo_unitario"));
+                Stato stato = new Stato();
+                stato.setCode(rs.getString("stato"));
+                ordine.setStato(stato);
+            }
+            //chiudi la connessione
+            rs.close();
+            preparedStatement.close();
+            connection.close();
+        }catch(SQLException e){
+            Utility.msgErr("GEOSTORE", "Errore nel getOrdiniByUserWithDB: " + e.getMessage());
+        }
+
+        return ordine;
+    }
+
     @Override
     public Ordine getOrdineWithDB(String nome) {
         return null;
@@ -61,7 +154,24 @@ public class OrdineRepository implements ordiniCRUD {
 
     @Override
     public void deleteOrdineWithDB(Integer id) {
+        String sql = "DELETE FROM `ordini` WHERE id = ? ";
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
 
+        try{
+            //Connessione al db
+            connection = DBConnection.sqlConnect();
+            preparedStatement = connection.prepareStatement(sql);
+            //int num = 0;
+
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
+            //chiudi la connessione
+            preparedStatement.close();
+            connection.close();
+        }catch(SQLException e){
+            Utility.msgErr("GEOSTORE", "Errore nel deleteOrdineWithDB: " + e.getMessage());
+        }
     }
 
     //metodi override per operazioni CRUD
