@@ -2,6 +2,7 @@ package src.main.java.model;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.time.OffsetDateTime;
 import java.util.Objects;
 
 public class Ordine {
@@ -12,7 +13,7 @@ public class Ordine {
     private Date data_ordine;
     private Integer quantita;
     private BigDecimal prezzo_unitario;
-    private String stato;
+    private Stato stato;
 
     public Integer getId() {
         return id;
@@ -67,11 +68,11 @@ public class Ordine {
         this.data_ordine = data_ordine;
     }
 
-    public String getStato() {
+    public Stato getStato() {
         return stato;
     }
 
-    public void setStato(String stato) {
+    public void setStato(Stato stato) {
         this.stato = stato;
     }
 
@@ -91,7 +92,7 @@ public class Ordine {
         return Objects.hash(id, cliente, oggetto, quantita, prezzo_unitario, data_ordine, stato);
     }
 
-    public Ordine(Integer id, Cliente cliente, Oggetto oggetto, Integer quantita, BigDecimal prezzo_unitario, Date data_ordine, String stato) {
+    public Ordine(Integer id, Cliente cliente, Oggetto oggetto, Integer quantita, BigDecimal prezzo_unitario, Date data_ordine, Stato stato) {
         this.id = id;
         this.cliente = cliente;
         this.oggetto = oggetto;

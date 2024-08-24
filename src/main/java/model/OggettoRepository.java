@@ -71,7 +71,7 @@ public class OggettoRepository implements oggettiCRUD {
                 "from oggetti o join Disponibilita d on (o.disponibilita = d.id)\n" +
                 "join Materie m on (o.materia = m.id)\n" +
                 "join Categorie c on (o.categoria = c.id)\n" +
-                "where disponibilita_code = 'DISPONIBILE' AND disponibilita_code = 'ESAURIMENTO'";
+                "where disponibilita_code = 'DISPONIBILE' OR disponibilita_code = 'ESAURIMENTO'";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet rs = null;
@@ -211,7 +211,85 @@ public class OggettoRepository implements oggettiCRUD {
 
     @Override
     public Oggetto getOggettoWithDB(String nome) {
-        return null;
+        String sql = "select * from oggetti o ";
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet rs = null;
+        Oggetto oggetto = new Oggetto();
+        try{
+            //Connessione al db
+            connection = DBConnection.sqlConnect();
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, nome);
+            rs = preparedStatement.executeQuery();
+
+            while(rs.next()){
+                oggetto.setId(rs.getInt("id"));
+                oggetto.setNome(rs.getString("nome"));
+                oggetto.setPrezzo(rs.getBigDecimal("prezzo"));
+                Disponibilita disponibilita = new Disponibilita();
+                disponibilita.setCode(rs.getString("disponibilita_code"));
+                oggetto.setDisponibilita(disponibilita);
+                Categoria categoria = new Categoria();
+                categoria.setNome(rs.getString("categoria_code"));
+                oggetto.setCategoria(categoria);
+                Materia materia = new Materia();
+                materia.setNome(rs.getString("materia_code"));
+                oggetto.setMateria(materia);
+                oggetto.setQuantita_disp(rs.getInt("quantita_disp"));
+            }
+            //chiudi la connessione
+            rs.close();
+            preparedStatement.close();
+            connection.close();
+        }catch(SQLException e){
+            Utility.msgErr("GEOSTORE", "Errore nel checkUser: " + e.getMessage());
+        }
+
+        return oggetto;
+    }
+
+    public Oggetto getOggettoDispWithDB(String nome) {
+        String sql = "select o.id, o.nome, o.prezzo, d.code as disponibilita_code, c.nome as categoria_code, m.nome as materia_code, o.quantita_disp \n" +
+                "from oggetti o join Disponibilita d on (o.disponibilita = d.id)\n" +
+                "join Materie m on (o.materia = m.id)\n" +
+                "join Categorie c on (o.categoria = c.id)\n" +
+                "where o.nome = ? AND (disponibilita_code = 'DISPONIBILE' OR disponibilita_code = 'ESAURIMENTO')";
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet rs = null;
+        Oggetto oggetto = new Oggetto();
+        try{
+            //Connessione al db
+            connection = DBConnection.sqlConnect();
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, nome);
+            rs = preparedStatement.executeQuery();
+
+            while(rs.next()){
+                oggetto.setId(rs.getInt("id"));
+                oggetto.setNome(rs.getString("nome"));
+                oggetto.setPrezzo(rs.getBigDecimal("prezzo"));
+                Disponibilita disponibilita = new Disponibilita();
+                disponibilita.setCode(rs.getString("disponibilita_code"));
+                oggetto.setDisponibilita(disponibilita);
+                Categoria categoria = new Categoria();
+                categoria.setNome(rs.getString("categoria_code"));
+                oggetto.setCategoria(categoria);
+                Materia materia = new Materia();
+                materia.setNome(rs.getString("materia_code"));
+                oggetto.setMateria(materia);
+                oggetto.setQuantita_disp(rs.getInt("quantita_disp"));
+            }
+            //chiudi la connessione
+            rs.close();
+            preparedStatement.close();
+            connection.close();
+        }catch(SQLException e){
+            Utility.msgErr("GEOSTORE", "Errore nel checkUser: " + e.getMessage());
+        }
+
+        return oggetto;
     }
 
     @Override

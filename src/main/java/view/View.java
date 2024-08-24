@@ -3,6 +3,10 @@ package src.main.java.view;
 import src.main.java.model.*;
 import src.main.java.utility.Utility;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.HashMap;
 
 public class View {
@@ -95,6 +99,23 @@ public class View {
             m.setNome(null);
         }
 
+    }
+
+    public void maskInsertOrdine(Ordine o, Cliente cliente){
+        //o.setData_ordine(OffsetDateTime.now());
+        LocalDateTime localDateTime = LocalDateTime.now();
+
+        // Estrazione di LocalDate da LocalDateTime
+        LocalDate localDate = localDateTime.toLocalDate();
+        o.setData_ordine(Date.valueOf(localDate));
+        Stato stato = new Stato();
+        stato.setId(1);
+        o.setStato(stato);
+        o.setCliente(cliente);
+        Oggetto oggetto = new Oggetto();
+        oggetto.setNome(Utility.insertString("Inserisci il nome oggetto"));
+        o.setOggetto(oggetto);
+        o.setQuantita(Utility.insertInt("Inserisci la quantità"));
     }
 
     public void maskInsertCategoria(Categoria c){
