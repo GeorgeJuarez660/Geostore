@@ -12,8 +12,8 @@ public interface ordiniCRUD {
     //metodi override per operazioni CRUD con database
     public int insertOrdineWithDB(Integer id, Ordine o);
     public HashMap<Integer, Ordine> getOrdiniWithDB();
-    public Ordine getOrdineWithDB(String nome);
-    public void updateOrdineWithDB(Integer id, Ordine newO);
+    public Ordine getOrdineWithDB(Integer id);
+    public int updateOrdineWithDB(Integer id, Ordine newO);
     public void deleteOrdineWithDB(Integer id);
 
 }
