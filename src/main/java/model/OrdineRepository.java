@@ -13,7 +13,7 @@ public class OrdineRepository implements ordiniCRUD {
 
     @Override
     public int insertOrdineWithDB(Integer id, Ordine o) {
-        String sql = "INSERT INTO `ordini`(`cliente_id`, `oggetto_id`,`data_ordine`,`quantita`,`prezzo_unitario`,`stato_id`) VALUES (?, ?, ?, ?, ?, ?) ";
+        String sql = "INSERT INTO `ordini`(`cliente_id`, `prodotto_id`,`data_ordine`,`quantita`,`prezzo_unitario`,`stato_id`) VALUES (?, ?, ?, ?, ?, ?) ";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         int num = 0;
@@ -43,8 +43,8 @@ public class OrdineRepository implements ordiniCRUD {
 
     @Override
     public HashMap<Integer, Ordine> getOrdiniWithDB() {
-        String sql = "SELECT o.id, c.nome AS nome_cliente, c.cognome AS cognome_cliente, og.nome AS nome_oggetto, o.data_ordine, o.quantita, o.prezzo_unitario, s.code AS stato FROM ordini o JOIN clienti c ON(o.cliente_id =c.id )\n" +
-                "JOIN oggetti og ON(o.oggetto_id =og.id )\n" +
+        String sql = "SELECT o.id, c.nome AS nome_cliente, c.cognome AS cognome_cliente, og.nome AS nome_prodotto, o.data_ordine, o.quantita, o.prezzo_unitario, s.code AS stato FROM ordini o JOIN clienti c ON(o.cliente_id =c.id )\n" +
+                "JOIN prodotti og ON(o.prodotto_id =og.id )\n" +
                 "JOIN stato s ON(o.stato_id =s.id ) ";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -66,7 +66,7 @@ public class OrdineRepository implements ordiniCRUD {
                 cliente.setCognome(rs.getString("cognome_cliente"));
                 ord.setCliente(cliente);
                 Prodotto prodotto = new Prodotto();
-                prodotto.setNome(rs.getString("nome_oggetto"));
+                prodotto.setNome(rs.getString("nome_prodotto"));
                 ord.setProdotto(prodotto);
                 ord.setData_ordine(rs.getDate("data_ordine"));
                 ord.setQuantita(rs.getInt("quantita"));
@@ -89,8 +89,8 @@ public class OrdineRepository implements ordiniCRUD {
     }
 
     public HashMap<Integer, Ordine> getOrdiniByUserWithDB(String nomeCliente) {
-        String sql = "SELECT o.id, c.nome AS nome_cliente, c.cognome AS cognome_cliente, og.nome AS nome_oggetto, o.data_ordine, o.quantita, o.prezzo_unitario, s.code AS stato FROM ordini o JOIN clienti c ON(o.cliente_id =c.id )\n" +
-                "JOIN oggetti og ON(o.oggetto_id =og.id )\n" +
+        String sql = "SELECT o.id, c.nome AS nome_cliente, c.cognome AS cognome_cliente, og.nome AS nome_prodotto, o.data_ordine, o.quantita, o.prezzo_unitario, s.code AS stato FROM ordini o JOIN clienti c ON(o.cliente_id =c.id )\n" +
+                "JOIN prodotti og ON(o.prodotto_id =og.id )\n" +
                 "JOIN stato s ON(o.stato_id =s.id )\n" +
                 "WHERE nome_cliente = ?";
         Connection connection = null;
@@ -114,7 +114,7 @@ public class OrdineRepository implements ordiniCRUD {
                 cliente.setCognome(rs.getString("cognome_cliente"));
                 ord.setCliente(cliente);
                 Prodotto prodotto = new Prodotto();
-                prodotto.setNome(rs.getString("nome_oggetto"));
+                prodotto.setNome(rs.getString("nome_prodotto"));
                 ord.setProdotto(prodotto);
                 ord.setData_ordine(rs.getDate("data_ordine"));
                 ord.setQuantita(rs.getInt("quantita"));
@@ -137,8 +137,8 @@ public class OrdineRepository implements ordiniCRUD {
     }
 
     public Ordine getOrdineByUserAndObjNameWithDB(String nomeCliente, Integer idOrdine) {
-        String sql = "SELECT o.id, c.nome AS nome_cliente, c.cognome AS cognome_cliente, og.nome AS nome_oggetto, o.data_ordine, o.quantita, o.prezzo_unitario, s.code AS stato FROM ordini o JOIN clienti c ON(o.cliente_id =c.id )\n" +
-                "JOIN oggetti og ON(o.oggetto_id =og.id )\n" +
+        String sql = "SELECT o.id, c.nome AS nome_cliente, c.cognome AS cognome_cliente, og.nome AS nome_prodotto, o.data_ordine, o.quantita, o.prezzo_unitario, s.code AS stato FROM ordini o JOIN clienti c ON(o.cliente_id =c.id )\n" +
+                "JOIN prodotti og ON(o.prodotto_id =og.id )\n" +
                 "JOIN stato s ON(o.stato_id =s.id )\n" +
                 "WHERE nome_cliente = ? AND o.id = ?";
         Connection connection = null;
@@ -161,7 +161,7 @@ public class OrdineRepository implements ordiniCRUD {
                 cliente.setCognome(rs.getString("cognome_cliente"));
                 ordine.setCliente(cliente);
                 Prodotto prodotto = new Prodotto();
-                prodotto.setNome(rs.getString("nome_oggetto"));
+                prodotto.setNome(rs.getString("nome_prodotto"));
                 ordine.setProdotto(prodotto);
                 ordine.setData_ordine(rs.getDate("data_ordine"));
                 ordine.setQuantita(rs.getInt("quantita"));
@@ -183,8 +183,8 @@ public class OrdineRepository implements ordiniCRUD {
 
     @Override
     public Ordine getOrdineWithDB(Integer id) {
-        String sql = "SELECT o.id, c.nome AS nome_cliente, c.cognome AS cognome_cliente, og.nome AS nome_oggetto, o.data_ordine, o.quantita, o.prezzo_unitario, s.code AS stato FROM ordini o JOIN clienti c ON(o.cliente_id =c.id )\n" +
-                "JOIN oggetti og ON(o.oggetto_id =og.id )\n" +
+        String sql = "SELECT o.id, c.nome AS nome_cliente, c.cognome AS cognome_cliente, og.nome AS nome_prodotto, o.data_ordine, o.quantita, o.prezzo_unitario, s.code AS stato FROM ordini o JOIN clienti c ON(o.cliente_id =c.id )\n" +
+                "JOIN prodotti og ON(o.prodotto_id =og.id )\n" +
                 "JOIN stato s ON(o.stato_id =s.id )\n" +
                 "WHERE o.id = ?";
         Connection connection = null;
@@ -206,7 +206,7 @@ public class OrdineRepository implements ordiniCRUD {
                 cliente.setCognome(rs.getString("cognome_cliente"));
                 ordine.setCliente(cliente);
                 Prodotto prodotto = new Prodotto();
-                prodotto.setNome(rs.getString("nome_oggetto"));
+                prodotto.setNome(rs.getString("nome_prodotto"));
                 ordine.setProdotto(prodotto);
                 ordine.setData_ordine(rs.getDate("data_ordine"));
                 ordine.setQuantita(rs.getInt("quantita"));
