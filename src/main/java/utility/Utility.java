@@ -15,11 +15,6 @@ public class Utility {
         System.out.println(owner + ": " + text);
     }
 
-    public static void msgErr(String owner, String text) //metodo di messaggio error
-    {
-        System.err.println(owner + ": " + text);
-    }
-
     public static int insertInt(String title){
         System.out.println(title);
         int num = 0;

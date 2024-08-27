@@ -49,7 +49,7 @@ public class PreviewConditionTwo {
                                         cr.updateCategoria(cNew.getId(), cNew);
                                    }
                                    else{
-                                        Utility.msgErr("GEOSTORE", "Categoria non trovata");
+                                        Utility.msgInf("GEOSTORE", "Categoria non trovata");
                                    }
 
                                    break;
@@ -69,12 +69,12 @@ public class PreviewConditionTwo {
                                         }
                                    }
                                    else{
-                                        Utility.msgErr("GEOSTORE", "Categoria non trovata");
+                                        Utility.msgInf("GEOSTORE", "Categoria non trovata");
                                    }
 
                                    break;
                               default:
-                                   Utility.msgErr("GEOSTORE", "Non so cosa hai inserito");
+                                   Utility.msgInf("GEOSTORE", "Non so cosa hai inserito");
                                    break;
                          }
 
@@ -117,10 +117,10 @@ public class PreviewConditionTwo {
                                         Categoria cNew = previewView.maskUpdateCategoria(c, new Categoria());
 
                                         cr.updateCategoriaWithDB(cNew.getId(), cNew);
-                                        Utility.msgErr("GEOSTORE", "Categoria modificata");
+                                        Utility.msgInf("GEOSTORE", "Categoria modificata");
                                    }
                                    else{
-                                        Utility.msgErr("GEOSTORE", "Categoria non trovata");
+                                        Utility.msgInf("GEOSTORE", "Categoria non trovata");
                                    }
 
                                    break;
@@ -140,12 +140,12 @@ public class PreviewConditionTwo {
                                         }
                                    }
                                    else{
-                                        Utility.msgErr("GEOSTORE", "Categoria non trovata");
+                                        Utility.msgInf("GEOSTORE", "Categoria non trovata");
                                    }
 
                                    break;
                               default:
-                                   Utility.msgErr("GEOSTORE", "Non so cosa hai inserito");
+                                   Utility.msgInf("GEOSTORE", "Non so cosa hai inserito");
                                    break;
                          }
 
@@ -161,7 +161,7 @@ public class PreviewConditionTwo {
 
                }
                else{
-                    Utility.msgErr("GEOSTORE", "Non so cosa hai inserito\n\n");
+                    Utility.msgInf("GEOSTORE", "Non so cosa hai inserito\n\n");
                }
           }
           else{

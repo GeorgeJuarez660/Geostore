@@ -21,9 +21,9 @@ public class DBConnection {
             Utility.msgInf("GEOSTORE", "Connessione al db stabilita");
         }
         catch(SQLException e){ //errore connessione
-            Utility.msgErr("GEOSTORE", "Errore alla connessione al db: " + e.getMessage());
+            Utility.msgInf("GEOSTORE", "Errore alla connessione al db: " + e.getMessage());
         } catch (ClassNotFoundException e) { //errore driver
-            Utility.msgErr("GEOSTORE", "Driver non caricato al db: " + e.getMessage());
+            Utility.msgInf("GEOSTORE", "Driver non caricato al db: " + e.getMessage());
         }
 
         return connection;

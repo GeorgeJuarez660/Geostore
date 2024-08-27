@@ -70,11 +70,11 @@ public class AppTerminal {
                                              }
                                         }
                                         else{
-                                             Utility.msgErr("GEOSTORE", "La quantità ordinata supera quella disponibile");
+                                             Utility.msgInf("GEOSTORE", "La quantità ordinata supera quella disponibile");
                                         }
                                    }
                                    else{
-                                        Utility.msgErr("GEOSTORE", "L'oggetto ordinato non è disponibile oppure è inesistente");
+                                        Utility.msgInf("GEOSTORE", "L'oggetto ordinato non è disponibile oppure è inesistente");
                                    }
                                    break;
                               case 4:
@@ -124,7 +124,7 @@ public class AppTerminal {
                                    view.printProdotti(pr.getProdottiDispWithDB());
                                    break;
                               default:
-                                   Utility.msgErr("GEOSTORE", "Non so cosa hai inserito");
+                                   Utility.msgInf("GEOSTORE", "Non so cosa hai inserito");
                                    break;
                          }
 
@@ -139,7 +139,7 @@ public class AppTerminal {
                     }while(flag);
                }
                else{
-                    Utility.msgErr("GEOSTORE", "Accesso negato - email errata\n");
+                    Utility.msgInf("GEOSTORE", "Accesso negato - email errata\n");
                }
 
           }
@@ -192,11 +192,11 @@ public class AppTerminal {
                                         }
                                    }
                                    else{
-                                        Utility.msgErr("GEOSTORE", "La quantità ordinata supera quella disponibile\n");
+                                        Utility.msgInf("GEOSTORE", "La quantità ordinata supera quella disponibile\n");
                                    }
                               }
                               else{
-                                   Utility.msgErr("GEOSTORE", "L'oggetto ordinato non è disponibile oppure è inesistente\n");
+                                   Utility.msgInf("GEOSTORE", "L'oggetto ordinato non è disponibile oppure è inesistente\n");
                               }
                               break;
                          case 6:
@@ -395,7 +395,7 @@ public class AppTerminal {
                               view.printProdotti(pr.getProdottiDispWithDB());
                               break;
                          default:
-                              Utility.msgErr("GEOSTORE", "Non so cosa hai inserito");
+                              Utility.msgInf("GEOSTORE", "Non so cosa hai inserito");
                               break;
                     }
 
@@ -411,7 +411,7 @@ public class AppTerminal {
 
           }
           else{
-               Utility.msgErr("GEOSTORE", "Non so cosa hai inserito\n\n");
+               Utility.msgInf("GEOSTORE", "Non so cosa hai inserito\n\n");
           }
 
           Utility.msgInf("GEOSTORE","***GRAZIE PER AVER PROVATO IL MENU***");

@@ -5,6 +5,7 @@ import src.main.java.utility.Utility;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -15,7 +16,7 @@ public class View {
         System.out.println("***MENU GEOSTORE***\n");
         System.out.println("1) Profilo utente");
         System.out.println("2) Visualizza prodotti");
-        System.out.println("5) Ordina prodotto");
+        System.out.println("3) Ordina prodotto");
         System.out.println("4) Visualizza i tuoi ordini");
         System.out.println("5) Elimina ordine");
         System.out.println("6) Visualizza prodotti per categoria");
@@ -32,18 +33,19 @@ public class View {
         System.out.println("***MENU GEOSTORE***\n");
         System.out.println("1) Profilo utente");
         System.out.println("2) Visualizza utenti");
-        System.out.println("3) Visualizza prodotti");
-        System.out.println("4) Crea/Modifica/Elimina prodotto");
-        System.out.println("5) Ordina prodotto");
-        System.out.println("6) Visualizza i tuoi ordini");
-        System.out.println("7) Visualizza gli ordini");
-        System.out.println("8) Modifica/Elimina ordine");
-        System.out.println("9) Visualizza prodotti per categoria");
-        System.out.println("10) Visualizza prodotti per materia");
-        System.out.println("11) Visualizza prodotti disponibili");
-        System.out.println("12) Crea/Modifica/Elimina categoria");
-        System.out.println("13) Crea/Modifica/Elimina materia");
-        System.out.println("14) Visualizza ordini totali giornalieri");
+        System.out.println("3) Crea/Modifica/Elimina utente");
+        System.out.println("4) Visualizza prodotti");
+        System.out.println("5) Crea/Modifica/Elimina prodotto");
+        System.out.println("6) Ordina prodotto");
+        System.out.println("7) Visualizza i tuoi ordini");
+        System.out.println("8) Visualizza gli ordini");
+        System.out.println("9) Modifica/Elimina ordine");
+        System.out.println("10) Visualizza prodotti per categoria");
+        System.out.println("11) Visualizza prodotti per materia");
+        System.out.println("12) Visualizza prodotti disponibili");
+        System.out.println("13) Crea/Modifica/Elimina categoria");
+        System.out.println("14) Crea/Modifica/Elimina materia");
+        System.out.println("15) Visualizza ordini totali giornalieri");
 
         System.out.println("0) ESCI");
 
@@ -107,11 +109,12 @@ public class View {
     }
 
     public void maskInsertOrdine(Ordine o, Cliente cliente){
-        LocalDateTime localDateTime = LocalDateTime.now();
-        // Estrazione di LocalDate da LocalDateTime
-        LocalDate localDate = localDateTime.toLocalDate();
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        String strDateTime = String.valueOf(currentDateTime);
+        strDateTime = strDateTime.substring(0, 19);
+        strDateTime = strDateTime.replace("T", " ");
 
-        o.setData_ordine(Date.valueOf(localDate));
+        o.setData_ordine(Timestamp.valueOf(strDateTime));
         Stato stato = new Stato();
         stato.setId(1);
         o.setStato(stato);

@@ -50,7 +50,7 @@ public class ClienteRepository implements clientiCRUD {
             preparedStatement.close();
             connection.close();
         }catch(SQLException e){
-            Utility.msgErr("GEOSTORE", "Errore nel getClientiWithDB: " + e.getMessage());
+            Utility.msgInf("GEOSTORE", "Errore nel getClientiWithDB: " + e.getMessage());
         }
 
         return clienti;
@@ -84,7 +84,7 @@ public class ClienteRepository implements clientiCRUD {
             preparedStatement.close();
             connection.close();
         }catch(SQLException e){
-            Utility.msgErr("GEOSTORE", "Errore nel getClienteWithDB: " + e.getMessage());
+            Utility.msgInf("GEOSTORE", "Errore nel getClienteWithDB: " + e.getMessage());
         }
 
         return foundCliente;
@@ -117,7 +117,7 @@ public class ClienteRepository implements clientiCRUD {
             preparedStatement.close();
             connection.close();
         }catch(SQLException e){
-            Utility.msgErr("GEOSTORE", "Errore nel checkUser: " + e.getMessage());
+            Utility.msgInf("GEOSTORE", "Errore nel checkUser: " + e.getMessage());
         }
 
         return foundCliente;

@@ -26,7 +26,7 @@ public class OrdineRepository implements ordiniCRUD {
 
             preparedStatement.setInt(1, o.getCliente().getId());
             preparedStatement.setInt(2, o.getProdotto().getId());
-            preparedStatement.setDate(3, o.getData_ordine());
+            preparedStatement.setString(3, String.valueOf(o.getData_ordine()));
             preparedStatement.setInt(4, o.getQuantita());
             preparedStatement.setBigDecimal(5, o.getPrezzo_unitario());
             preparedStatement.setInt(6, o.getStato().getId());
@@ -35,7 +35,7 @@ public class OrdineRepository implements ordiniCRUD {
             preparedStatement.close();
             connection.close();
         }catch(SQLException e){
-            Utility.msgErr("GEOSTORE", "Errore nel insertOrdineWithDB: " + e.getMessage());
+            Utility.msgInf("GEOSTORE", "Errore nel insertOrdineWithDB: " + e.getMessage());
         }
 
         return num;
@@ -68,7 +68,7 @@ public class OrdineRepository implements ordiniCRUD {
                 Prodotto prodotto = new Prodotto();
                 prodotto.setNome(rs.getString("nome_prodotto"));
                 ord.setProdotto(prodotto);
-                ord.setData_ordine(rs.getDate("data_ordine"));
+                ord.setData_ordine(Timestamp.valueOf(rs.getString("data_ordine")));
                 ord.setQuantita(rs.getInt("quantita"));
                 ord.setPrezzo_unitario(rs.getBigDecimal("prezzo_unitario"));
                 Stato stato = new Stato();
@@ -82,7 +82,7 @@ public class OrdineRepository implements ordiniCRUD {
             preparedStatement.close();
             connection.close();
         }catch(SQLException e){
-            Utility.msgErr("GEOSTORE", "Errore nel getOrdiniWithDB: " + e.getMessage());
+            Utility.msgInf("GEOSTORE", "Errore nel getOrdiniWithDB: " + e.getMessage());
         }
 
         return ordini;
@@ -116,7 +116,7 @@ public class OrdineRepository implements ordiniCRUD {
                 Prodotto prodotto = new Prodotto();
                 prodotto.setNome(rs.getString("nome_prodotto"));
                 ord.setProdotto(prodotto);
-                ord.setData_ordine(rs.getDate("data_ordine"));
+                ord.setData_ordine(Timestamp.valueOf(rs.getString("data_ordine")));
                 ord.setQuantita(rs.getInt("quantita"));
                 ord.setPrezzo_unitario(rs.getBigDecimal("prezzo_unitario"));
                 Stato stato = new Stato();
@@ -130,7 +130,7 @@ public class OrdineRepository implements ordiniCRUD {
             preparedStatement.close();
             connection.close();
         }catch(SQLException e){
-            Utility.msgErr("GEOSTORE", "Errore nel getOrdiniByUserWithDB: " + e.getMessage());
+            Utility.msgInf("GEOSTORE", "Errore nel getOrdiniByUserWithDB: " + e.getMessage());
         }
 
         return ordini;
@@ -163,7 +163,7 @@ public class OrdineRepository implements ordiniCRUD {
                 Prodotto prodotto = new Prodotto();
                 prodotto.setNome(rs.getString("nome_prodotto"));
                 ordine.setProdotto(prodotto);
-                ordine.setData_ordine(rs.getDate("data_ordine"));
+                ordine.setData_ordine(Timestamp.valueOf(rs.getString("data_ordine")));
                 ordine.setQuantita(rs.getInt("quantita"));
                 ordine.setPrezzo_unitario(rs.getBigDecimal("prezzo_unitario"));
                 Stato stato = new Stato();
@@ -175,7 +175,7 @@ public class OrdineRepository implements ordiniCRUD {
             preparedStatement.close();
             connection.close();
         }catch(SQLException e){
-            Utility.msgErr("GEOSTORE", "Errore nel getOrdiniByUserWithDB: " + e.getMessage());
+            Utility.msgInf("GEOSTORE", "Errore nel getOrdiniByUserWithDB: " + e.getMessage());
         }
 
         return ordine;
@@ -208,7 +208,7 @@ public class OrdineRepository implements ordiniCRUD {
                 Prodotto prodotto = new Prodotto();
                 prodotto.setNome(rs.getString("nome_prodotto"));
                 ordine.setProdotto(prodotto);
-                ordine.setData_ordine(rs.getDate("data_ordine"));
+                ordine.setData_ordine(Timestamp.valueOf(rs.getString("data_ordine")));
                 ordine.setQuantita(rs.getInt("quantita"));
                 ordine.setPrezzo_unitario(rs.getBigDecimal("prezzo_unitario"));
                 Stato stato = new Stato();
@@ -220,7 +220,7 @@ public class OrdineRepository implements ordiniCRUD {
             preparedStatement.close();
             connection.close();
         }catch(SQLException e){
-            Utility.msgErr("GEOSTORE", "Errore nel getOrdineWithDB: " + e.getMessage());
+            Utility.msgInf("GEOSTORE", "Errore nel getOrdineWithDB: " + e.getMessage());
         }
 
         return ordine;
@@ -248,7 +248,7 @@ public class OrdineRepository implements ordiniCRUD {
             preparedStatement.close();
             connection.close();
         }catch(SQLException e){
-            Utility.msgErr("GEOSTORE", "Errore nel updateOrdineWithDB: " + e.getMessage());
+            Utility.msgInf("GEOSTORE", "Errore nel updateOrdineWithDB: " + e.getMessage());
         }
 
         return num;
@@ -272,7 +272,7 @@ public class OrdineRepository implements ordiniCRUD {
             preparedStatement.close();
             connection.close();
         }catch(SQLException e){
-            Utility.msgErr("GEOSTORE", "Errore nel deleteOrdineWithDB: " + e.getMessage());
+            Utility.msgInf("GEOSTORE", "Errore nel deleteOrdineWithDB: " + e.getMessage());
         }
     }
 

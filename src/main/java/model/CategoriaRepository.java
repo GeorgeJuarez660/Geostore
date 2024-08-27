@@ -44,7 +44,7 @@ public class CategoriaRepository implements categorieCRUD {
             Utility.msgInf("GEOSTORE", "Categoria modificata");
         }
         else{
-            Utility.msgErr("GEOSTORE", "Errore durante la modifica della categoria");
+            Utility.msgInf("GEOSTORE", "Errore durante la modifica della categoria");
         }
     }
 
@@ -73,7 +73,7 @@ public class CategoriaRepository implements categorieCRUD {
             preparedStatement.close();
             connection.close();
         }catch(SQLException e){
-            Utility.msgErr("GEOSTORE", "Errore nel insertCategoriaWithDB: " + e.getMessage());
+            Utility.msgInf("GEOSTORE", "Errore nel insertCategoriaWithDB: " + e.getMessage());
         }
     }
 
@@ -106,7 +106,7 @@ public class CategoriaRepository implements categorieCRUD {
             preparedStatement.close();
             connection.close();
         }catch(SQLException e){
-            Utility.msgErr("GEOSTORE", "Errore nel getCategorieWithDB: " + e.getMessage());
+            Utility.msgInf("GEOSTORE", "Errore nel getCategorieWithDB: " + e.getMessage());
         }
 
         return categorie;
@@ -139,7 +139,7 @@ public class CategoriaRepository implements categorieCRUD {
             preparedStatement.close();
             connection.close();
         }catch(SQLException e){
-            Utility.msgErr("GEOSTORE", "Errore nel getCategoriaWithDB: " + e.getMessage());
+            Utility.msgInf("GEOSTORE", "Errore nel getCategoriaWithDB: " + e.getMessage());
         }
         return cat;
     }
@@ -164,7 +164,7 @@ public class CategoriaRepository implements categorieCRUD {
             preparedStatement.close();
             connection.close();
         }catch(SQLException e){
-            Utility.msgErr("GEOSTORE", "Errore nel updateCategoriaWithDB: " + e.getMessage());
+            Utility.msgInf("GEOSTORE", "Errore nel updateCategoriaWithDB: " + e.getMessage());
         }
 
         return num;
@@ -188,7 +188,7 @@ public class CategoriaRepository implements categorieCRUD {
             preparedStatement.close();
             connection.close();
         }catch(SQLException e){
-            Utility.msgErr("GEOSTORE", "Errore nel deleteCategoriaWithDB: " + e.getMessage());
+            Utility.msgInf("GEOSTORE", "Errore nel deleteCategoriaWithDB: " + e.getMessage());
         }
     }
 

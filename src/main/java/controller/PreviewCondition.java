@@ -29,7 +29,7 @@ public class PreviewCondition {
                          Utility.msgInf("PROVA", "per cui il numero è: " + num);
                          break;
                     default:
-                         Utility.msgErr("PROVA", "non so cosa hai inserito");
+                         Utility.msgInf("PROVA", "non so cosa hai inserito");
                          break;
                }
 

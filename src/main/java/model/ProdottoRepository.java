@@ -60,7 +60,7 @@ public class ProdottoRepository implements prodottiCRUD {
             preparedStatement.close();
             connection.close();
         }catch(SQLException e){
-            Utility.msgErr("GEOSTORE", "Errore nel getProdottiWithDB: " + e.getMessage());
+            Utility.msgInf("GEOSTORE", "Errore nel getProdottiWithDB: " + e.getMessage());
         }
 
         return prodotti;
@@ -107,7 +107,7 @@ public class ProdottoRepository implements prodottiCRUD {
             preparedStatement.close();
             connection.close();
         }catch(SQLException e){
-            Utility.msgErr("GEOSTORE", "Errore nel getProdottiDispWithDB: " + e.getMessage());
+            Utility.msgInf("GEOSTORE", "Errore nel getProdottiDispWithDB: " + e.getMessage());
         }
 
         return prodotti;
@@ -155,7 +155,7 @@ public class ProdottoRepository implements prodottiCRUD {
             preparedStatement.close();
             connection.close();
         }catch(SQLException e){
-            Utility.msgErr("GEOSTORE", "Errore nel getProdottiViaCategoriaWithDB: " + e.getMessage());
+            Utility.msgInf("GEOSTORE", "Errore nel getProdottiViaCategoriaWithDB: " + e.getMessage());
         }
 
         return prodotti;
@@ -203,7 +203,7 @@ public class ProdottoRepository implements prodottiCRUD {
             preparedStatement.close();
             connection.close();
         }catch(SQLException e){
-            Utility.msgErr("GEOSTORE", "Errore nel getProdottiViaMateriaWithDB: " + e.getMessage());
+            Utility.msgInf("GEOSTORE", "Errore nel getProdottiViaMateriaWithDB: " + e.getMessage());
         }
 
         return prodotti;
@@ -243,7 +243,7 @@ public class ProdottoRepository implements prodottiCRUD {
             preparedStatement.close();
             connection.close();
         }catch(SQLException e){
-            Utility.msgErr("GEOSTORE", "Errore nel getProdottoWithDB: " + e.getMessage());
+            Utility.msgInf("GEOSTORE", "Errore nel getProdottoWithDB: " + e.getMessage());
         }
 
         return prodotto;
@@ -286,7 +286,7 @@ public class ProdottoRepository implements prodottiCRUD {
             preparedStatement.close();
             connection.close();
         }catch(SQLException e){
-            Utility.msgErr("GEOSTORE", "Errore nel getProdottoDispWithDB: " + e.getMessage());
+            Utility.msgInf("GEOSTORE", "Errore nel getProdottoDispWithDB: " + e.getMessage());
         }
 
         return prodotto;

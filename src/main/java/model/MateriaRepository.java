@@ -35,7 +35,7 @@ public class MateriaRepository implements materieCRUD {
             preparedStatement.close();
             connection.close();
         }catch(SQLException e){
-            Utility.msgErr("GEOSTORE", "Errore nel insertMateriaWithDB: " + e.getMessage());
+            Utility.msgInf("GEOSTORE", "Errore nel insertMateriaWithDB: " + e.getMessage());
         }
     }
 
@@ -68,7 +68,7 @@ public class MateriaRepository implements materieCRUD {
             preparedStatement.close();
             connection.close();
         }catch(SQLException e){
-            Utility.msgErr("GEOSTORE", "Errore nel getMaterieWithDB: " + e.getMessage());
+            Utility.msgInf("GEOSTORE", "Errore nel getMaterieWithDB: " + e.getMessage());
         }
 
         return materie;
@@ -101,7 +101,7 @@ public class MateriaRepository implements materieCRUD {
             preparedStatement.close();
             connection.close();
         }catch(SQLException e){
-            Utility.msgErr("GEOSTORE", "Errore nel getMateriaWithDB: " + e.getMessage());
+            Utility.msgInf("GEOSTORE", "Errore nel getMateriaWithDB: " + e.getMessage());
         }
         return mat;
     }
@@ -126,7 +126,7 @@ public class MateriaRepository implements materieCRUD {
             preparedStatement.close();
             connection.close();
         }catch(SQLException e){
-            Utility.msgErr("GEOSTORE", "Errore nel updateMateriaWithDB: " + e.getMessage());
+            Utility.msgInf("GEOSTORE", "Errore nel updateMateriaWithDB: " + e.getMessage());
         }
 
         return num;
@@ -150,7 +150,7 @@ public class MateriaRepository implements materieCRUD {
             preparedStatement.close();
             connection.close();
         }catch(SQLException e){
-            Utility.msgErr("GEOSTORE", "Errore nel deleteMateriaWithDB: " + e.getMessage());
+            Utility.msgInf("GEOSTORE", "Errore nel deleteMateriaWithDB: " + e.getMessage());
         }
     }
 
