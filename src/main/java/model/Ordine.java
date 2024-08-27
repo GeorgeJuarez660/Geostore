@@ -2,14 +2,13 @@ package src.main.java.model;
 
 import java.math.BigDecimal;
 import java.sql.Date;
-import java.time.OffsetDateTime;
 import java.util.Objects;
 
 public class Ordine {
     private Integer id = 0;
     private static Integer count=0;
     private Cliente cliente;
-    private Oggetto oggetto;
+    private Prodotto prodotto;
     private Date data_ordine;
     private Integer quantita;
     private BigDecimal prezzo_unitario;
@@ -36,12 +35,12 @@ public class Ordine {
         this.cliente = cliente;
     }
 
-    public Oggetto getOggetto() {
-        return oggetto;
+    public Prodotto getProdotto() {
+        return prodotto;
     }
 
-    public void setOggetto(Oggetto oggetto) {
-        this.oggetto = oggetto;
+    public void setProdotto(Prodotto prodotto) {
+        this.prodotto = prodotto;
     }
 
     public Integer getQuantita() {
@@ -84,18 +83,18 @@ public class Ordine {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Ordine ordine1 = (Ordine) o;
-        return Objects.equals(id, ordine1.id) && Objects.equals(cliente, ordine1.cliente) && Objects.equals(oggetto, ordine1.oggetto) && Objects.equals(quantita, ordine1.quantita) && Objects.equals(prezzo_unitario, ordine1.prezzo_unitario) && Objects.equals(data_ordine, ordine1.data_ordine) && Objects.equals(stato, ordine1.stato);
+        return Objects.equals(id, ordine1.id) && Objects.equals(cliente, ordine1.cliente) && Objects.equals(prodotto, ordine1.prodotto) && Objects.equals(quantita, ordine1.quantita) && Objects.equals(prezzo_unitario, ordine1.prezzo_unitario) && Objects.equals(data_ordine, ordine1.data_ordine) && Objects.equals(stato, ordine1.stato);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, cliente, oggetto, quantita, prezzo_unitario, data_ordine, stato);
+        return Objects.hash(id, cliente, prodotto, quantita, prezzo_unitario, data_ordine, stato);
     }
 
-    public Ordine(Integer id, Cliente cliente, Oggetto oggetto, Integer quantita, BigDecimal prezzo_unitario, Date data_ordine, Stato stato) {
+    public Ordine(Integer id, Cliente cliente, Prodotto prodotto, Integer quantita, BigDecimal prezzo_unitario, Date data_ordine, Stato stato) {
         this.id = id;
         this.cliente = cliente;
-        this.oggetto = oggetto;
+        this.prodotto = prodotto;
         this.quantita = quantita;
         this.prezzo_unitario = prezzo_unitario;
         this.data_ordine = data_ordine;
@@ -107,7 +106,7 @@ public class Ordine {
         return "Ordine{" +
                 "id=" + id +
                 ", cliente='" + cliente + '\'' +
-                ", oggetto='" + oggetto + '\'' +
+                ", prodotto='" + prodotto + '\'' +
                 ", quantita=" + quantita +
                 ", prezzo_unitario=" + prezzo_unitario +
                 ", data_ordine=" + data_ordine +

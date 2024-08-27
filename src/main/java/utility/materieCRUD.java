@@ -13,7 +13,7 @@ public interface materieCRUD {
     public void insertMateriaWithDB(Integer id, Materia m);
     public HashMap<Integer, Materia> getMaterieWithDB();
     public Materia getMateriaWithDB(String nome);
-    public void updateMateriaWithDB(Integer id, Materia newM);
+    public int updateMateriaWithDB(Integer id, Materia newM);
     public void deleteMateriaWithDB(Integer id);
 
 }

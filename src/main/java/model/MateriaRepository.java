@@ -31,7 +31,6 @@ public class MateriaRepository implements materieCRUD {
 
             preparedStatement.setString(1, m.getNome());
             preparedStatement.executeUpdate();
-            Utility.msgInf("GEOSTORE", "Nuova materia aggiunta");
             //chiudi la connessione
             preparedStatement.close();
             connection.close();
@@ -108,10 +107,11 @@ public class MateriaRepository implements materieCRUD {
     }
 
     @Override
-    public void updateMateriaWithDB(Integer id, Materia newM) {
+    public int updateMateriaWithDB(Integer id, Materia newM) {
         String sql = "UPDATE `materie` SET `nome` = ? WHERE id = ? ";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
+        int num = 0;
 
         try{
             //Connessione al db
@@ -121,13 +121,15 @@ public class MateriaRepository implements materieCRUD {
 
             preparedStatement.setString(1, newM.getNome());
             preparedStatement.setInt(2, id);
-            preparedStatement.executeUpdate();
+            num = preparedStatement.executeUpdate();
             //chiudi la connessione
             preparedStatement.close();
             connection.close();
         }catch(SQLException e){
             Utility.msgErr("GEOSTORE", "Errore nel updateMateriaWithDB: " + e.getMessage());
         }
+
+        return num;
     }
 
     @Override

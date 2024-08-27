@@ -3,7 +3,6 @@ package src.main.java.model;
 import src.main.java.utility.DBConnection;
 import src.main.java.utility.Utility;
 import src.main.java.utility.clientiCRUD;
-import src.main.java.utility.oggettiCRUD;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

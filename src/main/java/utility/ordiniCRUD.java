@@ -1,6 +1,5 @@
 package src.main.java.utility;
 
-import src.main.java.model.Oggetto;
 import src.main.java.model.Ordine;
 
 import java.util.HashMap;

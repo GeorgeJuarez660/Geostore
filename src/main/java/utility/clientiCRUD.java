@@ -1,7 +1,6 @@
 package src.main.java.utility;
 
 import src.main.java.model.Cliente;
-import src.main.java.model.Oggetto;
 
 import java.util.HashMap;
 

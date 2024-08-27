@@ -19,7 +19,7 @@ public interface categorieCRUD {
     public void insertCategoriaWithDB(Integer id, Categoria c);
     public HashMap<Integer, Categoria> getCategorieWithDB();
     public Categoria getCategoriaWithDB(String nome);
-    public void updateCategoriaWithDB(Integer id, Categoria newC);
+    public int updateCategoriaWithDB(Integer id, Categoria newC);
     public void deleteCategoriaWithDB(Integer id);
 
 }

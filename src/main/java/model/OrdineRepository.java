@@ -2,12 +2,9 @@ package src.main.java.model;
 
 import src.main.java.utility.DBConnection;
 import src.main.java.utility.Utility;
-import src.main.java.utility.oggettiCRUD;
 import src.main.java.utility.ordiniCRUD;
 
 import java.sql.*;
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 import java.util.HashMap;
 
 public class OrdineRepository implements ordiniCRUD {
@@ -28,7 +25,7 @@ public class OrdineRepository implements ordiniCRUD {
             //int num = 0;
 
             preparedStatement.setInt(1, o.getCliente().getId());
-            preparedStatement.setInt(2, o.getOggetto().getId());
+            preparedStatement.setInt(2, o.getProdotto().getId());
             preparedStatement.setDate(3, o.getData_ordine());
             preparedStatement.setInt(4, o.getQuantita());
             preparedStatement.setBigDecimal(5, o.getPrezzo_unitario());
@@ -68,9 +65,9 @@ public class OrdineRepository implements ordiniCRUD {
                 cliente.setNome(rs.getString("nome_cliente"));
                 cliente.setCognome(rs.getString("cognome_cliente"));
                 ord.setCliente(cliente);
-                Oggetto oggetto = new Oggetto();
-                oggetto.setNome(rs.getString("nome_oggetto"));
-                ord.setOggetto(oggetto);
+                Prodotto prodotto = new Prodotto();
+                prodotto.setNome(rs.getString("nome_oggetto"));
+                ord.setProdotto(prodotto);
                 ord.setData_ordine(rs.getDate("data_ordine"));
                 ord.setQuantita(rs.getInt("quantita"));
                 ord.setPrezzo_unitario(rs.getBigDecimal("prezzo_unitario"));
@@ -116,9 +113,9 @@ public class OrdineRepository implements ordiniCRUD {
                 cliente.setNome(rs.getString("nome_cliente"));
                 cliente.setCognome(rs.getString("cognome_cliente"));
                 ord.setCliente(cliente);
-                Oggetto oggetto = new Oggetto();
-                oggetto.setNome(rs.getString("nome_oggetto"));
-                ord.setOggetto(oggetto);
+                Prodotto prodotto = new Prodotto();
+                prodotto.setNome(rs.getString("nome_oggetto"));
+                ord.setProdotto(prodotto);
                 ord.setData_ordine(rs.getDate("data_ordine"));
                 ord.setQuantita(rs.getInt("quantita"));
                 ord.setPrezzo_unitario(rs.getBigDecimal("prezzo_unitario"));
@@ -163,9 +160,9 @@ public class OrdineRepository implements ordiniCRUD {
                 cliente.setNome(rs.getString("nome_cliente"));
                 cliente.setCognome(rs.getString("cognome_cliente"));
                 ordine.setCliente(cliente);
-                Oggetto oggetto = new Oggetto();
-                oggetto.setNome(rs.getString("nome_oggetto"));
-                ordine.setOggetto(oggetto);
+                Prodotto prodotto = new Prodotto();
+                prodotto.setNome(rs.getString("nome_oggetto"));
+                ordine.setProdotto(prodotto);
                 ordine.setData_ordine(rs.getDate("data_ordine"));
                 ordine.setQuantita(rs.getInt("quantita"));
                 ordine.setPrezzo_unitario(rs.getBigDecimal("prezzo_unitario"));
@@ -208,9 +205,9 @@ public class OrdineRepository implements ordiniCRUD {
                 cliente.setNome(rs.getString("nome_cliente"));
                 cliente.setCognome(rs.getString("cognome_cliente"));
                 ordine.setCliente(cliente);
-                Oggetto oggetto = new Oggetto();
-                oggetto.setNome(rs.getString("nome_oggetto"));
-                ordine.setOggetto(oggetto);
+                Prodotto prodotto = new Prodotto();
+                prodotto.setNome(rs.getString("nome_oggetto"));
+                ordine.setProdotto(prodotto);
                 ordine.setData_ordine(rs.getDate("data_ordine"));
                 ordine.setQuantita(rs.getInt("quantita"));
                 ordine.setPrezzo_unitario(rs.getBigDecimal("prezzo_unitario"));

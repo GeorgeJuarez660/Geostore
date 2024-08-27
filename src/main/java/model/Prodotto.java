@@ -3,7 +3,7 @@ package src.main.java.model;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-public class Oggetto {
+public class Prodotto {
     private Integer id = 0;
     private static Integer count=0;
     private String nome;
@@ -78,8 +78,8 @@ public class Oggetto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Oggetto oggetto = (Oggetto) o;
-        return Objects.equals(id, oggetto.id) && Objects.equals(nome, oggetto.nome) && Objects.equals(prezzo, oggetto.prezzo) && Objects.equals(disponibilita, oggetto.disponibilita) && Objects.equals(materia, oggetto.materia) && Objects.equals(categoria, oggetto.categoria) && Objects.equals(quantita_disp, oggetto.quantita_disp);
+        Prodotto prodotto = (Prodotto) o;
+        return Objects.equals(id, prodotto.id) && Objects.equals(nome, prodotto.nome) && Objects.equals(prezzo, prodotto.prezzo) && Objects.equals(disponibilita, prodotto.disponibilita) && Objects.equals(materia, prodotto.materia) && Objects.equals(categoria, prodotto.categoria) && Objects.equals(quantita_disp, prodotto.quantita_disp);
     }
 
     @Override
@@ -87,10 +87,10 @@ public class Oggetto {
         return Objects.hash(id, nome, prezzo, disponibilita, materia, categoria, quantita_disp);
     }
 
-    public Oggetto() {
+    public Prodotto() {
     }
 
-    public Oggetto(Integer id, String nome, BigDecimal prezzo, Disponibilita disponibilita, Materia materia, Categoria categoria, Integer quantita_disp) {
+    public Prodotto(Integer id, String nome, BigDecimal prezzo, Disponibilita disponibilita, Materia materia, Categoria categoria, Integer quantita_disp) {
         this.id = id;
         this.nome = nome;
         this.prezzo = prezzo;

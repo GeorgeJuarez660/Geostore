@@ -69,7 +69,6 @@ public class CategoriaRepository implements categorieCRUD {
 
             preparedStatement.setString(1, c.getNome());
             preparedStatement.executeUpdate();
-            Utility.msgInf("GEOSTORE", "Nuova categoria aggiunta");
             //chiudi la connessione
             preparedStatement.close();
             connection.close();
@@ -146,10 +145,11 @@ public class CategoriaRepository implements categorieCRUD {
     }
 
     @Override
-    public void updateCategoriaWithDB(Integer id, Categoria newC) {
+    public int updateCategoriaWithDB(Integer id, Categoria newC) {
         String sql = "UPDATE `categorie` SET `nome` = ? WHERE id = ? ";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
+        int num = 0;
 
         try{
             //Connessione al db
@@ -159,13 +159,15 @@ public class CategoriaRepository implements categorieCRUD {
 
             preparedStatement.setString(1, newC.getNome());
             preparedStatement.setInt(2, id);
-            preparedStatement.executeUpdate();
+            num = preparedStatement.executeUpdate();
             //chiudi la connessione
             preparedStatement.close();
             connection.close();
         }catch(SQLException e){
             Utility.msgErr("GEOSTORE", "Errore nel updateCategoriaWithDB: " + e.getMessage());
         }
+
+        return num;
     }
 
     @Override
