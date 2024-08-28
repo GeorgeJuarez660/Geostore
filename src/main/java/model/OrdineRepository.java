@@ -277,10 +277,10 @@ public class OrdineRepository implements ordiniCRUD {
     }
 
     public Ordine getOrdineTotGiorWithDB(Cliente c, String data) {
-        String sql = "SELECT c.nome, c.cognome, o.data_ordine, sum(o.quantita*o.prezzo_unitario) AS tot_ord_gior FROM ordini o JOIN clienti c ON(o.cliente_id =c.id )\n" +
+        String sql = "SELECT c.nome as nome_cliente, c.cognome as cognome_cliente, o.data_ordine, sum(o.quantita*o.prezzo_unitario) AS tot_ord_gior FROM ordini o JOIN clienti c ON(o.cliente_id =c.id )\n" +
                 "JOIN prodotti p ON(o.prodotto_id =p.id )\n" +
                 "JOIN stato s ON(o.stato_id =s.id )\n" +
-                "WHERE c.nome = ? AND c.cognome = ? AND o.data_ordine LIKE ?%\n" +
+                "WHERE c.nome = ? AND c.cognome = ? AND o.data_ordine LIKE ?\n" +
                 "GROUP BY o.data_ordine ";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -293,7 +293,7 @@ public class OrdineRepository implements ordiniCRUD {
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, c.getNome());
             preparedStatement.setString(2, c.getCognome());
-            preparedStatement.setString(3, data);
+            preparedStatement.setString(3, data + "%");
             rs = preparedStatement.executeQuery();
 
             while(rs.next()){

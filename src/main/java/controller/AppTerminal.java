@@ -389,7 +389,8 @@ public class AppTerminal {
                               break;
                          case 14:
                               Utility.msgInf("GEOSTORE", "Ordini totali giornalieri\n\n");
-                              view.printProdotti(pr.getProdottiDispWithDB());
+                              String chooseDate = Utility.insertString("Inserisci la data in formato yyyy-mm-dd");
+                              view.printOrdiniTotGior(odr.getOrdineTotGiorWithDB(c, chooseDate));
                               break;
                          default:
                               Utility.msgInf("GEOSTORE", "Non so cosa hai inserito");

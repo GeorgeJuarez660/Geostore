@@ -368,9 +368,9 @@ public class View {
     }
 
     public void printOrdiniTotGior(Ordine ordine){
-        System.out.println("***ORDINI TOTALI EFFETTUATI NEL GIORNO " + ordine.getData_ordine() + " SU GEOSTORE***\n\n");
+        System.out.println("***ORDINI TOTALI EFFETTUATI NEL GIORNO " + ordine.getData_ordine().toString().substring(0, 10) + " SU GEOSTORE***\n\n");
 
-        System.out.println("Nome cliente: " + ordine.getCliente().getNome() + "\nCognome cliente: " + ordine.getCliente().getCognome() + ", \nData ordine: " + ordine.getData_ordine()+ ", \nPrezzo totale speso: " + ordine.getPrezzo_unitario());
+        System.out.println("Nome cliente: " + ordine.getCliente().getNome() + "\nCognome cliente: " + ordine.getCliente().getCognome() + ", \nData ordine totale: " + ordine.getData_ordine().toString().substring(0, 10) + ", \nPrezzo totale speso: " + ordine.getPrezzo_unitario());
     }
 
     public void printCategoria(Categoria categoria){

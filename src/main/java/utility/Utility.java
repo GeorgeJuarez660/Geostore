@@ -59,32 +59,6 @@ public class Utility {
 
     }
 
-    public static java.sql.Date convertDate(String date){
-        // La stringa da convertire
-        String dateString = date;
-
-        // Specifica il formato della stringa (deve corrispondere al formato della stringa in input)
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
-        try {
-            // Parsing della stringa in un oggetto java.util.Date
-            Date parsedDate = dateFormat.parse(dateString);
-
-            // Conversione dell'oggetto java.util.Date in un oggetto java.sql.Date
-            java.sql.Date sqlDate = new java.sql.Date(parsedDate.getTime());
-
-            // Stampa del risultato
-            System.out.println("java.sql.Date: " + sqlDate);
-
-            return sqlDate;
-        } catch (ParseException e) {
-            // Gestione delle eccezioni nel caso la stringa non sia nel formato corretto
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
     public static String insertString(String title){
         System.out.println(title);
         String word = input.nextLine();
