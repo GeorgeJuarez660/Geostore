@@ -367,13 +367,10 @@ public class View {
         }
     }
 
-    public void printOrdiniTotGior(HashMap<Integer, Ordine> ordini){
-        System.out.println("***ORDINI TOTALI GIORNALIERI EFFETTUATI NEL GEOSTORE***\n\n");
+    public void printOrdiniTotGior(Ordine ordine){
+        System.out.println("***ORDINI TOTALI EFFETTUATI NEL GIORNO " + ordine.getData_ordine() + " SU GEOSTORE***\n\n");
 
-        for(Ordine ordine : ordini.values()){
-            //System.out.println("ID: " + oggetto.getId() + ", \nNome: " + oggetto.getNome() + ", \nPrezzo: " + oggetto.getPrezzo()+ ", \nDisponibilità: " + oggetto.getDisponibilita().getCode() + ", \nCategoria: " + oggetto.getCategoria().getNome() + ", \nMateria: " + oggetto.getMateria().getNome() + ", \nQuantità disponibile: " + oggetto.getQuantita_disp());
-            System.out.println("-----------------------------------------------------------");
-        }
+        System.out.println("Nome cliente: " + ordine.getCliente().getNome() + "\nCognome cliente: " + ordine.getCliente().getCognome() + ", \nData ordine: " + ordine.getData_ordine()+ ", \nPrezzo totale speso: " + ordine.getPrezzo_unitario());
     }
 
     public void printCategoria(Categoria categoria){

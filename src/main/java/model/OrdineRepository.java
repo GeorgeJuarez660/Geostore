@@ -136,7 +136,7 @@ public class OrdineRepository implements ordiniCRUD {
         return ordini;
     }
 
-    public Ordine getOrdineByUserAndObjNameWithDB(String nomeCliente, Integer idOrdine) {
+    public Ordine getOrdineByUserAndProdNameWithDB(String nomeCliente, Integer idOrdine) {
         String sql = "SELECT o.id, c.nome AS nome_cliente, c.cognome AS cognome_cliente, og.nome AS nome_prodotto, o.data_ordine, o.quantita, o.prezzo_unitario, s.code AS stato FROM ordini o JOIN clienti c ON(o.cliente_id =c.id )\n" +
                 "JOIN prodotti og ON(o.prodotto_id =og.id )\n" +
                 "JOIN stato s ON(o.stato_id =s.id )\n" +
@@ -274,6 +274,45 @@ public class OrdineRepository implements ordiniCRUD {
         }catch(SQLException e){
             Utility.msgInf("GEOSTORE", "Errore nel deleteOrdineWithDB: " + e.getMessage());
         }
+    }
+
+    public Ordine getOrdineTotGiorWithDB(Cliente c, String data) {
+        String sql = "SELECT c.nome, c.cognome, o.data_ordine, sum(o.quantita*o.prezzo_unitario) AS tot_ord_gior FROM ordini o JOIN clienti c ON(o.cliente_id =c.id )\n" +
+                "JOIN prodotti p ON(o.prodotto_id =p.id )\n" +
+                "JOIN stato s ON(o.stato_id =s.id )\n" +
+                "WHERE c.nome = ? AND c.cognome = ? AND o.data_ordine LIKE ?%\n" +
+                "GROUP BY o.data_ordine ";
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet rs = null;
+        Ordine ordine = new Ordine();
+
+        try{
+            //Connessione al db
+            connection = DBConnection.sqlConnect();
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, c.getNome());
+            preparedStatement.setString(2, c.getCognome());
+            preparedStatement.setString(3, data);
+            rs = preparedStatement.executeQuery();
+
+            while(rs.next()){
+                Cliente cliente = new Cliente();
+                cliente.setNome(rs.getString("nome_cliente"));
+                cliente.setCognome(rs.getString("cognome_cliente"));
+                ordine.setCliente(cliente);
+                ordine.setData_ordine(Timestamp.valueOf(rs.getString("data_ordine")));
+                ordine.setPrezzo_unitario(rs.getBigDecimal("tot_ord_gior"));
+            }
+            //chiudi la connessione
+            rs.close();
+            preparedStatement.close();
+            connection.close();
+        }catch(SQLException e){
+            Utility.msgInf("GEOSTORE", "Errore nel getOrdineTotGiorWithDB: " + e.getMessage());
+        }
+
+        return ordine;
     }
 
     //metodi override per operazioni CRUD

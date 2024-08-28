@@ -4,8 +4,6 @@ import src.main.java.model.*;
 import src.main.java.utility.Utility;
 import src.main.java.view.View;
 
-import java.sql.Date;
-
 public class AppTerminal {
 
      public static void main(String[] args){
@@ -85,7 +83,7 @@ public class AppTerminal {
                                    Utility.msgInf("GEOSTORE", "Eliminazione ordine\n\n");
                                    view.printOrdini(odr.getOrdiniByUserWithDB(c.getNome()));
 
-                                   o = odr.getOrdineByUserAndObjNameWithDB(c.getNome(), Utility.insertInt("Inserisci l'id ordine"));
+                                   o = odr.getOrdineByUserAndProdNameWithDB(c.getNome(), Utility.insertInt("Inserisci l'id ordine"));
 
                                    if(o != null && o.getProdotto() != null && o.getProdotto().getNome() != null){
                                         Utility.msgInf("GEOSTORE", "Ordine trovato\n");
@@ -120,8 +118,7 @@ public class AppTerminal {
                               case 9:
                                    Utility.msgInf("GEOSTORE", "Ordini totali giornalieri\n\n");
                                    String chooseDate = Utility.insertString("Inserisci la data in formato yyyy-mm-dd");
-                                   Date date = Utility.convertDate(chooseDate);
-                                   view.printProdotti(pr.getProdottiDispWithDB());
+                                   view.printOrdiniTotGior(odr.getOrdineTotGiorWithDB(c, chooseDate));
                                    break;
                               default:
                                    Utility.msgInf("GEOSTORE", "Non so cosa hai inserito");
