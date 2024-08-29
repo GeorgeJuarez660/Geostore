@@ -95,7 +95,8 @@ public class ClienteRepository implements clientiCRUD {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet rs = null;
-        Cliente foundCliente = new Cliente();
+        Cliente foundCliente = null;
+        Cliente utente = null;
         try{
             //Connessione al db
             connection = DBConnection.sqlConnect();
@@ -104,13 +105,35 @@ public class ClienteRepository implements clientiCRUD {
             rs = preparedStatement.executeQuery();
 
             while(rs.next()){
-                foundCliente.setId(rs.getInt("id"));
-                foundCliente.setNome(rs.getString("nome"));
-                foundCliente.setCognome(rs.getString("cognome"));
-                foundCliente.setEmail(rs.getString("email"));
-                foundCliente.setIndirizzo(rs.getString("indirizzo"));
-                foundCliente.setTelefono(rs.getString("telefono"));
+                String codeAdmin = rs.getString("codice_admin");
 
+                if(codeAdmin != null) {
+                    foundCliente = new Amministratore();
+                }
+                else {
+                    foundCliente = new Cliente();
+                }
+
+                if(foundCliente instanceof Amministratore){
+                    Amministratore foundAdmin = (Amministratore) foundCliente;
+                    foundAdmin.setId(rs.getInt("id"));
+                    foundAdmin.setNome(rs.getString("nome"));
+                    foundAdmin.setCognome(rs.getString("cognome"));
+                    foundAdmin.setEmail(rs.getString("email"));
+                    foundAdmin.setIndirizzo(rs.getString("indirizzo"));
+                    foundAdmin.setTelefono(rs.getString("telefono"));
+                    foundAdmin.setCodeAdmin(codeAdmin);
+                    utente = foundAdmin;
+                }
+                else{
+                    foundCliente.setId(rs.getInt("id"));
+                    foundCliente.setNome(rs.getString("nome"));
+                    foundCliente.setCognome(rs.getString("cognome"));
+                    foundCliente.setEmail(rs.getString("email"));
+                    foundCliente.setIndirizzo(rs.getString("indirizzo"));
+                    foundCliente.setTelefono(rs.getString("telefono"));
+                    utente = foundCliente;
+                }
             }
             //chiudi la connessione
             rs.close();
@@ -120,10 +143,10 @@ public class ClienteRepository implements clientiCRUD {
             Utility.msgInf("GEOSTORE", "Errore nel getClienteWithDB: " + e.getMessage());
         }
 
-        return foundCliente;
+        return utente;
     }
 
-    public Cliente checkUser(String email) {
+    public Cliente checkCliente(String email) {
         String sql = "select * from clienti c where c.email = ? ";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -156,9 +179,43 @@ public class ClienteRepository implements clientiCRUD {
         return foundCliente;
     }
 
+    public Cliente checkAdmin(String email, String codeAdmin) {
+        String sql = "select * from clienti c where c.email = ? and c.codice_admin = ? ";
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet rs = null;
+        Amministratore foundCliente = new Amministratore();
+        try{
+            //Connessione al db
+            connection = DBConnection.sqlConnect();
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, email);
+            preparedStatement.setString(2, codeAdmin);
+            rs = preparedStatement.executeQuery();
+
+            while(rs.next()){
+                foundCliente.setId(rs.getInt("id"));
+                foundCliente.setNome(rs.getString("nome"));
+                foundCliente.setCognome(rs.getString("cognome"));
+                foundCliente.setEmail(rs.getString("email"));
+                foundCliente.setIndirizzo(rs.getString("indirizzo"));
+                foundCliente.setTelefono(rs.getString("telefono"));
+                foundCliente.setCodeAdmin(rs.getString("codice_admin"));
+            }
+            //chiudi la connessione
+            rs.close();
+            preparedStatement.close();
+            connection.close();
+        }catch(SQLException e){
+            Utility.msgInf("GEOSTORE", "Errore nel checkUser: " + e.getMessage());
+        }
+
+        return foundCliente;
+    }
+
     @Override
     public int updateClienteWithDB(Integer id, Cliente newC) {
-        String sql = "UPDATE `clienti` SET `nome` = ?, `cognome` = ?, `email` = ?, `email` = ?, `indirizzo` = ?, `telefono` = ?, `codice_admin` = ? WHERE id = ? ";
+        String sql = "UPDATE `clienti` SET `nome` = ?, `cognome` = ?, `email` = ?, `telefono` = ?, `indirizzo` = ?, `codice_admin` = ? WHERE id = ? ";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         int num = 0;
@@ -183,12 +240,14 @@ public class ClienteRepository implements clientiCRUD {
                 preparedStatement.setString(6, null);
             }
 
+            preparedStatement.setInt(7, id);
+
             num = preparedStatement.executeUpdate();
             //chiudi la connessione
             preparedStatement.close();
             connection.close();
         }catch(SQLException e){
-            Utility.msgInf("GEOSTORE", "Errore nel insertClienteWithDB: " + e.getMessage());
+            Utility.msgInf("GEOSTORE", "Errore nel updateClienteWithDB: " + e.getMessage());
         }
 
         return num;
@@ -196,7 +255,26 @@ public class ClienteRepository implements clientiCRUD {
 
     @Override
     public int deleteClienteWithDB(Integer id) {
+        String sql = "DELETE FROM `clienti` WHERE id = ? ";
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        int num = 0;
 
+        try{
+            //Connessione al db
+            connection = DBConnection.sqlConnect();
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, id);
+
+            num = preparedStatement.executeUpdate();
+            //chiudi la connessione
+            preparedStatement.close();
+            connection.close();
+        }catch(SQLException e){
+            Utility.msgInf("GEOSTORE", "Errore nel deleteClienteWithDB: " + e.getMessage());
+        }
+
+        return num;
     }
 
     //metodi override per operazioni CRUD
