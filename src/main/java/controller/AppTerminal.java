@@ -112,7 +112,7 @@ public class AppTerminal {
                                    view.printProdotti(pr.getProdottiViaMateriaWithDB(m.getNome()));
                                    break;
                               case 8:
-                                   Utility.msgInf("GEOSTORE", "Elenco prodotti dispobili\n\n");
+                                   Utility.msgInf("GEOSTORE", "Elenco prodotti disponibili\n\n");
                                    view.printProdotti(pr.getProdottiDispWithDB());
                                    break;
                               case 9:
@@ -380,7 +380,7 @@ public class AppTerminal {
                                    view.printProdotti(pr.getProdottiViaMateriaWithDB(m.getNome()));
                                    break;
                               case 12:
-                                   Utility.msgInf("GEOSTORE", "Elenco prodotti dispobili\n\n");
+                                   Utility.msgInf("GEOSTORE", "Elenco prodotti disponibili\n\n");
                                    view.printProdotti(pr.getProdottiDispWithDB());
                                    break;
                               case 13:
