@@ -15,8 +15,41 @@ public class ClienteRepository implements clientiCRUD {
     private HashMap<Integer, Cliente> clienti = new HashMap<>();
 
     @Override
-    public void insertClienteWithDB(Integer id, Cliente c) {
+    public int insertClienteWithDB(Integer id, Cliente c) {
+        String sql = "INSERT INTO `clienti`(`nome`, `cognome`,`email`,`telefono`,`indirizzo`, `indirizzo`, `codice_admin`) VALUES (?, ?, ?, ?, ?, ?) ";
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        int num = 0;
 
+        try{
+            //Connessione al db
+            connection = DBConnection.sqlConnect();
+            preparedStatement = connection.prepareStatement(sql);
+            //int num = 0;
+
+            preparedStatement.setString(1, c.getNome());
+            preparedStatement.setString(2, c.getCognome());
+            preparedStatement.setString(3, c.getEmail());
+            preparedStatement.setString(4, c.getTelefono());
+            preparedStatement.setString(5, c.getIndirizzo());
+
+            if(c instanceof Amministratore){
+                Amministratore a = (Amministratore) c;
+                preparedStatement.setString(6, a.getCodeAdmin());
+            }
+            else{
+                preparedStatement.setString(6, null);
+            }
+
+            num = preparedStatement.executeUpdate();
+            //chiudi la connessione
+            preparedStatement.close();
+            connection.close();
+        }catch(SQLException e){
+            Utility.msgInf("GEOSTORE", "Errore nel insertClienteWithDB: " + e.getMessage());
+        }
+
+        return num;
     }
 
     @Override
@@ -124,12 +157,45 @@ public class ClienteRepository implements clientiCRUD {
     }
 
     @Override
-    public void updateClienteWithDB(Integer id, Cliente newC) {
+    public int updateClienteWithDB(Integer id, Cliente newC) {
+        String sql = "UPDATE `clienti` SET `nome` = ?, `cognome` = ?, `email` = ?, `email` = ?, `indirizzo` = ?, `telefono` = ?, `codice_admin` = ? WHERE id = ? ";
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        int num = 0;
 
+        try{
+            //Connessione al db
+            connection = DBConnection.sqlConnect();
+            preparedStatement = connection.prepareStatement(sql);
+            //int num = 0;
+
+            preparedStatement.setString(1, newC.getNome());
+            preparedStatement.setString(2, newC.getCognome());
+            preparedStatement.setString(3, newC.getEmail());
+            preparedStatement.setString(4, newC.getTelefono());
+            preparedStatement.setString(5, newC.getIndirizzo());
+
+            if(newC instanceof Amministratore){
+                Amministratore newA = (Amministratore) newC;
+                preparedStatement.setString(6, newA.getCodeAdmin());
+            }
+            else{
+                preparedStatement.setString(6, null);
+            }
+
+            num = preparedStatement.executeUpdate();
+            //chiudi la connessione
+            preparedStatement.close();
+            connection.close();
+        }catch(SQLException e){
+            Utility.msgInf("GEOSTORE", "Errore nel insertClienteWithDB: " + e.getMessage());
+        }
+
+        return num;
     }
 
     @Override
-    public void deleteClienteWithDB(Integer id) {
+    public int deleteClienteWithDB(Integer id) {
 
     }
 

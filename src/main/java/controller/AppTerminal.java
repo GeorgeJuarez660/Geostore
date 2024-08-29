@@ -159,14 +159,105 @@ public class AppTerminal {
                               view.printUtenti(cr.getClientiWithDB());
                               break;
                          case 3:
+                              Utility.msgInf("GEOSTORE", "Crea/Modifica/Elimina cliente\n\n");
+                              int chooseC = Utility.insertInt("1 - Crea, 2 - Modifica, 3 - Elimina");
+
+                              if(chooseC == 1){
+                                   int csCliente = Utility.insertInt("Scegli 1 per cliente o 2 per amministratore");
+
+                                   if(csCliente == 1){
+                                        c = new Cliente();
+                                        view.maskInsertUtente(c);
+                                        int num = cr.insertClienteWithDB(c.getId(), c);
+
+                                        if(num > 0){
+                                             Utility.msgInf("GEOSTORE", "Nuovo cliente aggiunto\n");
+                                        }
+                                        else{
+                                             Utility.msgInf("GEOSTORE", "Cliente non aggiunto\n");
+                                        }
+
+                                   }
+                                   else if(csCliente == 2){
+                                        c = new Amministratore();
+                                        view.maskInsertUtente(c);
+                                        int num =cr.insertClienteWithDB(c.getId(), c);
+
+                                        if(num > 0){
+                                             Utility.msgInf("GEOSTORE", "Nuovo amministratore aggiunto\n");
+                                        }
+                                        else{
+                                             Utility.msgInf("GEOSTORE", "Amministratore non aggiunto\n");
+                                        }
+                                   }
+
+                              }
+                              else if(chooseC == 2){
+                                   c = cr.getClienteWithDB(Utility.insertString("Inserisci il nome utente"));
+
+                                   if(c != null && c.getNome() != null){
+                                        Utility.msgInf("GEOSTORE", "Utente trovato\n");
+
+                                        if(c instanceof Amministratore) { //se l'oggetto trovato contiene l'istanza di una classe figlia
+                                             Amministratore cNew = (Amministratore) view.maskUpdateUtente(((Amministratore) c), new Amministratore());
+
+                                             int num = cr.updateClienteWithDB(cNew.getId(), cNew);
+
+                                             if(num > 0){
+                                                  Utility.msgInf("GEOSTORE", "Amministratore aggiornato\n");
+                                             }
+                                             else{
+                                                  Utility.msgInf("GEOSTORE", "Amministratore non aggiornato\n");
+                                             }
+                                        }
+                                        else{
+                                             Cliente cNew = view.maskUpdateUtente(c, new Cliente());
+
+                                             int num = cr.updateClienteWithDB(cNew.getId(), cNew);
+
+                                             if(num > 0){
+                                                  Utility.msgInf("GEOSTORE", "Cliente aggiornato\n");
+                                             }
+                                             else{
+                                                  Utility.msgInf("GEOSTORE", "Cliente non aggiornato\n");
+                                             }
+                                        }
+
+                                   }
+                                   else{
+                                        Utility.msgInf("GEOSTORE", "Utente non trovato\n");
+                                   }
+                              }
+                              else if(chooseC == 3){
+                                   cat = car.getCategoriaWithDB(Utility.insertString("Inserisci il nome categoria"));
+
+                                   if(cat != null && cat.getNome() != null){
+                                        Utility.msgInf("GEOSTORE", "Categoria trovata\n");
+                                        if(Utility.insertString("Sei sicuro di voler eliminare questa categoria?").equalsIgnoreCase("s")){
+                                             car.deleteCategoriaWithDB(cat.getId());
+                                             Utility.msgInf("GEOSTORE", "Categoria eliminata\n");
+                                        }
+                                        else{
+                                             Utility.msgInf("GEOSTORE", "Operazione annullata\n");
+                                        }
+                                   }
+                                   else{
+                                        Utility.msgInf("GEOSTORE", "Categoria non trovata\n");
+                                   }
+                              }
+                              else{
+                                   Utility.msgInf("GEOSTORE", "Non so cosa hai inserito\n");
+                              }
+                              break;
+                         case 4:
                               Utility.msgInf("GEOSTORE", "Elenco prodotti\n\n");
                               view.printProdotti(pr.getProdottiWithDB());
                               break;
-                         case 4:
+                         case 5:
                               Utility.msgInf("GEOSTORE", "Crea/Modifica/Elimina prodotto\n\n");
 
                               break;
-                         case 5:
+                         case 6:
                               Utility.msgInf("GEOSTORE", "Ordinazione di un prodotto\n\n");
                               view.printProdotti(pr.getProdottiDispWithDB());
                               o = new Ordine();
@@ -196,7 +287,7 @@ public class AppTerminal {
                                    Utility.msgInf("GEOSTORE", "L'oggetto ordinato non è disponibile oppure è inesistente\n");
                               }
                               break;
-                         case 6:
+                         case 7:
                               Utility.msgInf("GEOSTORE", "Elenco ordini effettuati\n\n");
                               int choose = Utility.insertInt("1 - tuoi ordini, 2 - di un'altra persona ");
                               if(choose == 1){
@@ -213,11 +304,11 @@ public class AppTerminal {
                               }
 
                               break;
-                         case 7:
+                         case 8:
                               Utility.msgInf("GEOSTORE", "Elenco ordini generali effettuati\n\n");
                               view.printOrdini(odr.getOrdiniWithDB());
                               break;
-                         case 8:
+                         case 9:
                               Utility.msgInf("GEOSTORE", "Modifica/elimina ordine\n\n");
                               view.printOrdini(odr.getOrdiniWithDB());
                               int choose2 = Utility.insertInt("1 - Modifica, 2 - Elimina");
@@ -264,23 +355,23 @@ public class AppTerminal {
                                    Utility.msgInf("GEOSTORE", "Non so cosa hai inserito\n");
                               }
                               break;
-                         case 9:
+                         case 10:
                               Utility.msgInf("GEOSTORE", "Elenco prodotti per categoria\n\n");
                               cat = new Categoria();
                               view.maskObjViaCat(cat);
                               view.printProdotti(pr.getProdottiViaCategoriaWithDB(cat.getNome()));
                               break;
-                         case 10:
+                         case 11:
                               Utility.msgInf("GEOSTORE", "Elenco prodotti per materia\n\n");
                               m = new Materia();
                               view.maskObjViaMat(m);
                               view.printProdotti(pr.getProdottiViaMateriaWithDB(m.getNome()));
                               break;
-                         case 11:
+                         case 12:
                               Utility.msgInf("GEOSTORE", "Elenco prodotti dispobili\n\n");
                               view.printProdotti(pr.getProdottiDispWithDB());
                               break;
-                         case 12:
+                         case 13:
                               Utility.msgInf("GEOSTORE", "Crea/Modifica/Elimina categoria\n\n");
                               int choose3 = Utility.insertInt("1 - Crea, 2 - Modifica, 3 - Elimina");
 
@@ -334,7 +425,7 @@ public class AppTerminal {
                               }
 
                               break;
-                         case 13:
+                         case 14:
                               Utility.msgInf("GEOSTORE", "Crea/Modifica/Elimina materia\n\n");
                               int choose4 = Utility.insertInt("1 - Crea, 2 - Modifica, 3 - Elimina");
 
@@ -387,7 +478,7 @@ public class AppTerminal {
                                    Utility.msgInf("GEOSTORE", "Non so cosa hai inserito\n");
                               }
                               break;
-                         case 14:
+                         case 15:
                               Utility.msgInf("GEOSTORE", "Ordini totali giornalieri\n\n");
                               String chooseDate = Utility.insertString("Inserisci la data in formato yyyy-mm-dd");
                               view.printOrdiniTotGior(odr.getOrdineTotGiorWithDB(c, chooseDate));

@@ -135,6 +135,89 @@ public class View {
         m.setCount();
     }
 
+    public void maskInsertUtente(Cliente c){
+        c.setNome(Utility.insertString("Inserisci il nome utente"));
+        c.setCognome(Utility.insertString("Inserisci il cognome utente"));
+        c.setEmail(Utility.insertString("Inserisci l'email utente"));
+        c.setTelefono(Utility.insertString("Inserisci il numero di telefono"));
+        c.setIndirizzo(Utility.insertString("Inserisci l'indirizzo"));
+        c.setCount();
+
+        if(c instanceof Amministratore){
+            Amministratore a = (Amministratore) c;
+            a.setCodeAdmin(Utility.insertString("Inserisci il codice amministratore"));
+        }
+    }
+
+    public Cliente maskUpdateUtente(Cliente cOld, Cliente cNew){
+        String nome = Utility.insertString("Inserisci il nome da " + cOld.getNome() + " a: ");
+        String cognome = Utility.insertString("Inserisci il cognome da " + cOld.getCognome() + " a: ");
+        String email = Utility.insertString("Inserisci l'email da " + cOld.getEmail() + " a: ");
+        String telefono = Utility.insertString("Inserisci il numero di telefono da " + cOld.getTelefono() + " a: ");
+        String indirizzo = Utility.insertString("Inserisci l'indirizzo da " + cOld.getIndirizzo() + " a: ");
+        cNew.setId(cOld.getId());
+
+        if(!nome.isEmpty()){
+            cNew.setNome(nome);
+        }
+        else{
+            cNew.setNome(cOld.getNome());
+        }
+
+        if(!cognome.isEmpty()){
+            cNew.setCognome(cognome);
+        }
+        else{
+            cNew.setCognome(cOld.getCognome());
+        }
+
+        if(!email.isEmpty()){
+            cNew.setEmail(email);
+        }
+        else{
+            cNew.setEmail(cOld.getEmail());
+        }
+
+        if(!telefono.isEmpty()){
+            cNew.setTelefono(telefono);
+        }
+        else{
+            cNew.setTelefono(cOld.getTelefono());
+        }
+
+        if(!indirizzo.isEmpty()){
+            cNew.setIndirizzo(indirizzo);
+        }
+        else{
+            cNew.setIndirizzo(cOld.getIndirizzo());
+        }
+
+        if(cOld instanceof Amministratore){
+            Amministratore aOld = (Amministratore) cOld;
+            Amministratore aNew = (Amministratore) cNew;
+
+            String codeAdmin = Utility.insertString("Inserisci il codice amministratore da " + aOld.getCodeAdmin() + " a: ");
+
+
+            if(!codeAdmin.isEmpty()) {
+                aNew.setCodeAdmin(codeAdmin);
+            }
+            else {
+                aNew.setCodeAdmin(aOld.getCodeAdmin());
+            }
+        }
+        Cliente updateCl = null;
+
+        if(Utility.insertString("Vuoi apportare modifiche?").equalsIgnoreCase("s")){
+            updateCl = cNew;
+        }
+        else{
+            updateCl = cOld;
+        }
+
+        return updateCl;
+    }
+
     public Categoria maskUpdateCategoria(Categoria cOld, Categoria cNew){
         String nome = Utility.insertString("Inserisci il nome da " + cOld.getNome() + " a: ");
         cNew.setId(cOld.getId());
