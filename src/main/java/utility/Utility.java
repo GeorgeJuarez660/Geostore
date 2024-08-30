@@ -1,9 +1,6 @@
 package src.main.java.utility;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Scanner;
 
 public class Utility {
@@ -18,9 +15,10 @@ public class Utility {
     public static int insertInt(String title){
         System.out.println(title);
         int num = 0;
-        boolean flag = false;
+        boolean flag;
 
         do{ //controlla ripetutamente se è un numero
+            flag = false;
             try{
                 num = Integer.parseInt(input.nextLine());
             }catch(NumberFormatException err){
@@ -40,9 +38,10 @@ public class Utility {
     public static BigDecimal insertBigDecimal(String title){
         System.out.println(title);
         BigDecimal num = new BigDecimal(0);
-        boolean flag = false;
+        boolean flag;
 
         do{ //controlla ripetutamente se è un numero
+            flag = false;
             try{
                 num = new BigDecimal(input.nextLine());
             }catch(NumberFormatException err){

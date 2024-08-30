@@ -90,8 +90,6 @@ public class MateriaRepository implements materieCRUD {
             rs = preparedStatement.executeQuery();
 
             while(rs.next()){
-                Utility.msgInf("GEOSTORE", "ID: " + rs.getInt("id") +
-                        ", Nome: " + rs.getString("nome"));
                 mat = new Materia();
                 mat.setId(rs.getInt("id"));
                 mat.setNome(rs.getString("nome"));

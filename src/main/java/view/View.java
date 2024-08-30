@@ -149,6 +149,50 @@ public class View {
         }
     }
 
+    public void maskInsertProdotto(Prodotto p){
+        p.setNome(Utility.insertString("Inserisci il nome prodotto"));
+        p.setPrezzo(Utility.insertBigDecimal("Inserisci il prezzo unitario prodotto"));
+        p.setQuantita_disp(Utility.insertInt("Inserisci la quantità disponibile prodotto"));
+        Categoria c = new Categoria();
+        c.setNome(Utility.insertString("Inserisci il nome categoria appartenente"));
+        p.setCategoria(c);
+        Materia m = new Materia();
+        m.setNome(Utility.insertString("Inserisci il nome materia appartenente"));
+        p.setMateria(m);
+        String dispn = Utility.insertString("Inserisci la disponibilità prodotto");
+        Disponibilita disp = new Disponibilita();
+
+        if(dispn.equalsIgnoreCase("DISPONIBILE")){
+            disp.setId(1);
+            disp.setCode("DISPONIBILE");
+            p.setDisponibilita(disp);
+        }
+        else if(dispn.equalsIgnoreCase("ESAURITO")){
+            disp.setId(4);
+            disp.setCode("ESAURITO");
+            p.setDisponibilita(disp);
+        }
+        else if(dispn.equalsIgnoreCase("ESAURIMENTO")){
+            disp.setId(3);
+            disp.setCode("ESAURIMENTO");
+            p.setDisponibilita(disp);
+        }
+        else if(dispn.equalsIgnoreCase("ARRIVO")){
+            disp.setId(2);
+            disp.setCode("ARRIVO");
+            p.setDisponibilita(disp);
+        }
+        else{
+            disp.setId(5);
+            disp.setCode("N/A");
+            p.setDisponibilita(disp);
+        }
+
+
+
+        p.setCount();
+    }
+
     public Cliente maskUpdateUtente(Cliente cOld, Cliente cNew){
         String nome = Utility.insertString("Inserisci il nome da " + cOld.getNome() + " a: ");
         String cognome = Utility.insertString("Inserisci il cognome da " + cOld.getCognome() + " a: ");
@@ -264,8 +308,6 @@ public class View {
 
     public Prodotto maskUpdateProdotto(Prodotto pOld, Prodotto pNew){
         String nome = Utility.insertString("Inserisci il nome da " + pOld.getNome() + " a: ");
-        BigDecimal prezzo = Utility.insertBigDecimal("Inserisci il prezzo da " + pOld.getPrezzo() + " a: ");
-        Integer quantita_disp = Utility.insertInt("Inserisci la quantità disponibile da " + pOld.getQuantita_disp() + " a: ");
         String disponibilita = Utility.insertString("Inserisci la disponibilità da " + pOld.getDisponibilita().getCode() + " a: ");
         String categoria = Utility.insertString("Inserisci la categoria da " + pOld.getCategoria().getNome() + " a: ");
         String materia = Utility.insertString("Inserisci la materia da " + pOld.getMateria().getNome() + " a: ");
@@ -278,19 +320,49 @@ public class View {
             pNew.setNome(pOld.getNome());
         }
 
-        if(prezzo != null){
-            pNew.setPrezzo(prezzo);
-        }
-        else{
-            pNew.setPrezzo(pOld.getPrezzo());
-        }
+        boolean flag;
+        do {
+            flag = false;
+            String prezzo = Utility.insertString("Inserisci il prezzo unitario prodotto da " + pOld.getPrezzo() + " a: ");
+            if(!prezzo.isEmpty()) {
+                try {
+                    pNew.setPrezzo(new BigDecimal(prezzo));
+                }
+                catch(NumberFormatException e){
+                    Utility.msgInf("GEOSTORE","ATTENZIONE: inserisci un numero valido");
+                    flag=true;
+                }
+                catch(Exception e) {
+                    Utility.msgInf("GEOSTORE","ERRORE");
+                    flag=true;
+                }
+            }
+            else {
+                pNew.setPrezzo(pOld.getPrezzo());
+            }
+        }while(flag);
 
-        if(quantita_disp != null){
-            pNew.setQuantita_disp(quantita_disp);
-        }
-        else{
-            pNew.setQuantita_disp(pOld.getQuantita_disp());
-        }
+        do {
+            flag = false;
+            String quantita_disp = Utility.insertString("Inserisci la quantità disponibile da " + pOld.getQuantita_disp() + " a: ");
+            if(!quantita_disp.isEmpty()) {
+                try {
+                    pNew.setQuantita_disp(Integer.parseInt(quantita_disp));
+                }
+                catch(NumberFormatException e){
+                    Utility.msgInf("GEOSTORE","ATTENZIONE: inserisci un numero valido");
+                    flag=true;
+                }
+                catch(Exception e) {
+                    Utility.msgInf("GEOSTORE","ERRORE");
+                    flag=true;
+                }
+            }
+            else {
+                pNew.setPrezzo(pOld.getPrezzo());
+            }
+        }while(flag);
+
 
         Disponibilita disp = new Disponibilita();
 
@@ -315,6 +387,11 @@ public class View {
                 disp.setCode("ARRIVO");
                 pNew.setDisponibilita(disp);
             }
+            else if(disponibilita.equalsIgnoreCase("N/A")){
+                disp.setId(5);
+                disp.setCode("N/A");
+                pNew.setDisponibilita(disp);
+            }
             else{
                 pNew.setDisponibilita(pOld.getDisponibilita());
             }
@@ -323,36 +400,23 @@ public class View {
             pNew.setDisponibilita(pOld.getDisponibilita());
         }
 
-       /* Disponibilita disp = new Disponibilita();
-
-        if(!disponibilita.isEmpty()){
-            if(disponibilita.equalsIgnoreCase("DISPONIBILE")){
-                disp.setId(1);
-                disp.setCode("DISPONIBILE");
-                oNew.setDisponibilita(disp);
-            }
-            else if(disponibilita.equalsIgnoreCase("ESAURITO")){
-                disp.setId(4);
-                disp.setCode("ESAURITO");
-                oNew.setDisponibilita(disp);
-            }
-            else if(disponibilita.equalsIgnoreCase("ESAURIMENTO")){
-                disp.setId(3);
-                disp.setCode("ESAURIMENTO");
-                oNew.setDisponibilita(disp);
-            }
-            else if(disponibilita.equalsIgnoreCase("ARRIVO")){
-                disp.setId(2);
-                disp.setCode("ARRIVO");
-                oNew.setDisponibilita(disp);
-            }
-            else{
-                oNew.setDisponibilita(oOld.getDisponibilita());
-            }
+        if(!categoria.isEmpty()){
+            Categoria c = new Categoria();
+            c.setNome(categoria);
+            pNew.setCategoria(c);
         }
         else{
-            oNew.setDisponibilita(oOld.getDisponibilita());
-        }*/
+            pNew.setCategoria(pOld.getCategoria());
+        }
+
+        if(!materia.isEmpty()){
+            Materia m = new Materia();
+            m.setNome(materia);
+            pNew.setMateria(m);
+        }
+        else{
+            pNew.setMateria(pOld.getMateria());
+        }
 
         Prodotto updatePr = null;
 

@@ -267,7 +267,91 @@ public class AppTerminal {
                                    break;
                               case 5:
                                    Utility.msgInf("GEOSTORE", "Crea/Modifica/Elimina prodotto\n\n");
+                                   int chooseP = Utility.insertInt("1 - Crea, 2 - Modifica, 3 - Elimina");
 
+                                   if(chooseP == 1){
+                                        p = new Prodotto();
+                                        view.maskInsertProdotto(p);
+
+                                        cat = car.getCategoriaWithDB(p.getCategoria().getNome());
+                                        m = mr.getMateriaWithDB(p.getMateria().getNome());
+
+                                        if(cat != null && m != null && cat.getNome() != null && m.getNome() != null){
+                                             p.setCategoria(cat);
+                                             p.setMateria(m);
+                                             int num = pr.insertProdottoWithDB(p.getId(), p);
+
+                                             if(num > 0){
+                                                  Utility.msgInf("GEOSTORE", "Nuovo prodotto aggiunto\n");
+                                             }
+                                             else{
+                                                  Utility.msgInf("GEOSTORE", "Prodotto non aggiunto\n");
+                                             }
+                                        }
+                                        else{
+                                             Utility.msgInf("GEOSTORE", "Categoria e/o Materia inesistenti\n");
+                                        }
+
+                                   }
+                                   else if(chooseP == 2){
+                                        p = pr.getProdottoWithDB(Utility.insertString("Inserisci il nome prodotto"));
+
+                                        if(p != null && p.getNome() != null){
+                                             Utility.msgInf("GEOSTORE", "Prodotto trovato\n");
+
+                                             Prodotto pNew = view.maskUpdateProdotto(p, new Prodotto());
+
+                                             cat = car.getCategoriaWithDB(pNew.getCategoria().getNome());
+                                             m = mr.getMateriaWithDB(pNew.getMateria().getNome());
+
+                                             if(cat != null && m != null && cat.getNome() != null && m.getNome() != null){
+                                                  pNew.setCategoria(cat);
+                                                  pNew.setMateria(m);
+                                                  int num = pr.updateProdottoWithDB(pNew.getId(), pNew);
+
+                                                  if(num > 0){
+                                                       Utility.msgInf("GEOSTORE", "Prodotto aggiornato\n");
+                                                  }
+                                                  else{
+                                                       Utility.msgInf("GEOSTORE", "Prodotto non aggiornato\n");
+                                                  }
+                                             }
+                                             else{
+                                                  Utility.msgInf("GEOSTORE", "Categoria e/o Materia inesistenti\n");
+                                             }
+
+                                        }
+                                        else{
+                                             Utility.msgInf("GEOSTORE", "Prodotto non trovato\n");
+                                        }
+                                   }
+                                   else if(chooseP == 3){
+                                        p = pr.getProdottoWithDB(Utility.insertString("Inserisci il nome prodotto"));
+
+                                        if(p != null && p.getNome() != null){
+                                             Utility.msgInf("GEOSTORE", "Prodotto trovato\n");
+                                             if(Utility.insertString("Sei sicuro di voler eliminare questo prodotto?").equalsIgnoreCase("s")){
+                                                  int num = pr.deleteProdottoWithDB(p.getId());
+
+                                                  if(num > 0){
+                                                       Utility.msgInf("GEOSTORE", "Prodotto eliminato\n");
+                                                  }
+                                                  else{
+                                                       Utility.msgInf("GEOSTORE", "Prodotto non eliminato\n");
+                                                  }
+
+                                             }
+                                             else{
+                                                  Utility.msgInf("GEOSTORE", "Operazione annullata\n");
+                                             }
+                                        }
+                                        else{
+                                             Utility.msgInf("GEOSTORE", "Prodotto non trovato\n");
+                                        }
+                                   }
+                                   else{
+                                        Utility.msgInf("GEOSTORE", "Non so cosa hai inserito\n");
+                                   }
                                    break;
                               case 6:
                                    Utility.msgInf("GEOSTORE", "Ordinazione di un prodotto\n\n");

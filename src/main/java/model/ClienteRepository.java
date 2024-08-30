@@ -16,7 +16,7 @@ public class ClienteRepository implements clientiCRUD {
 
     @Override
     public int insertClienteWithDB(Integer id, Cliente c) {
-        String sql = "INSERT INTO `clienti`(`nome`, `cognome`,`email`,`telefono`,`indirizzo`, `indirizzo`, `codice_admin`) VALUES (?, ?, ?, ?, ?, ?) ";
+        String sql = "INSERT INTO `clienti`(`nome`, `cognome`,`email`,`telefono`, `indirizzo`, `codice_admin`) VALUES (?, ?, ?, ?, ?, ?) ";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         int num = 0;

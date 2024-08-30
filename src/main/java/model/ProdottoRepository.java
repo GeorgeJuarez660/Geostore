@@ -15,8 +15,34 @@ public class ProdottoRepository implements prodottiCRUD {
     private HashMap<Integer, Prodotto> prodotti = new HashMap<>();
 
     @Override
-    public void insertProdottoWithDB(Integer id, Prodotto p) {
+    public int insertProdottoWithDB(Integer id, Prodotto p) {
+        String sql = "INSERT INTO `prodotti`(`nome`,`prezzo`,`disponibilita`,`categoria`,`materia`,`quantita_disp`) VALUES (?, ?, ?, ?, ?, ?) ";
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        int num = 0;
 
+        try{
+            //Connessione al db
+            connection = DBConnection.sqlConnect();
+            preparedStatement = connection.prepareStatement(sql);
+            //int num = 0;
+
+            preparedStatement.setString(1, p.getNome());
+            preparedStatement.setBigDecimal(2, p.getPrezzo());
+            preparedStatement.setInt(3, p.getDisponibilita().getId());
+            preparedStatement.setInt(4, p.getCategoria().getId());
+            preparedStatement.setInt(5, p.getMateria().getId());
+            preparedStatement.setInt(6, p.getQuantita_disp());
+
+            num = preparedStatement.executeUpdate();
+            //chiudi la connessione
+            preparedStatement.close();
+            connection.close();
+        }catch(SQLException e){
+            Utility.msgInf("GEOSTORE", "Errore nel insertProdottoWithDB: " + e.getMessage());
+        }
+
+        return num;
     }
 
     @Override
@@ -211,7 +237,11 @@ public class ProdottoRepository implements prodottiCRUD {
 
     @Override
     public Prodotto getProdottoWithDB(String nome) {
-        String sql = "select * from prodotti o ";
+        String sql = "select o.id, o.nome, o.prezzo, d.code as disponibilita_code, c.nome as categoria_code, m.nome as materia_code, o.quantita_disp \n" +
+                "from prodotti o join Disponibilita d on (o.disponibilita = d.id)\n" +
+                "join Materie m on (o.materia = m.id)\n" +
+                "join Categorie c on (o.categoria = c.id)\n" +
+                "where o.nome = ?";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet rs = null;
@@ -293,13 +323,60 @@ public class ProdottoRepository implements prodottiCRUD {
     }
 
     @Override
-    public void updateProdottoWithDB(Integer id, Prodotto newP) {
+    public int updateProdottoWithDB(Integer id, Prodotto newP) {
+        String sql = "UPDATE `prodotti` SET `nome` = ?, `prezzo` = ?, `disponibilita` = ?, `categoria` = ?, `materia` = ?, `quantita_disp` = ? WHERE id = ? ";
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        int num = 0;
 
+        try{
+            //Connessione al db
+            connection = DBConnection.sqlConnect();
+            preparedStatement = connection.prepareStatement(sql);
+            //int num = 0;
+
+            preparedStatement.setString(1, newP.getNome());
+            preparedStatement.setBigDecimal(2, newP.getPrezzo());
+            preparedStatement.setInt(3, newP.getDisponibilita().getId());
+            preparedStatement.setInt(4, newP.getCategoria().getId());
+            preparedStatement.setInt(5, newP.getMateria().getId());
+            preparedStatement.setInt(6, newP.getQuantita_disp());
+
+            preparedStatement.setInt(7, id);
+
+            num = preparedStatement.executeUpdate();
+            //chiudi la connessione
+            preparedStatement.close();
+            connection.close();
+        }catch(SQLException e){
+            Utility.msgInf("GEOSTORE", "Errore nel updateProdottoWithDB: " + e.getMessage());
+        }
+
+        return num;
     }
 
     @Override
-    public void deleteProdottoWithDB(Integer id) {
+    public int deleteProdottoWithDB(Integer id) {
+        String sql = "DELETE FROM `prodotti` WHERE id = ? ";
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        int num = 0;
 
+        try{
+            //Connessione al db
+            connection = DBConnection.sqlConnect();
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, id);
+
+            num = preparedStatement.executeUpdate();
+            //chiudi la connessione
+            preparedStatement.close();
+            connection.close();
+        }catch(SQLException e){
+            Utility.msgInf("GEOSTORE", "Errore nel deleteProdottoWithDB: " + e.getMessage());
+        }
+
+        return num;
     }
 
     //metodi override per operazioni CRUD

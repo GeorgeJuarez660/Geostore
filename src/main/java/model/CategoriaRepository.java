@@ -128,8 +128,6 @@ public class CategoriaRepository implements categorieCRUD {
             rs = preparedStatement.executeQuery();
 
             while(rs.next()){
-                Utility.msgInf("GEOSTORE", "ID: " + rs.getInt("id") +
-                        ", Nome: " + rs.getString("nome"));
                 cat = new Categoria();
                 cat.setId(rs.getInt("id"));
                 cat.setNome(rs.getString("nome"));
