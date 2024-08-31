@@ -116,7 +116,7 @@ public class View {
 
         o.setData_ordine(Timestamp.valueOf(strDateTime));
         Stato stato = new Stato();
-        stato.setId(1);
+        stato.setCode("ELABORAZIONE");
         o.setStato(stato);
         o.setCliente(cliente);
         Prodotto prodotto = new Prodotto();
@@ -163,32 +163,25 @@ public class View {
         Disponibilita disp = new Disponibilita();
 
         if(dispn.equalsIgnoreCase("DISPONIBILE")){
-            disp.setId(1);
             disp.setCode("DISPONIBILE");
             p.setDisponibilita(disp);
         }
         else if(dispn.equalsIgnoreCase("ESAURITO")){
-            disp.setId(4);
             disp.setCode("ESAURITO");
             p.setDisponibilita(disp);
         }
         else if(dispn.equalsIgnoreCase("ESAURIMENTO")){
-            disp.setId(3);
             disp.setCode("ESAURIMENTO");
             p.setDisponibilita(disp);
         }
         else if(dispn.equalsIgnoreCase("ARRIVO")){
-            disp.setId(2);
             disp.setCode("ARRIVO");
             p.setDisponibilita(disp);
         }
         else{
-            disp.setId(5);
             disp.setCode("N/A");
             p.setDisponibilita(disp);
         }
-
-
 
         p.setCount();
     }
@@ -308,7 +301,7 @@ public class View {
 
     public Prodotto maskUpdateProdotto(Prodotto pOld, Prodotto pNew){
         String nome = Utility.insertString("Inserisci il nome da " + pOld.getNome() + " a: ");
-        String disponibilita = Utility.insertString("Inserisci la disponibilità da " + pOld.getDisponibilita().getCode() + " a: ");
+        String disponibilita = Utility.insertString("Inserisci la disponibilità da " + pOld.getDisponibilita().fromIntToString(pOld.getDisponibilita().getId()) + " a: ");
         String categoria = Utility.insertString("Inserisci la categoria da " + pOld.getCategoria().getNome() + " a: ");
         String materia = Utility.insertString("Inserisci la materia da " + pOld.getMateria().getNome() + " a: ");
         pNew.setId(pOld.getId());
@@ -359,7 +352,7 @@ public class View {
                 }
             }
             else {
-                pNew.setPrezzo(pOld.getPrezzo());
+                pNew.setQuantita_disp(pOld.getQuantita_disp());
             }
         }while(flag);
 
@@ -368,36 +361,33 @@ public class View {
 
         if(!disponibilita.isEmpty()){
             if(disponibilita.equalsIgnoreCase("DISPONIBILE")){
-                disp.setId(1);
                 disp.setCode("DISPONIBILE");
                 pNew.setDisponibilita(disp);
             }
             else if(disponibilita.equalsIgnoreCase("ESAURITO")){
-                disp.setId(4);
                 disp.setCode("ESAURITO");
                 pNew.setDisponibilita(disp);
             }
             else if(disponibilita.equalsIgnoreCase("ESAURIMENTO")){
-                disp.setId(3);
                 disp.setCode("ESAURIMENTO");
                 pNew.setDisponibilita(disp);
             }
             else if(disponibilita.equalsIgnoreCase("ARRIVO")){
-                disp.setId(2);
                 disp.setCode("ARRIVO");
                 pNew.setDisponibilita(disp);
             }
             else if(disponibilita.equalsIgnoreCase("N/A")){
-                disp.setId(5);
                 disp.setCode("N/A");
                 pNew.setDisponibilita(disp);
             }
             else{
-                pNew.setDisponibilita(pOld.getDisponibilita());
+                disp.setCode(pOld.getDisponibilita().fromIntToString(pOld.getDisponibilita().getId()));
+                pNew.setDisponibilita(disp);
             }
         }
         else{
-            pNew.setDisponibilita(pOld.getDisponibilita());
+            disp.setCode(pOld.getDisponibilita().fromIntToString(pOld.getDisponibilita().getId()));
+            pNew.setDisponibilita(disp);
         }
 
         if(!categoria.isEmpty()){
@@ -433,7 +423,7 @@ public class View {
     public Ordine maskUpdateOrdine(Ordine oOld, Ordine oNew){
         BigDecimal prezzo = Utility.insertBigDecimal("Inserisci il prezzo unitario da " + oOld.getPrezzo_unitario() + " a: ");
         Integer quantita_ord = Utility.insertInt("Inserisci la quantità ordinata da " + oOld.getQuantita() + " a: ");
-        String stato = Utility.insertString("Inserisci lo stato da " + oOld.getStato().getCode() + " a: ");
+        String stato = Utility.insertString("Inserisci lo stato da " + oOld.getStato().fromIntToString(oOld.getStato().getId()) + " a: ");
         oNew.setId(oOld.getId());
 
         if(prezzo != null){
@@ -454,25 +444,24 @@ public class View {
         if(!stato.isEmpty()){
             if(stato.equalsIgnoreCase("ELABORAZIONE")){
                 st.setCode("ELABORAZIONE");
-                st.setId(1);
                 oNew.setStato(st);
             }
             else if(stato.equalsIgnoreCase("ACCETTATO")){
                 st.setCode("ACCETTATO");
-                st.setId(2);
                 oNew.setStato(st);
             }
             else if(stato.equalsIgnoreCase("RIFIUTATO")){
                 st.setCode("RIFIUTATO");
-                st.setId(3);
                 oNew.setStato(st);
             }
             else{
-                oNew.setStato(oOld.getStato());
+                st.setCode(oOld.getStato().fromIntToString(oOld.getStato().getId()));
+                oNew.setStato(st);
             }
         }
         else{
-            oNew.setStato(oOld.getStato());
+            st.setCode(oOld.getStato().fromIntToString(oOld.getStato().getId()));
+            oNew.setStato(st);
         }
 
         Ordine updateOrd = null;
@@ -488,53 +477,92 @@ public class View {
     }
 
     public void printCategorie(HashMap<Integer, Categoria> categorie){
-        System.out.println("***CATEGORIE***\n\n");
+        if(!categorie.isEmpty()){
+            System.out.println("***CATEGORIE***\n");
 
-        for(Categoria categoria : categorie.values()){
-            System.out.println("ID: " + categoria.getId() + ", \nNome: " + categoria.getNome());
-            System.out.println("-----------------------------------------------------------");
+            for(Categoria categoria : categorie.values()){
+                System.out.println("ID: " + categoria.getId() + ", \nNome: " + categoria.getNome());
+                System.out.println("-----------------------------------------------------------");
+            }
         }
+        else{
+            System.out.println("***NESSUNA CATEGORIA PRESENTE***\n");
+        }
+
     }
 
     public void printProdotti(HashMap<Integer, Prodotto> prodotti){
-        System.out.println("***PRODOTTI PRESENTI NEL GEOSTORE***\n\n");
+        if(!prodotti.isEmpty()){
+            System.out.println("***PRODOTTI PRESENTI NEL GEOSTORE***\n");
 
-        for(Prodotto prodotto : prodotti.values()){
-            System.out.println("ID: " + prodotto.getId() + ", \nNome: " + prodotto.getNome() + ", \nPrezzo: " + prodotto.getPrezzo()+ ", \nDisponibilità: " + prodotto.getDisponibilita().getCode() + ", \nCategoria: " + prodotto.getCategoria().getNome() + ", \nMateria: " + prodotto.getMateria().getNome() + ", \nQuantità disponibile: " + prodotto.getQuantita_disp());
-            System.out.println("-----------------------------------------------------------");
+            for(Prodotto prodotto : prodotti.values()){
+                System.out.println("ID: " + prodotto.getId() + ", \nNome: " + prodotto.getNome() + ", \nPrezzo: " + prodotto.getPrezzo()+ ", \nDisponibilità: " + prodotto.getDisponibilita().fromIntToString(prodotto.getDisponibilita().getId()) + ", \nCategoria: " + prodotto.getCategoria().getNome() + ", \nMateria: " + prodotto.getMateria().getNome() + ", \nQuantità disponibile: " + prodotto.getQuantita_disp());
+                System.out.println("-----------------------------------------------------------");
+            }
         }
+        else{
+            System.out.println("***NESSUN PRODOTTO PRESENTE NEL GEOSTORE***\n");
+        }
+
     }
 
     public void printOrdini(HashMap<Integer, Ordine> ordini){
-        System.out.println("***ORDINI EFFETTUATI NEL GEOSTORE***\n\n");
+        if(!ordini.isEmpty()){
+            System.out.println("***ORDINI EFFETTUATI NEL GEOSTORE***\n");
 
-        for(Ordine ordine : ordini.values()){
-            System.out.println("ID: " + ordine.getId() + ", \nNome cliente: " + ordine.getCliente().getNome() + ", \nCognome cliente: " + ordine.getCliente().getCognome() + ", \nNome prodotto: " + ordine.getProdotto().getNome() + ", \nData ordine: " + ordine.getData_ordine() + ", \nQuantità ordinata: " + ordine.getQuantita() + ", \nPrezzo unitario: " + ordine.getPrezzo_unitario()+ ", \nStato ordine: " + ordine.getStato().getCode());
-            System.out.println("-----------------------------------------------------------");
+            for(Ordine ordine : ordini.values()){
+                System.out.println("ID: " + ordine.getId() + ", \nNome cliente: " + ordine.getCliente().getNome() + ", \nCognome cliente: " + ordine.getCliente().getCognome() + ", \nNome prodotto: " + ordine.getProdotto().getNome() + ", \nData ordine: " + ordine.getData_ordine() + ", \nQuantità ordinata: " + ordine.getQuantita() + ", \nPrezzo unitario: " + ordine.getPrezzo_unitario()+ ", \nStato ordine: " + ordine.getStato().fromIntToString(ordine.getStato().getId()));
+                System.out.println("-----------------------------------------------------------");
+            }
+        }
+        else{
+            System.out.println("***NESSUN ORDINE EFFETTUATO NEL GEOSTORE***\n");
+
         }
     }
 
     public void printOrdiniTotGior(Ordine ordine){
-        System.out.println("***ORDINI TOTALI EFFETTUATI NEL GIORNO " + ordine.getData_ordine().toString().substring(0, 10) + " SU GEOSTORE***\n\n");
+        if(ordine != null && ordine.getPrezzo_unitario() != null){
+            System.out.println("***ORDINI TOTALI EFFETTUATI NEL GIORNO " + ordine.getData_ordine().toString().substring(0, 10) + " SU GEOSTORE***\n");
 
-        System.out.println("Nome cliente: " + ordine.getCliente().getNome() + "\nCognome cliente: " + ordine.getCliente().getCognome() + ", \nData ordine totale: " + ordine.getData_ordine().toString().substring(0, 10) + ", \nPrezzo totale speso: " + ordine.getPrezzo_unitario());
+            System.out.println("Nome cliente: " + ordine.getCliente().getNome() + "\nCognome cliente: " + ordine.getCliente().getCognome() + ", \nData ordine totale: " + ordine.getData_ordine().toString().substring(0, 10) + ", \nPrezzo totale speso: " + ordine.getPrezzo_unitario());
+        }
+        else{
+            System.out.println("***NESSUN ORDINE TOTALE PRESENTE NEL GIORNO PRESTABILITO***\n");
+        }
     }
 
     public void printCategoria(Categoria categoria){
-        System.out.println("ID: " + categoria.getId() + ", \nNome: " + categoria.getNome());
+        if(categoria != null && categoria.getNome() != null){
+            System.out.println("ID: " + categoria.getId() + ", \nNome: " + categoria.getNome());
+        }
+        else{
+            System.out.println("***NESSUNA CATEGORIA***");
+        }
+
     }
 
     public void printUtente(Cliente cliente){
-        System.out.println("***PROFILO UTENTE GEOSTORE***\n");
-        System.out.println("ID: " + cliente.getId() + ", \nNome: " + cliente.getNome() + ", \nCognome: " + cliente.getCognome()+ ", \nEmail: " + cliente.getEmail()+ ", \nTelefono: " + cliente.getTelefono()+ ", \nIndirizzo: " + cliente.getIndirizzo());
+        if(cliente != null && cliente.getNome() != null){
+            System.out.println("***PROFILO UTENTE GEOSTORE***\n");
+            System.out.println("ID: " + cliente.getId() + ", \nNome: " + cliente.getNome() + ", \nCognome: " + cliente.getCognome()+ ", \nEmail: " + cliente.getEmail()+ ", \nTelefono: " + cliente.getTelefono()+ ", \nIndirizzo: " + cliente.getIndirizzo());
+        }
+        else{
+            System.out.println("***NESSUN PROFILO UTENTE GEOSTORE***\n");
+        }
     }
 
     public void printUtenti(HashMap<Integer, Cliente> clienti){
-        System.out.println("***UTENTI SU GEOSTORE***\n\n");
+        if(!clienti.isEmpty()){
+            System.out.println("***UTENTI SU GEOSTORE***\n");
 
-        for(Cliente cliente : clienti.values()){
-            System.out.println("ID: " + cliente.getId() + ", \nNome: " + cliente.getNome() + ", \nCognome: " + cliente.getCognome()+ ", \nEmail: " + cliente.getEmail()+ ", \nTelefono: " + cliente.getTelefono()+ ", \nIndirizzo: " + cliente.getIndirizzo());
-            System.out.println("-----------------------------------------------------------");
+            for(Cliente cliente : clienti.values()){
+                System.out.println("ID: " + cliente.getId() + ", \nNome: " + cliente.getNome() + ", \nCognome: " + cliente.getCognome()+ ", \nEmail: " + cliente.getEmail()+ ", \nTelefono: " + cliente.getTelefono()+ ", \nIndirizzo: " + cliente.getIndirizzo());
+                System.out.println("-----------------------------------------------------------");
+            }
+        }
+        else{
+            System.out.println("***NESSUN UTENTE PRESENTE SU GEOSTORE***\n");
         }
     }
 }

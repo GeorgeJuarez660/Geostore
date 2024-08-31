@@ -29,7 +29,7 @@ public class OrdineRepository implements ordiniCRUD {
             preparedStatement.setString(3, String.valueOf(o.getData_ordine()));
             preparedStatement.setInt(4, o.getQuantita());
             preparedStatement.setBigDecimal(5, o.getPrezzo_unitario());
-            preparedStatement.setInt(6, o.getStato().getId());
+            preparedStatement.setInt(6, o.getStato().fromStringToInt(o.getStato().getCode()));
             num = preparedStatement.executeUpdate();
             //chiudi la connessione
             preparedStatement.close();
@@ -43,9 +43,8 @@ public class OrdineRepository implements ordiniCRUD {
 
     @Override
     public HashMap<Integer, Ordine> getOrdiniWithDB() {
-        String sql = "SELECT o.id, c.nome AS nome_cliente, c.cognome AS cognome_cliente, og.nome AS nome_prodotto, o.data_ordine, o.quantita, o.prezzo_unitario, s.code AS stato FROM ordini o JOIN clienti c ON(o.cliente_id =c.id )\n" +
-                "JOIN prodotti og ON(o.prodotto_id =og.id )\n" +
-                "JOIN stato s ON(o.stato_id =s.id ) ";
+        String sql = "SELECT o.id, c.nome AS nome_cliente, c.cognome AS cognome_cliente, og.nome AS nome_prodotto, o.data_ordine, o.quantita, o.prezzo_unitario, o.stato_id FROM ordini o JOIN clienti c ON(o.cliente_id =c.id )\n" +
+                "JOIN prodotti og ON(o.prodotto_id =og.id ) ";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet rs = null;
@@ -72,7 +71,7 @@ public class OrdineRepository implements ordiniCRUD {
                 ord.setQuantita(rs.getInt("quantita"));
                 ord.setPrezzo_unitario(rs.getBigDecimal("prezzo_unitario"));
                 Stato stato = new Stato();
-                stato.setCode(rs.getString("stato"));
+                stato.setId(rs.getInt("stato_id"));
                 ord.setStato(stato);
 
                 ordini.put(ord.getId(), ord);
@@ -89,9 +88,8 @@ public class OrdineRepository implements ordiniCRUD {
     }
 
     public HashMap<Integer, Ordine> getOrdiniByUserWithDB(String nomeCliente) {
-        String sql = "SELECT o.id, c.nome AS nome_cliente, c.cognome AS cognome_cliente, og.nome AS nome_prodotto, o.data_ordine, o.quantita, o.prezzo_unitario, s.code AS stato FROM ordini o JOIN clienti c ON(o.cliente_id =c.id )\n" +
+        String sql = "SELECT o.id, c.nome AS nome_cliente, c.cognome AS cognome_cliente, og.nome AS nome_prodotto, o.data_ordine, o.quantita, o.prezzo_unitario, o.stato_id FROM ordini o JOIN clienti c ON(o.cliente_id =c.id )\n" +
                 "JOIN prodotti og ON(o.prodotto_id =og.id )\n" +
-                "JOIN stato s ON(o.stato_id =s.id )\n" +
                 "WHERE nome_cliente = ?";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -120,7 +118,7 @@ public class OrdineRepository implements ordiniCRUD {
                 ord.setQuantita(rs.getInt("quantita"));
                 ord.setPrezzo_unitario(rs.getBigDecimal("prezzo_unitario"));
                 Stato stato = new Stato();
-                stato.setCode(rs.getString("stato"));
+                stato.setId(rs.getInt("stato_id"));
                 ord.setStato(stato);
 
                 ordini.put(ord.getId(), ord);
@@ -137,9 +135,8 @@ public class OrdineRepository implements ordiniCRUD {
     }
 
     public Ordine getOrdineByUserAndProdNameWithDB(String nomeCliente, Integer idOrdine) {
-        String sql = "SELECT o.id, c.nome AS nome_cliente, c.cognome AS cognome_cliente, og.nome AS nome_prodotto, o.data_ordine, o.quantita, o.prezzo_unitario, s.code AS stato FROM ordini o JOIN clienti c ON(o.cliente_id =c.id )\n" +
+        String sql = "SELECT o.id, c.nome AS nome_cliente, c.cognome AS cognome_cliente, og.nome AS nome_prodotto, o.data_ordine, o.quantita, o.prezzo_unitario, o.stato_id FROM ordini o JOIN clienti c ON(o.cliente_id =c.id )\n" +
                 "JOIN prodotti og ON(o.prodotto_id =og.id )\n" +
-                "JOIN stato s ON(o.stato_id =s.id )\n" +
                 "WHERE nome_cliente = ? AND o.id = ?";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -167,7 +164,7 @@ public class OrdineRepository implements ordiniCRUD {
                 ordine.setQuantita(rs.getInt("quantita"));
                 ordine.setPrezzo_unitario(rs.getBigDecimal("prezzo_unitario"));
                 Stato stato = new Stato();
-                stato.setCode(rs.getString("stato"));
+                stato.setId(rs.getInt("stato_id"));
                 ordine.setStato(stato);
             }
             //chiudi la connessione
@@ -183,9 +180,8 @@ public class OrdineRepository implements ordiniCRUD {
 
     @Override
     public Ordine getOrdineWithDB(Integer id) {
-        String sql = "SELECT o.id, c.nome AS nome_cliente, c.cognome AS cognome_cliente, og.nome AS nome_prodotto, o.data_ordine, o.quantita, o.prezzo_unitario, s.code AS stato FROM ordini o JOIN clienti c ON(o.cliente_id =c.id )\n" +
+        String sql = "SELECT o.id, c.nome AS nome_cliente, c.cognome AS cognome_cliente, og.nome AS nome_prodotto, o.data_ordine, o.quantita, o.prezzo_unitario, o.stato_id FROM ordini o JOIN clienti c ON(o.cliente_id =c.id )\n" +
                 "JOIN prodotti og ON(o.prodotto_id =og.id )\n" +
-                "JOIN stato s ON(o.stato_id =s.id )\n" +
                 "WHERE o.id = ?";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -212,7 +208,7 @@ public class OrdineRepository implements ordiniCRUD {
                 ordine.setQuantita(rs.getInt("quantita"));
                 ordine.setPrezzo_unitario(rs.getBigDecimal("prezzo_unitario"));
                 Stato stato = new Stato();
-                stato.setCode(rs.getString("stato"));
+                stato.setId(rs.getInt("stato_id"));
                 ordine.setStato(stato);
             }
             //chiudi la connessione
@@ -239,7 +235,7 @@ public class OrdineRepository implements ordiniCRUD {
             preparedStatement = connection.prepareStatement(sql);
             //int num = 0;
 
-            preparedStatement.setInt(1, newO.getStato().getId());
+            preparedStatement.setInt(1, newO.getStato().fromStringToInt(newO.getStato().getCode()));
             preparedStatement.setInt(2, newO.getQuantita());
             preparedStatement.setBigDecimal(3, newO.getPrezzo_unitario());
             preparedStatement.setInt(4, id);
@@ -279,7 +275,6 @@ public class OrdineRepository implements ordiniCRUD {
     public Ordine getOrdineTotGiorWithDB(Cliente c, String data) {
         String sql = "SELECT c.nome as nome_cliente, c.cognome as cognome_cliente, o.data_ordine, sum(o.quantita*o.prezzo_unitario) AS tot_ord_gior FROM ordini o JOIN clienti c ON(o.cliente_id =c.id )\n" +
                 "JOIN prodotti p ON(o.prodotto_id =p.id )\n" +
-                "JOIN stato s ON(o.stato_id =s.id )\n" +
                 "WHERE c.nome = ? AND c.cognome = ? AND o.data_ordine LIKE ?\n" +
                 "GROUP BY o.data_ordine ";
         Connection connection = null;

@@ -29,7 +29,7 @@ public class ProdottoRepository implements prodottiCRUD {
 
             preparedStatement.setString(1, p.getNome());
             preparedStatement.setBigDecimal(2, p.getPrezzo());
-            preparedStatement.setInt(3, p.getDisponibilita().getId());
+            preparedStatement.setInt(3, p.getDisponibilita().fromStringToInt(p.getDisponibilita().getCode()));
             preparedStatement.setInt(4, p.getCategoria().getId());
             preparedStatement.setInt(5, p.getMateria().getId());
             preparedStatement.setInt(6, p.getQuantita_disp());
@@ -47,8 +47,8 @@ public class ProdottoRepository implements prodottiCRUD {
 
     @Override
     public HashMap<Integer, Prodotto> getProdottiWithDB() {
-        String sql = "select o.id, o.nome, o.prezzo, d.code as disponibilita_code, c.nome as categoria_code, m.nome as materia_code, o.quantita_disp \n" +
-                "from prodotti o join Disponibilita d on (o.disponibilita = d.id)\n" +
+        String sql = "select o.id, o.nome, o.prezzo, o.disponibilita, c.nome as categoria_code, m.nome as materia_code, o.quantita_disp \n" +
+                "from prodotti o \n" +
                 "join Materie m on (o.materia = m.id)\n" +
                 "join Categorie c on (o.categoria = c.id) ";
         Connection connection = null;
@@ -69,7 +69,7 @@ public class ProdottoRepository implements prodottiCRUD {
                 ogg.setNome(rs.getString("nome"));
                 ogg.setPrezzo(rs.getBigDecimal("prezzo"));
                 Disponibilita disponibilita = new Disponibilita();
-                disponibilita.setCode(rs.getString("disponibilita_code"));
+                disponibilita.setId(rs.getInt("disponibilita"));
                 ogg.setDisponibilita(disponibilita);
                 Categoria categoria = new Categoria();
                 categoria.setNome(rs.getString("categoria_code"));
@@ -93,11 +93,11 @@ public class ProdottoRepository implements prodottiCRUD {
     }
 
     public HashMap<Integer, Prodotto> getProdottiDispWithDB() {
-        String sql = "select o.id, o.nome, o.prezzo, d.code as disponibilita_code, c.nome as categoria_code, m.nome as materia_code, o.quantita_disp \n" +
-                "from prodotti o join Disponibilita d on (o.disponibilita = d.id)\n" +
+        String sql = "select o.id, o.nome, o.prezzo, o.disponibilita, c.nome as categoria_code, m.nome as materia_code, o.quantita_disp \n" +
+                "from prodotti o \n" +
                 "join Materie m on (o.materia = m.id)\n" +
                 "join Categorie c on (o.categoria = c.id)\n" +
-                "where disponibilita_code = 'DISPONIBILE' OR disponibilita_code = 'ESAURIMENTO'";
+                "where o.disponibilita = 1 OR o.disponibilita = 3";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet rs = null;
@@ -116,7 +116,7 @@ public class ProdottoRepository implements prodottiCRUD {
                 p.setNome(rs.getString("nome"));
                 p.setPrezzo(rs.getBigDecimal("prezzo"));
                 Disponibilita disponibilita = new Disponibilita();
-                disponibilita.setCode(rs.getString("disponibilita_code"));
+                disponibilita.setId(rs.getInt("disponibilita"));
                 p.setDisponibilita(disponibilita);
                 Categoria categoria = new Categoria();
                 categoria.setNome(rs.getString("categoria_code"));
@@ -140,8 +140,8 @@ public class ProdottoRepository implements prodottiCRUD {
     }
 
     public HashMap<Integer, Prodotto> getProdottiViaCategoriaWithDB(String nomeCat) {
-        String sql = "select o.id, o.nome, o.prezzo, d.code as disponibilita_code, c.nome as categoria_code, m.nome as materia_code, o.quantita_disp \n" +
-                "from prodotti o join Disponibilita d on (o.disponibilita = d.id)\n" +
+        String sql = "select o.id, o.nome, o.prezzo, o.disponibilita, c.nome as categoria_code, m.nome as materia_code, o.quantita_disp \n" +
+                "from prodotti o \n" +
                 "join Materie m on (o.materia = m.id)\n" +
                 "join Categorie c on (o.categoria = c.id)\n" +
                 "where categoria_code = ?";
@@ -164,7 +164,7 @@ public class ProdottoRepository implements prodottiCRUD {
                 ogg.setNome(rs.getString("nome"));
                 ogg.setPrezzo(rs.getBigDecimal("prezzo"));
                 Disponibilita disponibilita = new Disponibilita();
-                disponibilita.setCode(rs.getString("disponibilita_code"));
+                disponibilita.setId(rs.getInt("disponibilita"));
                 ogg.setDisponibilita(disponibilita);
                 Categoria categoria = new Categoria();
                 categoria.setNome(rs.getString("categoria_code"));
@@ -188,8 +188,8 @@ public class ProdottoRepository implements prodottiCRUD {
     }
 
     public HashMap<Integer, Prodotto> getProdottiViaMateriaWithDB(String nomeMat) {
-        String sql = "select o.id, o.nome, o.prezzo, d.code as disponibilita_code, c.nome as categoria_code, m.nome as materia_code, o.quantita_disp \n" +
-                "from prodotti o join Disponibilita d on (o.disponibilita = d.id)\n" +
+        String sql = "select o.id, o.nome, o.prezzo, o.disponibilita, c.nome as categoria_code, m.nome as materia_code, o.quantita_disp \n" +
+                "from prodotti o \n" +
                 "join Materie m on (o.materia = m.id)\n" +
                 "join Categorie c on (o.categoria = c.id)\n" +
                 "where materia_code = ?";
@@ -212,7 +212,7 @@ public class ProdottoRepository implements prodottiCRUD {
                 ogg.setNome(rs.getString("nome"));
                 ogg.setPrezzo(rs.getBigDecimal("prezzo"));
                 Disponibilita disponibilita = new Disponibilita();
-                disponibilita.setCode(rs.getString("disponibilita_code"));
+                disponibilita.setId(rs.getInt("disponibilita"));
                 ogg.setDisponibilita(disponibilita);
                 Categoria categoria = new Categoria();
                 categoria.setNome(rs.getString("categoria_code"));
@@ -237,8 +237,8 @@ public class ProdottoRepository implements prodottiCRUD {
 
     @Override
     public Prodotto getProdottoWithDB(String nome) {
-        String sql = "select o.id, o.nome, o.prezzo, d.code as disponibilita_code, c.nome as categoria_code, m.nome as materia_code, o.quantita_disp \n" +
-                "from prodotti o join Disponibilita d on (o.disponibilita = d.id)\n" +
+        String sql = "select o.id, o.nome, o.prezzo, o.disponibilita, c.nome as categoria_code, m.nome as materia_code, o.quantita_disp \n" +
+                "from prodotti o \n" +
                 "join Materie m on (o.materia = m.id)\n" +
                 "join Categorie c on (o.categoria = c.id)\n" +
                 "where o.nome = ?";
@@ -258,7 +258,7 @@ public class ProdottoRepository implements prodottiCRUD {
                 prodotto.setNome(rs.getString("nome"));
                 prodotto.setPrezzo(rs.getBigDecimal("prezzo"));
                 Disponibilita disponibilita = new Disponibilita();
-                disponibilita.setCode(rs.getString("disponibilita_code"));
+                disponibilita.setId(rs.getInt("disponibilita"));
                 prodotto.setDisponibilita(disponibilita);
                 Categoria categoria = new Categoria();
                 categoria.setNome(rs.getString("categoria_code"));
@@ -280,11 +280,11 @@ public class ProdottoRepository implements prodottiCRUD {
     }
 
     public Prodotto getProdottoDispWithDB(String nome) {
-        String sql = "select o.id, o.nome, o.prezzo, d.code as disponibilita_code, c.nome as categoria_code, m.nome as materia_code, o.quantita_disp \n" +
-                "from prodotti o join Disponibilita d on (o.disponibilita = d.id)\n" +
+        String sql = "select o.id, o.nome, o.prezzo, o.disponibilita, c.nome as categoria_code, m.nome as materia_code, o.quantita_disp \n" +
+                "from prodotti o \n" +
                 "join Materie m on (o.materia = m.id)\n" +
                 "join Categorie c on (o.categoria = c.id)\n" +
-                "where o.nome = ? AND (disponibilita_code = 'DISPONIBILE' OR disponibilita_code = 'ESAURIMENTO')";
+                "where o.nome = ? AND (o.disponibilita = 1 OR o.disponibilita = 3)";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet rs = null;
@@ -301,7 +301,7 @@ public class ProdottoRepository implements prodottiCRUD {
                 prodotto.setNome(rs.getString("nome"));
                 prodotto.setPrezzo(rs.getBigDecimal("prezzo"));
                 Disponibilita disponibilita = new Disponibilita();
-                disponibilita.setCode(rs.getString("disponibilita_code"));
+                disponibilita.setId(rs.getInt("disponibilita"));
                 prodotto.setDisponibilita(disponibilita);
                 Categoria categoria = new Categoria();
                 categoria.setNome(rs.getString("categoria_code"));
@@ -337,7 +337,7 @@ public class ProdottoRepository implements prodottiCRUD {
 
             preparedStatement.setString(1, newP.getNome());
             preparedStatement.setBigDecimal(2, newP.getPrezzo());
-            preparedStatement.setInt(3, newP.getDisponibilita().getId());
+            preparedStatement.setInt(3, newP.getDisponibilita().fromStringToInt(newP.getDisponibilita().getCode()));
             preparedStatement.setInt(4, newP.getCategoria().getId());
             preparedStatement.setInt(5, newP.getMateria().getId());
             preparedStatement.setInt(6, newP.getQuantita_disp());

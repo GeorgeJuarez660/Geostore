@@ -594,6 +594,9 @@ public class AppTerminal {
                          }
                     }while(flag);
                }
+               else{
+                    Utility.msgInf("GEOSTORE", "Accesso negato - email e/o codice admin errati\n");
+               }
 
           }
           else{

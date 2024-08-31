@@ -67,4 +67,40 @@ public class Stato {
                 ", descrizione='" + descrizione + '\'' +
                 '}';
     }
+
+    public String fromIntToString(int value){
+        String valueS = "";
+        if(value == 1){
+            valueS = "ELABORAZIONE";
+        }
+        else if(value == 2){
+            valueS = "ACCETTATO";
+        }
+        else if(value == 3){
+            valueS = "RIFIUTATO";
+        }
+        else{
+            valueS = null;
+        }
+
+        return valueS;
+    }
+
+    public int fromStringToInt(String value){
+        int valueInt;
+        if(value.equalsIgnoreCase("ELABORAZIONE")){
+            valueInt = 1;
+        }
+        else if(value.equalsIgnoreCase("ACCETTATO")){
+            valueInt = 2;
+        }
+        else if(value.equalsIgnoreCase("RIFIUTATO")){
+            valueInt = 3;
+        }
+        else{
+            valueInt = 0;
+        }
+
+        return valueInt;
+    }
 }

@@ -69,4 +69,52 @@ public class Disponibilita {
                 ", descrizione='" + descrizione + '\'' +
                 '}';
     }
+
+    public String fromIntToString(int value){
+        String valueS = "";
+        if(value == 1){
+            valueS = "DISPONIBILE";
+        }
+        else if(value == 2){
+            valueS = "ARRIVO";
+        }
+        else if(value == 3){
+            valueS = "ESAURIMENTO";
+        }
+        else if(value == 4){
+            valueS = "ESAURITO";
+        }
+        else if(value == 5){
+            valueS = "N/A";
+        }
+        else{
+            valueS = null;
+        }
+
+        return valueS;
+    }
+
+    public int fromStringToInt(String value){
+        int valueInt;
+        if(value.equalsIgnoreCase("DISPONIBILE")){
+            valueInt = 1;
+        }
+        else if(value.equalsIgnoreCase("ARRIVO")){
+            valueInt = 2;
+        }
+        else if(value.equalsIgnoreCase("ESAURIMENTO")){
+            valueInt = 3;
+        }
+        else if(value.equalsIgnoreCase("ESAURITO")){
+            valueInt = 4;
+        }
+        else if(value.equalsIgnoreCase("N/A")){
+            valueInt = 5;
+        }
+        else{
+            valueInt = 0;
+        }
+
+        return valueInt;
+    }
 }
