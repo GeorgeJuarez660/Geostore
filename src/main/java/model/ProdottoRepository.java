@@ -355,6 +355,34 @@ public class ProdottoRepository implements prodottiCRUD {
         return num;
     }
 
+    public int updateProdottoAfterAccOrdineWithDB(Integer id, Prodotto newP) {
+        String sql = "UPDATE `prodotti` SET `disponibilita` = ?, `quantita_disp` = ? WHERE id = ? ";
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        int num = 0;
+
+        try{
+            //Connessione al db
+            connection = DBConnection.sqlConnect();
+            preparedStatement = connection.prepareStatement(sql);
+            //int num = 0;
+
+            preparedStatement.setInt(1, newP.getDisponibilita().getId());
+            preparedStatement.setInt(2, newP.getQuantita_disp());
+
+            preparedStatement.setInt(3, id);
+
+            num = preparedStatement.executeUpdate();
+            //chiudi la connessione
+            preparedStatement.close();
+            connection.close();
+        }catch(SQLException e){
+            Utility.msgInf("GEOSTORE", "Errore nel updateProdottoAfterAccOrdineWithDB: " + e.getMessage());
+        }
+
+        return num;
+    }
+
     @Override
     public int deleteProdottoWithDB(Integer id) {
         String sql = "DELETE FROM `prodotti` WHERE id = ? ";

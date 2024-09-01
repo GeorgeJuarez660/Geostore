@@ -224,7 +224,7 @@ public class OrdineRepository implements ordiniCRUD {
 
     @Override
     public int updateOrdineWithDB(Integer id, Ordine newO) {
-        String sql = "UPDATE `ordini` SET `stato_id` = ?, `quantita` = ?, `prezzo_unitario` = ? WHERE id = ? ";
+        String sql = "UPDATE `ordini` SET `stato_id` = ?, `quantita` = ? WHERE id = ? ";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         int num = 0;
@@ -237,8 +237,7 @@ public class OrdineRepository implements ordiniCRUD {
 
             preparedStatement.setInt(1, newO.getStato().fromStringToInt(newO.getStato().getCode()));
             preparedStatement.setInt(2, newO.getQuantita());
-            preparedStatement.setBigDecimal(3, newO.getPrezzo_unitario());
-            preparedStatement.setInt(4, id);
+            preparedStatement.setInt(3, id);
             num = preparedStatement.executeUpdate();
             //chiudi la connessione
             preparedStatement.close();

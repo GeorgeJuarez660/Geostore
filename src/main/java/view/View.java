@@ -421,24 +421,31 @@ public class View {
     }
 
     public Ordine maskUpdateOrdine(Ordine oOld, Ordine oNew){
-        BigDecimal prezzo = Utility.insertBigDecimal("Inserisci il prezzo unitario da " + oOld.getPrezzo_unitario() + " a: ");
-        Integer quantita_ord = Utility.insertInt("Inserisci la quantità ordinata da " + oOld.getQuantita() + " a: ");
         String stato = Utility.insertString("Inserisci lo stato da " + oOld.getStato().fromIntToString(oOld.getStato().getId()) + " a: ");
         oNew.setId(oOld.getId());
 
-        if(prezzo != null){
-            oNew.setPrezzo_unitario(prezzo);
-        }
-        else{
-            oNew.setPrezzo_unitario(oOld.getPrezzo_unitario());
-        }
+        boolean flag;
 
-        if(quantita_ord != null){
-            oNew.setQuantita(quantita_ord);
-        }
-        else{
-            oNew.setQuantita(oOld.getQuantita());
-        }
+        do {
+            flag = false;
+            String quantita_ord = Utility.insertString("Inserisci la quantità ordinata da " + oOld.getQuantita() + " a: ");
+            if(!quantita_ord.isEmpty()) {
+                try {
+                    oNew.setQuantita(Integer.parseInt(quantita_ord));
+                }
+                catch(NumberFormatException e){
+                    Utility.msgInf("GEOSTORE","ATTENZIONE: inserisci un numero valido");
+                    flag=true;
+                }
+                catch(Exception e) {
+                    Utility.msgInf("GEOSTORE","ERRORE");
+                    flag=true;
+                }
+            }
+            else {
+                oNew.setQuantita(oOld.getQuantita());
+            }
+        }while(flag);
 
         Stato st = new Stato();
         if(!stato.isEmpty()){

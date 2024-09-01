@@ -416,6 +416,8 @@ public class AppTerminal {
 
                                              Ordine oNew = view.maskUpdateOrdine(o, new Ordine());
 
+                                             changeStatusProdottoAfterOrder(o, oNew);
+
                                              int num = odr.updateOrdineWithDB(oNew.getId(), oNew);
 
                                              if(num > 0){
@@ -605,5 +607,37 @@ public class AppTerminal {
 
           Utility.msgInf("GEOSTORE","***GRAZIE PER AVER PROVATO IL MENU***");
 
+     }
+
+     private static void changeStatusProdottoAfterOrder(Ordine oOld, Ordine oNew){
+          if(oOld.getStato().getId() == 1 && oNew.getStato().getCode().equals("ACCETTATO")){
+               Prodotto p;
+               ProdottoRepository pr = new ProdottoRepository();
+               p = pr.getProdottoWithDB(oOld.getProdotto().getNome());
+
+               Integer subQuantita = p.getQuantita_disp() - oNew.getQuantita();
+               p.setQuantita_disp(subQuantita);
+               Disponibilita newDisp = new Disponibilita();
+
+               if(p.getQuantita_disp() == 0){
+                    newDisp.setId(4);
+               }
+               else if(p.getQuantita_disp() >= 1 && p.getQuantita_disp() <=3){
+                    newDisp.setId(3);
+               }
+               else{
+                    newDisp.setId(1);
+               }
+               p.setDisponibilita(newDisp);
+
+               int num = pr.updateProdottoAfterAccOrdineWithDB(p.getId(), p);
+
+               if(num > 0){
+                    Utility.msgInf("GEOSTORE", "Quantità e/o disponibilità aggiornati\n");
+               }
+               else{
+                    Utility.msgInf("GEOSTORE", "Quantità e/o disponibilità non aggiornati\n");
+               }
+          }
      }
 }
