@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact name="Geostore:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Geostore_jar</output-path>
+    <root id="root">
+      <element id="archive" name="Geostore.jar">
+        <element id="module-output" name="Geostore" />
+      </element>
+      <element id="library" level="project" name="slf4j-api-2.0.16" />
+      <element id="library" level="project" name="sqlite-jdbc-3.46.0.1" />
+      <element id="library" level="project" name="slf4j-simple-2.0.16" />
+    </root>
+  </artifact>
+</component>
