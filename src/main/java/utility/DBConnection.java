@@ -3,13 +3,12 @@ package src.main.java.utility;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import org.sqlite.JDBC;
 
 
 public class DBConnection {
 
     //Directory del file db
-    private static final String URL = "jdbc:sqlite:C:/Users/giorg/OneDrive/Desktop/App/G&P/DB/geostore.db";
+    private static final String URL = "jdbc:sqlite:database/geostore.db";
 
     //Metodo per ottenere la connessione al db
     public static Connection sqlConnect(){
