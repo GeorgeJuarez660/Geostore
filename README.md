@@ -1,7 +1,9 @@
 # GeoStore
 Programma che permette di simulare il funzionamento di uno store virtuale
 
-è disponibile il file zip all'interno della cartella exe, contenente il file jar, il file db e le credenziali d'accesso, cui il primo verrà eseguito aprendo il prompt cmd digitando il comando "java -jar GeostoreTerminal.jar"
+Troverete il file zip contenente il file jar, il file db e le credenziali d'accesso, cui il primo verrà eseguito aprendo il prompt cmd digitando il comando "java -jar GeostoreTerminal.jar"
+
+ATTENZIONE: assicuratevi di avere la versione JDK 22, altrimenti non viene eseguito il file jar
 
 ATTENZIONE: assicuratevi di avere la versione JDK 22, altrimenti non viene eseguito il file jar
 
