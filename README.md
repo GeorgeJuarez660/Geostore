@@ -5,8 +5,6 @@ Troverete il file zip contenente il file jar, il file db e le credenziali d'acce
 
 ATTENZIONE: assicuratevi di avere la versione JDK 22, altrimenti non viene eseguito il file jar
 
-ATTENZIONE: assicuratevi di avere la versione JDK 22, altrimenti non viene eseguito il file jar
-
 Invece, se volete scaricare l'intero codice del programma, è necessario:
 
 1. Scaricare l'ide IntelliJ e il programma DBeaver (quest'ultimo per eseguire query)
