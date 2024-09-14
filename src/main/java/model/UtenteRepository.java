@@ -2,7 +2,7 @@ package src.main.java.model;
 
 import src.main.java.utility.DBConnection;
 import src.main.java.utility.Utility;
-import src.main.java.utility.clientiCRUD;
+import src.main.java.utility.utentiCRUD;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,13 +10,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 
-public class ClienteRepository implements clientiCRUD {
+public class UtenteRepository implements utentiCRUD {
 
     private HashMap<Integer, Cliente> clienti = new HashMap<>();
 
     @Override
-    public int insertClienteWithDB(Integer id, Cliente c) {
-        String sql = "INSERT INTO `clienti`(`nome`, `cognome`,`email`,`telefono`, `indirizzo`, `codice_admin`) VALUES (?, ?, ?, ?, ?, ?) ";
+    public int insertUtenteWithDB(Integer id, Utente u) {
+        String sql = "INSERT INTO `utenti`(`nome`, `cognome`,`email`,`password`,`telefono`, `indirizzo`, `portafoglio`,`codice_admin`) VALUES (?, ?, ?, ?, ?, ?) ";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         int num = 0;
@@ -27,18 +27,24 @@ public class ClienteRepository implements clientiCRUD {
             preparedStatement = connection.prepareStatement(sql);
             //int num = 0;
 
-            preparedStatement.setString(1, c.getNome());
-            preparedStatement.setString(2, c.getCognome());
-            preparedStatement.setString(3, c.getEmail());
-            preparedStatement.setString(4, c.getTelefono());
-            preparedStatement.setString(5, c.getIndirizzo());
+            preparedStatement.setString(1, u.getNome());
+            preparedStatement.setString(2, u.getCognome());
+            preparedStatement.setString(5, u.getTelefono());
+            preparedStatement.setString(6, u.getIndirizzo());
 
-            if(c instanceof Amministratore){
-                Amministratore a = (Amministratore) c;
-                preparedStatement.setString(6, a.getCodeAdmin());
+            if(u instanceof Amministratore){
+                Amministratore a = (Amministratore) u;
+                preparedStatement.setString(3, a.getEmail());
+                preparedStatement.setString(4, a.getPassword());
+                preparedStatement.setBigDecimal(7, a.getPortafoglio());
+                preparedStatement.setString(8, a.getCodeAdmin());
             }
-            else{
-                preparedStatement.setString(6, null);
+            else if(u instanceof Cliente){
+                Cliente c = (Cliente) u;
+                preparedStatement.setString(3, c.getEmail());
+                preparedStatement.setString(4, c.getPassword());
+                preparedStatement.setBigDecimal(7, c.getPortafoglio());
+                preparedStatement.setString(8, null);
             }
 
             num = preparedStatement.executeUpdate();
@@ -46,7 +52,7 @@ public class ClienteRepository implements clientiCRUD {
             preparedStatement.close();
             connection.close();
         }catch(SQLException e){
-            Utility.msgInf("GEOSTORE", "Errore nel insertClienteWithDB: " + e.getMessage());
+            Utility.msgInf("GEOSTORE", "Errore nel insertUtenteWithDB: " + e.getMessage());
         }
 
         return num;

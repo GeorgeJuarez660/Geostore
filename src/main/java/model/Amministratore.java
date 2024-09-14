@@ -1,5 +1,6 @@
 package src.main.java.model;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 public class Amministratore extends Cliente{
@@ -29,8 +30,8 @@ public class Amministratore extends Cliente{
         return Objects.hash(codeAdmin);
     }
 
-    public Amministratore(Integer id, String nome, String cognome, String email, String telefono, String indirizzo, String codeAdmin) {
-        super(id, nome, cognome, email, telefono, indirizzo);
+    public Amministratore(Integer id, String nome, String cognome, String email, String password, BigDecimal portafoglio, String telefono, String indirizzo, String codeAdmin) {
+        super(id, nome, cognome, email, password, indirizzo, telefono, portafoglio);
         this.codeAdmin = codeAdmin;
     }
 

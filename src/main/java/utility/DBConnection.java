@@ -7,9 +7,9 @@ import java.sql.SQLException;
 
 public class DBConnection {
     //Directory automatica
-    private static final String currentDir = System.getProperty("user.dir");
+    //private static final String currentDir = System.getProperty("user.dir");
     //Directory del file db
-    private static final String URL = "jdbc:sqlite:" + currentDir + "/" + "geostore.db";
+    private static final String URL = "jdbc:sqlite:C:/Users/giorg/OneDrive/Desktop/App/G&P/DB/geostore.db";
 
     //Metodo per ottenere la connessione al db
     public static Connection sqlConnect(){

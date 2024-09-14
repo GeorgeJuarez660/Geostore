@@ -1,5 +1,6 @@
 package src.main.java.view;
 
+import jdk.jshell.execution.Util;
 import src.main.java.model.*;
 import src.main.java.utility.Utility;
 
@@ -53,10 +54,19 @@ public class View {
     }
 
     public int readAdminOrUserMenu(){
-        System.out.println("***BENVENUTO SU GEOSTORE***\n");
         System.out.println("***SEI UN CLIENTE O ADMIN?***");
         System.out.println("1) Cliente");
         System.out.println("2) Admin");
+
+        return Utility.insertInt("******");
+    }
+
+    public int registerOrLogin(){
+        System.out.println("***BENVENUTO SU GEOSTORE***\n");
+        System.out.println("1) Registrati");
+        System.out.println("2) Accedi");
+        System.out.println("0) ESCI");
+
 
         return Utility.insertInt("******");
     }
@@ -135,17 +145,25 @@ public class View {
         m.setCount();
     }
 
-    public void maskInsertUtente(Cliente c){
-        c.setNome(Utility.insertString("Inserisci il nome utente"));
-        c.setCognome(Utility.insertString("Inserisci il cognome utente"));
-        c.setEmail(Utility.insertString("Inserisci l'email utente"));
-        c.setTelefono(Utility.insertString("Inserisci il numero di telefono"));
-        c.setIndirizzo(Utility.insertString("Inserisci l'indirizzo"));
-        c.setCount();
+    public void maskInsertUtente(Utente u){
+        u.setNome(Utility.insertString("Inserisci il nome utente"));
+        u.setCognome(Utility.insertString("Inserisci il cognome utente"));
+        u.setTelefono(Utility.insertString("Inserisci il numero di telefono"));
+        u.setIndirizzo(Utility.insertString("Inserisci l'indirizzo"));
+        u.setCount();
 
-        if(c instanceof Amministratore){
-            Amministratore a = (Amministratore) c;
+        if(u instanceof Amministratore){
+            Amministratore a = (Amministratore) u;
+            a.setEmail(Utility.insertString("Inserisci l'email utente"));
+            a.setPassword(Utility.insertString("Inserisci la password utente"));
+            a.setPortafoglio(new BigDecimal(50));
             a.setCodeAdmin(Utility.insertString("Inserisci il codice amministratore"));
+        }
+        else if(u instanceof Cliente){
+            Cliente c = (Cliente) u;
+            c.setEmail(Utility.insertString("Inserisci l'email utente"));
+            c.setPassword(Utility.insertString("Inserisci la password utente"));
+            c.setPortafoglio(new BigDecimal(50));
         }
     }
 
