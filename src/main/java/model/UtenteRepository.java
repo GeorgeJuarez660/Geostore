@@ -12,11 +12,11 @@ import java.util.HashMap;
 
 public class UtenteRepository implements utentiCRUD {
 
-    private HashMap<Integer, Cliente> clienti = new HashMap<>();
+    private HashMap<Integer, Utente> utenti = new HashMap<>();
 
     @Override
     public int insertUtenteWithDB(Integer id, Utente u) {
-        String sql = "INSERT INTO `utenti`(`nome`, `cognome`,`email`,`password`,`telefono`, `indirizzo`, `portafoglio`,`codice_admin`) VALUES (?, ?, ?, ?, ?, ?) ";
+        String sql = "INSERT INTO `utenti`(`nome`, `cognome`,`email`,`password`,`telefono`, `indirizzo`, `portafoglio`,`codice_admin`) VALUES (?, ?, ?, ?, ?, ?, ?, ?) ";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         int num = 0;
@@ -59,50 +59,76 @@ public class UtenteRepository implements utentiCRUD {
     }
 
     @Override
-    public HashMap<Integer, Cliente> getClientiWithDB() {
-        String sql = "select * from clienti c ";
+    public HashMap<Integer, Utente> getUtentiWithDB() {
+        String sql = "select * from utenti u ";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet rs = null;
-        clienti = new HashMap<>();
+        utenti = new HashMap<>();
 
         try{
             //Connessione al db
             connection = DBConnection.sqlConnect();
             preparedStatement = connection.prepareStatement(sql);
             rs = preparedStatement.executeQuery();
-            Cliente cl;
+            Utente foundUt, ut;
 
             while(rs.next()){
-                cl = new Cliente();
-                cl.setId(rs.getInt("id"));
-                cl.setNome(rs.getString("nome"));
-                cl.setCognome(rs.getString("cognome"));
-                cl.setEmail(rs.getString("email"));
-                cl.setIndirizzo(rs.getString("indirizzo"));
-                cl.setTelefono(rs.getString("telefono"));
+                String codeAdmin = rs.getString("codice_admin");
 
-                clienti.put(cl.getId(), cl);
+                if(codeAdmin != null) {
+                    foundUt = new Amministratore();
+                }
+                else {
+                    foundUt = new Cliente();
+                }
+
+                if(foundUt instanceof Amministratore){
+                    Amministratore foundAm = (Amministratore) foundUt;
+                    foundAm.setId(rs.getInt("id"));
+                    foundAm.setNome(rs.getString("nome"));
+                    foundAm.setCognome(rs.getString("cognome"));
+                    foundAm.setEmail(rs.getString("email"));
+                    foundAm.setPassword(rs.getString("password"));
+                    foundAm.setIndirizzo(rs.getString("indirizzo"));
+                    foundAm.setTelefono(rs.getString("telefono"));
+                    foundAm.setCodeAdmin(rs.getString("codice_admin"));
+                    foundAm.setPortafoglio(rs.getBigDecimal("portafoglio"));
+                    ut = foundAm;
+                }
+                else{
+                    Cliente foundCl = (Cliente) foundUt;
+                    foundCl.setId(rs.getInt("id"));
+                    foundCl.setNome(rs.getString("nome"));
+                    foundCl.setCognome(rs.getString("cognome"));
+                    foundCl.setEmail(rs.getString("email"));
+                    foundCl.setPassword(rs.getString("password"));
+                    foundCl.setIndirizzo(rs.getString("indirizzo"));
+                    foundCl.setTelefono(rs.getString("telefono"));
+                    foundCl.setPortafoglio(rs.getBigDecimal("portafoglio"));
+                    ut = foundCl;
+                }
+
+                utenti.put(ut.getId(), ut);
             }
             //chiudi la connessione
             rs.close();
             preparedStatement.close();
             connection.close();
         }catch(SQLException e){
-            Utility.msgInf("GEOSTORE", "Errore nel getClientiWithDB: " + e.getMessage());
+            Utility.msgInf("GEOSTORE", "Errore nel getUtentiWithDB: " + e.getMessage());
         }
 
-        return clienti;
+        return utenti;
     }
 
     @Override
-    public Cliente getClienteWithDB(String nome) {
-        String sql = "select * from clienti c where c.nome = ? ";
+    public Utente getUtenteWithDB(String nome) {
+        String sql = "select * from utenti u where u.nome = ? ";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet rs = null;
-        Cliente foundCliente = null;
-        Cliente utente = null;
+        Utente foundUtente = null, utente = null;
         try{
             //Connessione al db
             connection = DBConnection.sqlConnect();
@@ -114,30 +140,35 @@ public class UtenteRepository implements utentiCRUD {
                 String codeAdmin = rs.getString("codice_admin");
 
                 if(codeAdmin != null) {
-                    foundCliente = new Amministratore();
+                    foundUtente = new Amministratore();
                 }
                 else {
-                    foundCliente = new Cliente();
+                    foundUtente = new Cliente();
                 }
 
-                if(foundCliente instanceof Amministratore){
-                    Amministratore foundAdmin = (Amministratore) foundCliente;
+                if(foundUtente instanceof Amministratore){
+                    Amministratore foundAdmin = (Amministratore) foundUtente;
                     foundAdmin.setId(rs.getInt("id"));
                     foundAdmin.setNome(rs.getString("nome"));
                     foundAdmin.setCognome(rs.getString("cognome"));
                     foundAdmin.setEmail(rs.getString("email"));
+                    foundAdmin.setPassword(rs.getString("password"));
                     foundAdmin.setIndirizzo(rs.getString("indirizzo"));
                     foundAdmin.setTelefono(rs.getString("telefono"));
                     foundAdmin.setCodeAdmin(codeAdmin);
+                    foundAdmin.setPortafoglio(rs.getBigDecimal("portafoglio"));
                     utente = foundAdmin;
                 }
                 else{
+                    Cliente foundCliente = (Cliente) foundUtente;
                     foundCliente.setId(rs.getInt("id"));
                     foundCliente.setNome(rs.getString("nome"));
                     foundCliente.setCognome(rs.getString("cognome"));
                     foundCliente.setEmail(rs.getString("email"));
+                    foundCliente.setPassword(rs.getString("password"));
                     foundCliente.setIndirizzo(rs.getString("indirizzo"));
                     foundCliente.setTelefono(rs.getString("telefono"));
+                    foundCliente.setPortafoglio(rs.getBigDecimal("portafoglio"));
                     utente = foundCliente;
                 }
             }
@@ -146,14 +177,14 @@ public class UtenteRepository implements utentiCRUD {
             preparedStatement.close();
             connection.close();
         }catch(SQLException e){
-            Utility.msgInf("GEOSTORE", "Errore nel getClienteWithDB: " + e.getMessage());
+            Utility.msgInf("GEOSTORE", "Errore nel getUtenteWithDB: " + e.getMessage());
         }
 
         return utente;
     }
 
-    public Cliente checkCliente(String email) {
-        String sql = "select * from clienti c where c.email = ? ";
+    public Cliente checkCliente(String email, String password) {
+        String sql = "select * from utenti u where u.email = ? and u.password = ? ";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet rs = null;
@@ -163,6 +194,7 @@ public class UtenteRepository implements utentiCRUD {
             connection = DBConnection.sqlConnect();
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, email);
+            preparedStatement.setString(2, password);
             rs = preparedStatement.executeQuery();
 
             while(rs.next()){
@@ -170,58 +202,62 @@ public class UtenteRepository implements utentiCRUD {
                 foundCliente.setNome(rs.getString("nome"));
                 foundCliente.setCognome(rs.getString("cognome"));
                 foundCliente.setEmail(rs.getString("email"));
+                foundCliente.setPassword(rs.getString("password"));
                 foundCliente.setIndirizzo(rs.getString("indirizzo"));
                 foundCliente.setTelefono(rs.getString("telefono"));
-
+                foundCliente.setPortafoglio(rs.getBigDecimal("portafoglio"));
             }
             //chiudi la connessione
             rs.close();
             preparedStatement.close();
             connection.close();
         }catch(SQLException e){
-            Utility.msgInf("GEOSTORE", "Errore nel checkUser: " + e.getMessage());
+            Utility.msgInf("GEOSTORE", "Errore nel checkCliente: " + e.getMessage());
         }
 
         return foundCliente;
     }
 
-    public Cliente checkAdmin(String email, String codeAdmin) {
-        String sql = "select * from clienti c where c.email = ? and c.codice_admin = ? ";
+    public Amministratore checkAdmin(String email, String password, String codeAdmin) {
+        String sql = "select * from utenti u where u.email = ? and u.password = ? and u.codice_admin = ? ";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet rs = null;
-        Amministratore foundCliente = new Amministratore();
+        Amministratore foundAdmin = new Amministratore();
         try{
             //Connessione al db
             connection = DBConnection.sqlConnect();
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, email);
-            preparedStatement.setString(2, codeAdmin);
+            preparedStatement.setString(2, password);
+            preparedStatement.setString(3, codeAdmin);
             rs = preparedStatement.executeQuery();
 
             while(rs.next()){
-                foundCliente.setId(rs.getInt("id"));
-                foundCliente.setNome(rs.getString("nome"));
-                foundCliente.setCognome(rs.getString("cognome"));
-                foundCliente.setEmail(rs.getString("email"));
-                foundCliente.setIndirizzo(rs.getString("indirizzo"));
-                foundCliente.setTelefono(rs.getString("telefono"));
-                foundCliente.setCodeAdmin(rs.getString("codice_admin"));
+                foundAdmin.setId(rs.getInt("id"));
+                foundAdmin.setNome(rs.getString("nome"));
+                foundAdmin.setCognome(rs.getString("cognome"));
+                foundAdmin.setEmail(rs.getString("email"));
+                foundAdmin.setPassword(rs.getString("password"));
+                foundAdmin.setIndirizzo(rs.getString("indirizzo"));
+                foundAdmin.setTelefono(rs.getString("telefono"));
+                foundAdmin.setCodeAdmin(rs.getString("codice_admin"));
+                foundAdmin.setPortafoglio(rs.getBigDecimal("portafoglio"));
             }
             //chiudi la connessione
             rs.close();
             preparedStatement.close();
             connection.close();
         }catch(SQLException e){
-            Utility.msgInf("GEOSTORE", "Errore nel checkUser: " + e.getMessage());
+            Utility.msgInf("GEOSTORE", "Errore nel checkAdmin: " + e.getMessage());
         }
 
-        return foundCliente;
+        return foundAdmin;
     }
 
     @Override
-    public int updateClienteWithDB(Integer id, Cliente newC) {
-        String sql = "UPDATE `clienti` SET `nome` = ?, `cognome` = ?, `email` = ?, `telefono` = ?, `indirizzo` = ?, `codice_admin` = ? WHERE id = ? ";
+    public int updateUtenteWithDB(Integer id, Utente newU) {
+        String sql = "UPDATE `utenti` SET `nome` = ?, `cognome` = ?, `email` = ?, `password` = ?, `telefono` = ?, `indirizzo` = ?, `codice_admin` = ?, `portafoglio` = ?, WHERE id = ? ";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         int num = 0;
@@ -232,18 +268,24 @@ public class UtenteRepository implements utentiCRUD {
             preparedStatement = connection.prepareStatement(sql);
             //int num = 0;
 
-            preparedStatement.setString(1, newC.getNome());
-            preparedStatement.setString(2, newC.getCognome());
-            preparedStatement.setString(3, newC.getEmail());
-            preparedStatement.setString(4, newC.getTelefono());
-            preparedStatement.setString(5, newC.getIndirizzo());
+            preparedStatement.setString(1, newU.getNome());
+            preparedStatement.setString(2, newU.getCognome());
+            preparedStatement.setString(5, newU.getTelefono());
+            preparedStatement.setString(6, newU.getIndirizzo());
 
-            if(newC instanceof Amministratore){
-                Amministratore newA = (Amministratore) newC;
-                preparedStatement.setString(6, newA.getCodeAdmin());
+            if(newU instanceof Amministratore){
+                Amministratore newA = (Amministratore) newU;
+                preparedStatement.setString(3, newA.getEmail());
+                preparedStatement.setString(4, newA.getPassword());
+                preparedStatement.setString(7, newA.getCodeAdmin());
+                preparedStatement.setBigDecimal(8, newA.getPortafoglio());
             }
-            else{
-                preparedStatement.setString(6, null);
+            else if(newU instanceof Cliente){
+                Cliente newC = (Cliente) newU;
+                preparedStatement.setString(3, newC.getEmail());
+                preparedStatement.setString(4, newC.getPassword());
+                preparedStatement.setString(7, null);
+                preparedStatement.setBigDecimal(8, newC.getPortafoglio());
             }
 
             preparedStatement.setInt(7, id);
@@ -253,15 +295,15 @@ public class UtenteRepository implements utentiCRUD {
             preparedStatement.close();
             connection.close();
         }catch(SQLException e){
-            Utility.msgInf("GEOSTORE", "Errore nel updateClienteWithDB: " + e.getMessage());
+            Utility.msgInf("GEOSTORE", "Errore nel updateUtenteWithDB: " + e.getMessage());
         }
 
         return num;
     }
 
     @Override
-    public int deleteClienteWithDB(Integer id) {
-        String sql = "DELETE FROM `clienti` WHERE id = ? ";
+    public int deleteUtenteWithDB(Integer id) {
+        String sql = "DELETE FROM `utenti` WHERE id = ? ";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         int num = 0;
@@ -277,7 +319,7 @@ public class UtenteRepository implements utentiCRUD {
             preparedStatement.close();
             connection.close();
         }catch(SQLException e){
-            Utility.msgInf("GEOSTORE", "Errore nel deleteClienteWithDB: " + e.getMessage());
+            Utility.msgInf("GEOSTORE", "Errore nel deleteUtenteWithDB: " + e.getMessage());
         }
 
         return num;

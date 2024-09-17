@@ -7,7 +7,7 @@ import java.util.Objects;
 public class Ordine {
     private Integer id = 0;
     private static Integer count=0;
-    private Cliente cliente;
+    private Utente utente;
     private Prodotto prodotto;
     private Timestamp data_ordine;
     private Integer quantita;
@@ -27,12 +27,12 @@ public class Ordine {
         this.id = id;
     }
 
-    public Cliente getCliente() {
-        return cliente;
+    public Utente getUtente() {
+        return utente;
     }
 
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
+    public void setUtente(Utente utente) {
+        this.utente = utente;
     }
 
     public Prodotto getProdotto() {
@@ -83,17 +83,17 @@ public class Ordine {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Ordine ordine1 = (Ordine) o;
-        return Objects.equals(id, ordine1.id) && Objects.equals(cliente, ordine1.cliente) && Objects.equals(prodotto, ordine1.prodotto) && Objects.equals(quantita, ordine1.quantita) && Objects.equals(prezzo_unitario, ordine1.prezzo_unitario) && Objects.equals(data_ordine, ordine1.data_ordine) && Objects.equals(stato, ordine1.stato);
+        return Objects.equals(id, ordine1.id) && Objects.equals(utente, ordine1.utente) && Objects.equals(prodotto, ordine1.prodotto) && Objects.equals(quantita, ordine1.quantita) && Objects.equals(prezzo_unitario, ordine1.prezzo_unitario) && Objects.equals(data_ordine, ordine1.data_ordine) && Objects.equals(stato, ordine1.stato);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, cliente, prodotto, quantita, prezzo_unitario, data_ordine, stato);
+        return Objects.hash(id, utente, prodotto, quantita, prezzo_unitario, data_ordine, stato);
     }
 
-    public Ordine(Integer id, Cliente cliente, Prodotto prodotto, Integer quantita, BigDecimal prezzo_unitario, Timestamp data_ordine, Stato stato) {
+    public Ordine(Integer id, Utente utente, Prodotto prodotto, Integer quantita, BigDecimal prezzo_unitario, Timestamp data_ordine, Stato stato) {
         this.id = id;
-        this.cliente = cliente;
+        this.utente = utente;
         this.prodotto = prodotto;
         this.quantita = quantita;
         this.prezzo_unitario = prezzo_unitario;
@@ -105,7 +105,7 @@ public class Ordine {
     public String toString() {
         return "Ordine{" +
                 "id=" + id +
-                ", cliente='" + cliente + '\'' +
+                ", utente='" + utente + '\'' +
                 ", prodotto='" + prodotto + '\'' +
                 ", quantita=" + quantita +
                 ", prezzo_unitario=" + prezzo_unitario +

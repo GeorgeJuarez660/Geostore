@@ -13,7 +13,7 @@ public class OrdineRepository implements ordiniCRUD {
 
     @Override
     public int insertOrdineWithDB(Integer id, Ordine o) {
-        String sql = "INSERT INTO `ordini`(`cliente_id`, `prodotto_id`,`data_ordine`,`quantita`,`prezzo_unitario`,`stato_id`) VALUES (?, ?, ?, ?, ?, ?) ";
+        String sql = "INSERT INTO `ordini`(`utente_id`, `prodotto_id`,`data_ordine`,`quantita`,`prezzo_unitario`,`stato_id`) VALUES (?, ?, ?, ?, ?, ?) ";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         int num = 0;
@@ -24,7 +24,7 @@ public class OrdineRepository implements ordiniCRUD {
             preparedStatement = connection.prepareStatement(sql);
             //int num = 0;
 
-            preparedStatement.setInt(1, o.getCliente().getId());
+            preparedStatement.setInt(1, o.getUtente().getId());
             preparedStatement.setInt(2, o.getProdotto().getId());
             preparedStatement.setString(3, String.valueOf(o.getData_ordine()));
             preparedStatement.setInt(4, o.getQuantita());
@@ -43,7 +43,7 @@ public class OrdineRepository implements ordiniCRUD {
 
     @Override
     public HashMap<Integer, Ordine> getOrdiniWithDB() {
-        String sql = "SELECT o.id, c.nome AS nome_cliente, c.cognome AS cognome_cliente, og.nome AS nome_prodotto, o.data_ordine, o.quantita, o.prezzo_unitario, o.stato_id FROM ordini o JOIN clienti c ON(o.cliente_id =c.id )\n" +
+        String sql = "SELECT o.id, u.nome AS nome_utente, u.cognome AS cognome_utente, og.nome AS nome_prodotto, o.data_ordine, o.quantita, o.prezzo_unitario, o.stato_id FROM ordini o JOIN utenti u ON(o.utente_id =u.id )\n" +
                 "JOIN prodotti og ON(o.prodotto_id =og.id ) ";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -60,10 +60,10 @@ public class OrdineRepository implements ordiniCRUD {
             while(rs.next()){
                 ord = new Ordine();
                 ord.setId(rs.getInt("id"));
-                Cliente cliente = new Cliente();
-                cliente.setNome(rs.getString("nome_cliente"));
-                cliente.setCognome(rs.getString("cognome_cliente"));
-                ord.setCliente(cliente);
+                Utente utente = new Utente();
+                utente.setNome(rs.getString("nome_utente"));
+                utente.setCognome(rs.getString("cognome_utente"));
+                ord.setUtente(utente);
                 Prodotto prodotto = new Prodotto();
                 prodotto.setNome(rs.getString("nome_prodotto"));
                 ord.setProdotto(prodotto);
@@ -87,10 +87,10 @@ public class OrdineRepository implements ordiniCRUD {
         return ordini;
     }
 
-    public HashMap<Integer, Ordine> getOrdiniByUserWithDB(String nomeCliente) {
-        String sql = "SELECT o.id, c.nome AS nome_cliente, c.cognome AS cognome_cliente, og.nome AS nome_prodotto, o.data_ordine, o.quantita, o.prezzo_unitario, o.stato_id FROM ordini o JOIN clienti c ON(o.cliente_id =c.id )\n" +
+    public HashMap<Integer, Ordine> getOrdiniByUserWithDB(String nomeUtente) {
+        String sql = "SELECT o.id, u.nome AS nome_utente, u.cognome AS cognome_utente, og.nome AS nome_prodotto, o.data_ordine, o.quantita, o.prezzo_unitario, o.stato_id FROM ordini o JOIN utenti u ON(o.utente_id =u.id )\n" +
                 "JOIN prodotti og ON(o.prodotto_id =og.id )\n" +
-                "WHERE nome_cliente = ?";
+                "WHERE nome_utente = ?";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet rs = null;
@@ -100,17 +100,17 @@ public class OrdineRepository implements ordiniCRUD {
             //Connessione al db
             connection = DBConnection.sqlConnect();
             preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, nomeCliente);
+            preparedStatement.setString(1, nomeUtente);
             rs = preparedStatement.executeQuery();
             Ordine ord;
 
             while(rs.next()){
                 ord = new Ordine();
                 ord.setId(rs.getInt("id"));
-                Cliente cliente = new Cliente();
-                cliente.setNome(rs.getString("nome_cliente"));
-                cliente.setCognome(rs.getString("cognome_cliente"));
-                ord.setCliente(cliente);
+                Utente utente = new Utente();
+                utente.setNome(rs.getString("nome_utente"));
+                utente.setCognome(rs.getString("cognome_utente"));
+                ord.setUtente(utente);
                 Prodotto prodotto = new Prodotto();
                 prodotto.setNome(rs.getString("nome_prodotto"));
                 ord.setProdotto(prodotto);
@@ -134,10 +134,10 @@ public class OrdineRepository implements ordiniCRUD {
         return ordini;
     }
 
-    public Ordine getOrdineByUserAndProdNameWithDB(String nomeCliente, Integer idOrdine) {
-        String sql = "SELECT o.id, c.nome AS nome_cliente, c.cognome AS cognome_cliente, og.nome AS nome_prodotto, o.data_ordine, o.quantita, o.prezzo_unitario, o.stato_id FROM ordini o JOIN clienti c ON(o.cliente_id =c.id )\n" +
+    public Ordine getOrdineByUserAndProdNameWithDB(String nomeUtente, Integer idOrdine) {
+        String sql = "SELECT o.id, u.nome AS nome_utente, u.cognome AS cognome_utente, og.nome AS nome_prodotto, o.data_ordine, o.quantita, o.prezzo_unitario, o.stato_id FROM ordini o JOIN utenti u ON(o.utente_id =u.id )\n" +
                 "JOIN prodotti og ON(o.prodotto_id =og.id )\n" +
-                "WHERE nome_cliente = ? AND o.id = ?";
+                "WHERE nome_utente = ? AND o.id = ?";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet rs = null;
@@ -147,16 +147,16 @@ public class OrdineRepository implements ordiniCRUD {
             //Connessione al db
             connection = DBConnection.sqlConnect();
             preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, nomeCliente);
+            preparedStatement.setString(1, nomeUtente);
             preparedStatement.setInt(2, idOrdine);
             rs = preparedStatement.executeQuery();
 
             while(rs.next()){
                 ordine.setId(rs.getInt("id"));
-                Cliente cliente = new Cliente();
-                cliente.setNome(rs.getString("nome_cliente"));
-                cliente.setCognome(rs.getString("cognome_cliente"));
-                ordine.setCliente(cliente);
+                Utente utente = new Utente();
+                utente.setNome(rs.getString("nome_utente"));
+                utente.setCognome(rs.getString("cognome_utente"));
+                ordine.setUtente(utente);
                 Prodotto prodotto = new Prodotto();
                 prodotto.setNome(rs.getString("nome_prodotto"));
                 ordine.setProdotto(prodotto);
@@ -180,7 +180,7 @@ public class OrdineRepository implements ordiniCRUD {
 
     @Override
     public Ordine getOrdineWithDB(Integer id) {
-        String sql = "SELECT o.id, c.nome AS nome_cliente, c.cognome AS cognome_cliente, og.nome AS nome_prodotto, o.data_ordine, o.quantita, o.prezzo_unitario, o.stato_id FROM ordini o JOIN clienti c ON(o.cliente_id =c.id )\n" +
+        String sql = "SELECT o.id, u.nome AS nome_utente, u.cognome AS cognome_utente, og.nome AS nome_prodotto, o.data_ordine, o.quantita, o.prezzo_unitario, o.stato_id FROM ordini o JOIN utenti u ON(o.utente_id =u.id )\n" +
                 "JOIN prodotti og ON(o.prodotto_id =og.id )\n" +
                 "WHERE o.id = ?";
         Connection connection = null;
@@ -197,10 +197,10 @@ public class OrdineRepository implements ordiniCRUD {
 
             while(rs.next()){
                 ordine.setId(rs.getInt("id"));
-                Cliente cliente = new Cliente();
-                cliente.setNome(rs.getString("nome_cliente"));
-                cliente.setCognome(rs.getString("cognome_cliente"));
-                ordine.setCliente(cliente);
+                Utente utente = new Utente();
+                utente.setNome(rs.getString("nome_utente"));
+                utente.setCognome(rs.getString("cognome_utente"));
+                ordine.setUtente(utente);
                 Prodotto prodotto = new Prodotto();
                 prodotto.setNome(rs.getString("nome_prodotto"));
                 ordine.setProdotto(prodotto);
@@ -271,10 +271,10 @@ public class OrdineRepository implements ordiniCRUD {
         }
     }
 
-    public Ordine getOrdineTotGiorWithDB(Cliente c, String data) {
-        String sql = "SELECT c.nome as nome_cliente, c.cognome as cognome_cliente, o.data_ordine, sum(o.quantita*o.prezzo_unitario) AS tot_ord_gior FROM ordini o JOIN clienti c ON(o.cliente_id =c.id )\n" +
+    public Ordine getOrdineTotGiorWithDB(Utente u, String data) {
+        String sql = "SELECT u.nome as nome_utente, u.cognome as cognome_utente, o.data_ordine, sum(o.quantita*o.prezzo_unitario) AS tot_ord_gior FROM ordini o JOIN utenti u ON(o.utente_id =u.id )\n" +
                 "JOIN prodotti p ON(o.prodotto_id =p.id )\n" +
-                "WHERE c.nome = ? AND c.cognome = ? AND o.data_ordine LIKE ? AND o.stato_id = 2\n" +
+                "WHERE u.nome = ? AND u.cognome = ? AND o.data_ordine LIKE ? AND o.stato_id = 2\n" +
                 "GROUP BY o.data_ordine ";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -285,16 +285,16 @@ public class OrdineRepository implements ordiniCRUD {
             //Connessione al db
             connection = DBConnection.sqlConnect();
             preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, c.getNome());
-            preparedStatement.setString(2, c.getCognome());
+            preparedStatement.setString(1, u.getNome());
+            preparedStatement.setString(2, u.getCognome());
             preparedStatement.setString(3, data + "%");
             rs = preparedStatement.executeQuery();
 
             while(rs.next()){
-                Cliente cliente = new Cliente();
-                cliente.setNome(rs.getString("nome_cliente"));
-                cliente.setCognome(rs.getString("cognome_cliente"));
-                ordine.setCliente(cliente);
+                Utente utente = new Utente();
+                utente.setNome(rs.getString("nome_utente"));
+                utente.setCognome(rs.getString("cognome_utente"));
+                ordine.setUtente(utente);
                 ordine.setData_ordine(Timestamp.valueOf(rs.getString("data_ordine")));
                 ordine.setPrezzo_unitario(rs.getBigDecimal("tot_ord_gior"));
             }

@@ -54,7 +54,7 @@ public class View {
     }
 
     public int readAdminOrUserMenu(){
-        System.out.println("***SEI UN CLIENTE O ADMIN?***");
+        System.out.println("***ACCEDI COME CLIENTE/ADMIN***");
         System.out.println("1) Cliente");
         System.out.println("2) Admin");
 
@@ -71,25 +71,54 @@ public class View {
         return Utility.insertInt("******");
     }
 
-    public void maskCheckUser(Cliente c){
-        String email = Utility.insertString("Inserisci l'email cliente:");
+    public void maskCheckUser(Utente u){
 
-        if(!email.isEmpty()){
-            c.setEmail(email);
-        }
-        else{
-            c.setEmail(null);
-        }
+        if(u instanceof Amministratore){
+            Amministratore aU = (Amministratore) u;
 
-        if(c instanceof Amministratore){
-            Amministratore aC = (Amministratore) c;
+            String email = Utility.insertString("Inserisci l'email cliente:");
+            String password = Utility.insertString("Inserisci la password cliente:");
             String codeAdmin = Utility.insertString("Inserisci il codice amministratore:");
 
-            if(!codeAdmin.isEmpty()){
-                aC.setCodeAdmin(codeAdmin);
+            if(!email.isEmpty()){
+                aU.setEmail(email);
             }
             else{
-                aC.setCodeAdmin(null);
+                aU.setEmail(null);
+            }
+
+            if(!password.isEmpty()){
+                aU.setPassword(password);
+            }
+            else{
+                aU.setPassword(null);
+            }
+
+            if(!codeAdmin.isEmpty()){
+                aU.setCodeAdmin(codeAdmin);
+            }
+            else{
+                aU.setCodeAdmin(null);
+            }
+        }
+        else if(u instanceof Cliente){
+            Cliente cU = (Cliente) u;
+
+            String email = Utility.insertString("Inserisci l'email cliente:");
+            String password = Utility.insertString("Inserisci la password cliente:");
+
+            if(!email.isEmpty()){
+                cU.setEmail(email);
+            }
+            else{
+                cU.setEmail(null);
+            }
+
+            if(!password.isEmpty()){
+                cU.setPassword(password);
+            }
+            else{
+                cU.setPassword(null);
             }
         }
     }
@@ -118,7 +147,7 @@ public class View {
 
     }
 
-    public void maskInsertOrdine(Ordine o, Cliente cliente){
+    public void maskInsertOrdine(Ordine o, Utente utente){
         LocalDateTime currentDateTime = LocalDateTime.now();
         String strDateTime = String.valueOf(currentDateTime);
         strDateTime = strDateTime.substring(0, 19);
@@ -128,7 +157,7 @@ public class View {
         Stato stato = new Stato();
         stato.setCode("ELABORAZIONE");
         o.setStato(stato);
-        o.setCliente(cliente);
+        o.setUtente(utente);
         Prodotto prodotto = new Prodotto();
         prodotto.setNome(Utility.insertString("Inserisci il nome prodotto"));
         o.setProdotto(prodotto);
@@ -204,55 +233,63 @@ public class View {
         p.setCount();
     }
 
-    public Cliente maskUpdateUtente(Cliente cOld, Cliente cNew){
-        String nome = Utility.insertString("Inserisci il nome da " + cOld.getNome() + " a: ");
-        String cognome = Utility.insertString("Inserisci il cognome da " + cOld.getCognome() + " a: ");
-        String email = Utility.insertString("Inserisci l'email da " + cOld.getEmail() + " a: ");
-        String telefono = Utility.insertString("Inserisci il numero di telefono da " + cOld.getTelefono() + " a: ");
-        String indirizzo = Utility.insertString("Inserisci l'indirizzo da " + cOld.getIndirizzo() + " a: ");
-        cNew.setId(cOld.getId());
+    public Utente maskUpdateUtente(Utente uOld, Utente uNew){
+        String nome = Utility.insertString("Inserisci il nome da " + uOld.getNome() + " a: ");
+        String cognome = Utility.insertString("Inserisci il cognome da " + uOld.getCognome() + " a: ");
+        String telefono = Utility.insertString("Inserisci il numero di telefono da " + uOld.getTelefono() + " a: ");
+        String indirizzo = Utility.insertString("Inserisci l'indirizzo da " + uOld.getIndirizzo() + " a: ");
+        uNew.setId(uOld.getId());
 
+        //TODO: da continuare...
         if(!nome.isEmpty()){
-            cNew.setNome(nome);
+            uNew.setNome(nome);
         }
         else{
-            cNew.setNome(cOld.getNome());
+            uNew.setNome(uOld.getNome());
         }
 
         if(!cognome.isEmpty()){
-            cNew.setCognome(cognome);
+            uNew.setCognome(cognome);
         }
         else{
-            cNew.setCognome(cOld.getCognome());
-        }
-
-        if(!email.isEmpty()){
-            cNew.setEmail(email);
-        }
-        else{
-            cNew.setEmail(cOld.getEmail());
+            uNew.setCognome(uOld.getCognome());
         }
 
         if(!telefono.isEmpty()){
-            cNew.setTelefono(telefono);
+            uNew.setTelefono(telefono);
         }
         else{
-            cNew.setTelefono(cOld.getTelefono());
+            uNew.setTelefono(uOld.getTelefono());
         }
 
         if(!indirizzo.isEmpty()){
-            cNew.setIndirizzo(indirizzo);
+            uNew.setIndirizzo(indirizzo);
         }
         else{
-            cNew.setIndirizzo(cOld.getIndirizzo());
+            uNew.setIndirizzo(uOld.getIndirizzo());
         }
 
-        if(cOld instanceof Amministratore){
-            Amministratore aOld = (Amministratore) cOld;
-            Amministratore aNew = (Amministratore) cNew;
+        if(uOld instanceof Amministratore){
+            Amministratore aOld = (Amministratore) uOld;
+            Amministratore aNew = (Amministratore) uNew;
 
+            String email = Utility.insertString("Inserisci l'email da " + aOld.getEmail() + " a: ");
+            String password = Utility.insertString("Inserisci la password da " + aOld.getPassword() + " a: ");
             String codeAdmin = Utility.insertString("Inserisci il codice amministratore da " + aOld.getCodeAdmin() + " a: ");
 
+            if(!email.isEmpty()){
+                aNew.setEmail(email);
+            }
+            else{
+                aNew.setEmail(aOld.getEmail());
+            }
+
+            if(!password.isEmpty()){
+                aNew.setPassword(password);
+            }
+            else{
+                aNew.setPassword(aOld.getPassword());
+            }
 
             if(!codeAdmin.isEmpty()) {
                 aNew.setCodeAdmin(codeAdmin);
@@ -261,16 +298,38 @@ public class View {
                 aNew.setCodeAdmin(aOld.getCodeAdmin());
             }
         }
-        Cliente updateCl = null;
+        else if(uOld instanceof Cliente){
+            Cliente cOld = (Cliente) uOld;
+            Cliente cNew = (Cliente) uNew;
+
+            String email = Utility.insertString("Inserisci l'email da " + cOld.getEmail() + " a: ");
+            String password = Utility.insertString("Inserisci la password da " + cOld.getPassword() + " a: ");
+
+            if(!email.isEmpty()){
+                cNew.setEmail(email);
+            }
+            else{
+                cNew.setEmail(cOld.getEmail());
+            }
+
+            if(!password.isEmpty()){
+                cNew.setPassword(password);
+            }
+            else{
+                cNew.setPassword(cOld.getPassword());
+            }
+        }
+
+        Utente updateUt = null;
 
         if(Utility.insertString("Vuoi apportare modifiche?").equalsIgnoreCase("s")){
-            updateCl = cNew;
+            updateUt = uNew;
         }
         else{
-            updateCl = cOld;
+            updateUt = uOld;
         }
 
-        return updateCl;
+        return updateUt;
     }
 
     public Categoria maskUpdateCategoria(Categoria cOld, Categoria cNew){
@@ -503,7 +562,7 @@ public class View {
 
     public void printCategorie(HashMap<Integer, Categoria> categorie){
         if(!categorie.isEmpty()){
-            System.out.println("***CATEGORIE***\n");
+            System.out.println("***CATEGORIE DISPONIBILI***\n");
 
             for(Categoria categoria : categorie.values()){
                 System.out.println("ID: " + categoria.getId() + ", \nNome: " + categoria.getNome());
@@ -512,6 +571,21 @@ public class View {
         }
         else{
             System.out.println("***NESSUNA CATEGORIA PRESENTE***\n");
+        }
+
+    }
+
+    public void printMaterie(HashMap<Integer, Materia> materie){
+        if(!materie.isEmpty()){
+            System.out.println("***MATERIE DISPONIBILI***\n");
+
+            for(Materia materia : materie.values()){
+                System.out.println("ID: " + materia.getId() + ", \nNome: " + materia.getNome());
+                System.out.println("-----------------------------------------------------------");
+            }
+        }
+        else{
+            System.out.println("***NESSUNA MATERIA PRESENTE***\n");
         }
 
     }
@@ -536,7 +610,7 @@ public class View {
             System.out.println("***ORDINI EFFETTUATI NEL GEOSTORE***\n");
 
             for(Ordine ordine : ordini.values()){
-                System.out.println("ID: " + ordine.getId() + ", \nNome cliente: " + ordine.getCliente().getNome() + ", \nCognome cliente: " + ordine.getCliente().getCognome() + ", \nNome prodotto: " + ordine.getProdotto().getNome() + ", \nData ordine: " + ordine.getData_ordine() + ", \nQuantità ordinata: " + ordine.getQuantita() + ", \nPrezzo unitario: " + ordine.getPrezzo_unitario()+ ", \nStato ordine: " + ordine.getStato().fromIntToString(ordine.getStato().getId()));
+                System.out.println("ID: " + ordine.getId() + ", \nNome utente: " + ordine.getUtente().getNome() + ", \nCognome utente: " + ordine.getUtente().getCognome() + ", \nNome prodotto: " + ordine.getProdotto().getNome() + ", \nData ordine: " + ordine.getData_ordine() + ", \nQuantità ordinata: " + ordine.getQuantita() + ", \nPrezzo unitario: " + ordine.getPrezzo_unitario()+ ", \nStato ordine: " + ordine.getStato().fromIntToString(ordine.getStato().getId()));
                 System.out.println("-----------------------------------------------------------");
             }
         }
@@ -550,7 +624,7 @@ public class View {
         if(ordine != null && ordine.getPrezzo_unitario() != null){
             System.out.println("***ORDINI TOTALI EFFETTUATI NEL GIORNO " + ordine.getData_ordine().toString().substring(0, 10) + " SU GEOSTORE***\n");
 
-            System.out.println("Nome cliente: " + ordine.getCliente().getNome() + "\nCognome cliente: " + ordine.getCliente().getCognome() + ", \nData ordine totale: " + ordine.getData_ordine().toString().substring(0, 10) + ", \nPrezzo totale speso: " + ordine.getPrezzo_unitario());
+            System.out.println("Nome utente: " + ordine.getUtente().getNome() + "\nCognome utente: " + ordine.getUtente().getCognome() + ", \nData ordine totale: " + ordine.getData_ordine().toString().substring(0, 10) + ", \nPrezzo totale speso: " + ordine.getPrezzo_unitario());
         }
         else{
             System.out.println("***NESSUN ORDINE TOTALE PRESENTE NEL GIORNO PRESTABILITO***\n");
@@ -567,23 +641,37 @@ public class View {
 
     }
 
-    public void printUtente(Cliente cliente){
-        if(cliente != null && cliente.getNome() != null){
+    public void printUtente(Utente utente){
+        if(utente != null && utente.getNome() != null){
             System.out.println("***PROFILO UTENTE GEOSTORE***\n");
-            System.out.println("ID: " + cliente.getId() + ", \nNome: " + cliente.getNome() + ", \nCognome: " + cliente.getCognome()+ ", \nEmail: " + cliente.getEmail()+ ", \nTelefono: " + cliente.getTelefono()+ ", \nIndirizzo: " + cliente.getIndirizzo());
+
+            if(utente instanceof Amministratore){
+                Amministratore admin = (Amministratore) utente;
+                System.out.println("ID: " + admin.getId() + ", \nNome: " + admin.getNome() + ", \nCognome: " + admin.getCognome()+ ", \nEmail: " + admin.getEmail()+ ", \nPassword: " + admin.getPassword()+ ", \nTelefono: " + admin.getTelefono()+ ", \nIndirizzo: " + admin.getIndirizzo()+ ", \nCodice admin: " + admin.getCodeAdmin()+ ", \nPortafoglio: " + admin.getPortafoglio());
+            }
+            else{
+                Cliente cliente = (Cliente) utente;
+                System.out.println("ID: " + cliente.getId() + ", \nNome: " + cliente.getNome() + ", \nCognome: " + cliente.getCognome()+ ", \nEmail: " + cliente.getEmail()+ ", \nPassword: " + cliente.getPassword()+ ", \nTelefono: " + cliente.getTelefono()+ ", \nIndirizzo: " + cliente.getIndirizzo()+ ", \nPortafoglio: " + cliente.getPortafoglio());
+            }
         }
         else{
             System.out.println("***NESSUN PROFILO UTENTE GEOSTORE***\n");
         }
     }
 
-    public void printUtenti(HashMap<Integer, Cliente> clienti){
-        if(!clienti.isEmpty()){
+    public void printUtenti(HashMap<Integer, Utente> utenti){
+        if(!utenti.isEmpty()){
             System.out.println("***UTENTI SU GEOSTORE***\n");
 
-            for(Cliente cliente : clienti.values()){
-                System.out.println("ID: " + cliente.getId() + ", \nNome: " + cliente.getNome() + ", \nCognome: " + cliente.getCognome()+ ", \nEmail: " + cliente.getEmail()+ ", \nTelefono: " + cliente.getTelefono()+ ", \nIndirizzo: " + cliente.getIndirizzo());
-                System.out.println("-----------------------------------------------------------");
+            for(Utente utente : utenti.values()){
+                if(utente instanceof Amministratore){
+                    Amministratore admin = (Amministratore) utente;
+                    System.out.println("ID: " + admin.getId() + ", \nNome: " + admin.getNome() + ", \nCognome: " + admin.getCognome()+ ", \nEmail: " + admin.getEmail()+ ", \nPassword: " + admin.getPassword()+ ", \nTelefono: " + admin.getTelefono()+ ", \nIndirizzo: " + admin.getIndirizzo()+ ", \nCodice admin: " + admin.getCodeAdmin()+ ", \nPortafoglio: " + admin.getPortafoglio());
+                }
+                else{
+                    Cliente cliente = (Cliente) utente;
+                    System.out.println("ID: " + cliente.getId() + ", \nNome: " + cliente.getNome() + ", \nCognome: " + cliente.getCognome()+ ", \nEmail: " + cliente.getEmail()+ ", \nPassword: " + cliente.getPassword()+ ", \nTelefono: " + cliente.getTelefono()+ ", \nIndirizzo: " + cliente.getIndirizzo()+ ", \nPortafoglio: " + cliente.getPortafoglio());
+                }
             }
         }
         else{
