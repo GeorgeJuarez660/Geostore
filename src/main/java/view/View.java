@@ -16,14 +16,15 @@ public class View {
     public int readMenuCliente(){
         System.out.println("***MENU GEOSTORE***\n");
         System.out.println("1) Profilo utente");
-        System.out.println("2) Visualizza prodotti");
-        System.out.println("3) Ordina prodotto");
-        System.out.println("4) Visualizza i tuoi ordini");
-        System.out.println("5) Elimina ordine");
-        System.out.println("6) Visualizza prodotti per categoria");
-        System.out.println("7) Visualizza prodotti per materia");
-        System.out.println("8) Visualizza prodotti disponibili");
-        System.out.println("9) Visualizza i tuoi ordini totali giornalieri");
+        System.out.println("2) Modifica profilo utente");
+        System.out.println("3) Visualizza prodotti");
+        System.out.println("4) Ordina prodotto");
+        System.out.println("5) Visualizza i tuoi ordini");
+        System.out.println("6) Elimina ordine");
+        System.out.println("7) Visualizza prodotti per categoria");
+        System.out.println("8) Visualizza prodotti per materia");
+        System.out.println("9) Visualizza prodotti disponibili");
+        System.out.println("10) Visualizza i tuoi ordini totali giornalieri");
 
         System.out.println("0) ESCI");
 

@@ -257,7 +257,7 @@ public class UtenteRepository implements utentiCRUD {
 
     @Override
     public int updateUtenteWithDB(Integer id, Utente newU) {
-        String sql = "UPDATE `utenti` SET `nome` = ?, `cognome` = ?, `email` = ?, `password` = ?, `telefono` = ?, `indirizzo` = ?, `codice_admin` = ?, `portafoglio` = ?, WHERE id = ? ";
+        String sql = "UPDATE `utenti` SET `nome` = ?, `cognome` = ?, `email` = ?, `password` = ?, `telefono` = ?, `indirizzo` = ?, `codice_admin` = ?, `portafoglio` = ? WHERE id = ? ";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         int num = 0;
@@ -288,7 +288,7 @@ public class UtenteRepository implements utentiCRUD {
                 preparedStatement.setBigDecimal(8, newC.getPortafoglio());
             }
 
-            preparedStatement.setInt(7, id);
+            preparedStatement.setInt(9, id);
 
             num = preparedStatement.executeUpdate();
             //chiudi la connessione

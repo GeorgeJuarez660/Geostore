@@ -119,10 +119,49 @@ public class AppJavaSwing {
                                         view.printUtente(ur.getUtenteWithDB(c.getNome()));
                                         break;
                                    case 2:
+                                        Utility.msgInf("GEOSTORE", "Modifica profilo utente\n\n");
+                                        u = ur.getUtenteWithDB(c.getNome());
+
+                                        if(u != null && u.getNome() != null){
+                                             Utility.msgInf("GEOSTORE", "Utente trovato\n");
+
+                                             if(u instanceof Amministratore) { //se l'oggetto trovato contiene l'istanza di una classe figlia
+                                                  Amministratore aOld = (Amministratore) u;
+                                                  Amministratore aNew = (Amministratore) view.maskUpdateUtente(aOld, new Amministratore());
+
+                                                  int num = ur.updateUtenteWithDB(aNew.getId(), aNew);
+
+                                                  if(num > 0){
+                                                       Utility.msgInf("GEOSTORE", "Amministratore aggiornato\n");
+                                                  }
+                                                  else{
+                                                       Utility.msgInf("GEOSTORE", "Amministratore non aggiornato\n");
+                                                  }
+                                             }
+                                             else{
+                                                  Cliente cOld = (Cliente) u;
+                                                  Cliente cNew = (Cliente) view.maskUpdateUtente(cOld, new Cliente());
+
+                                                  int num = ur.updateUtenteWithDB(cNew.getId(), cNew);
+
+                                                  if(num > 0){
+                                                       Utility.msgInf("GEOSTORE", "Cliente aggiornato\n");
+                                                  }
+                                                  else{
+                                                       Utility.msgInf("GEOSTORE", "Cliente non aggiornato\n");
+                                                  }
+                                             }
+
+                                        }
+                                        else{
+                                             Utility.msgInf("GEOSTORE", "Utente non trovato\n");
+                                        }
+                                        break;
+                                   case 3:
                                         Utility.msgInf("GEOSTORE", "Elenco prodotti\n\n");
                                         view.printProdotti(pr.getProdottiWithDB());
                                         break;
-                                   case 3:
+                                   case 4:
                                         Utility.msgInf("GEOSTORE", "Ordinazione di un prodotto\n\n");
                                         view.printProdotti(pr.getProdottiDispWithDB());
                                         o = new Ordine();
@@ -152,11 +191,11 @@ public class AppJavaSwing {
                                              Utility.msgInf("GEOSTORE", "L'oggetto ordinato non è disponibile oppure è inesistente\n");
                                         }
                                         break;
-                                   case 4:
+                                   case 5:
                                         Utility.msgInf("GEOSTORE", "Elenco ordini effettuati\n\n");
                                         view.printOrdini(odr.getOrdiniByUserWithDB(c.getNome()));
                                         break;
-                                   case 5:
+                                   case 6:
                                         Utility.msgInf("GEOSTORE", "Eliminazione ordine\n\n");
                                         view.printOrdini(odr.getOrdiniByUserWithDB(c.getNome()));
 
@@ -176,25 +215,25 @@ public class AppJavaSwing {
                                              Utility.msgInf("GEOSTORE", "Ordine non trovato\n");
                                         }
                                         break;
-                                   case 6:
+                                   case 7:
                                         Utility.msgInf("GEOSTORE", "Elenco prodotti per categoria\n\n");
                                         view.printCategorie(car.getCategorieWithDB());
                                         cat = new Categoria();
                                         view.maskObjViaCat(cat);
                                         view.printProdotti(pr.getProdottiViaCategoriaWithDB(cat.getNome()));
                                         break;
-                                   case 7:
+                                   case 8:
                                         Utility.msgInf("GEOSTORE", "Elenco prodotti per materia\n\n");
                                         view.printMaterie(mr.getMaterieWithDB());
                                         m = new Materia();
                                         view.maskObjViaMat(m);
                                         view.printProdotti(pr.getProdottiViaMateriaWithDB(m.getNome()));
                                         break;
-                                   case 8:
+                                   case 9:
                                         Utility.msgInf("GEOSTORE", "Elenco prodotti disponibili\n\n");
                                         view.printProdotti(pr.getProdottiDispWithDB());
                                         break;
-                                   case 9:
+                                   case 10:
                                         Utility.msgInf("GEOSTORE", "Ordini totali giornalieri\n\n");
                                         String chooseDate = Utility.insertString("Inserisci la data in formato yyyy-mm-dd");
                                         view.printOrdiniTotGior(odr.getOrdineTotGiorWithDB(c, chooseDate));
