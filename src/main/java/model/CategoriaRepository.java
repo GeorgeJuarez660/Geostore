@@ -111,8 +111,8 @@ public class CategoriaRepository implements categorieCRUD {
     }
 
     @Override
-    public Categoria getCategoriaWithDB(String nome) {
-        String sql = "SELECT * FROM Categorie c WHERE c.NOME = ?";
+    public Categoria getCategoriaWithDB(Integer id) {
+        String sql = "SELECT * FROM Categorie c WHERE c.ID = ?";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet rs = null;
@@ -122,7 +122,7 @@ public class CategoriaRepository implements categorieCRUD {
             //Connessione al db
             connection = DBConnection.sqlConnect();
             preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, nome);
+            preparedStatement.setInt(1, id);
             rs = preparedStatement.executeQuery();
 
             while(rs.next()){

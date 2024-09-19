@@ -18,7 +18,7 @@ public interface categorieCRUD {
     //metodi override per operazioni CRUD con database
     public void insertCategoriaWithDB(Integer id, Categoria c);
     public HashMap<Integer, Categoria> getCategorieWithDB();
-    public Categoria getCategoriaWithDB(String nome);
+    public Categoria getCategoriaWithDB(Integer id);
     public int updateCategoriaWithDB(Integer id, Categoria newC);
     public void deleteCategoriaWithDB(Integer id);
 

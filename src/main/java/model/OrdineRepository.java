@@ -87,10 +87,10 @@ public class OrdineRepository implements ordiniCRUD {
         return ordini;
     }
 
-    public HashMap<Integer, Ordine> getOrdiniByUserWithDB(String nomeUtente) {
+    public HashMap<Integer, Ordine> getOrdiniByUserWithDB(Integer idUtente) {
         String sql = "SELECT o.id, u.nome AS nome_utente, u.cognome AS cognome_utente, og.nome AS nome_prodotto, o.data_ordine, o.quantita, o.prezzo_unitario, o.stato_id FROM ordini o JOIN utenti u ON(o.utente_id =u.id )\n" +
                 "JOIN prodotti og ON(o.prodotto_id =og.id )\n" +
-                "WHERE nome_utente = ?";
+                "WHERE o.utente_id = ?";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet rs = null;
@@ -100,7 +100,7 @@ public class OrdineRepository implements ordiniCRUD {
             //Connessione al db
             connection = DBConnection.sqlConnect();
             preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, nomeUtente);
+            preparedStatement.setInt(1, idUtente);
             rs = preparedStatement.executeQuery();
             Ordine ord;
 
@@ -134,10 +134,10 @@ public class OrdineRepository implements ordiniCRUD {
         return ordini;
     }
 
-    public Ordine getOrdineByUserAndProdNameWithDB(String nomeUtente, Integer idOrdine) {
+    public Ordine getOrdineByUserAndProdNameWithDB(Integer idUtente, Integer idOrdine) {
         String sql = "SELECT o.id, u.nome AS nome_utente, u.cognome AS cognome_utente, og.nome AS nome_prodotto, o.data_ordine, o.quantita, o.prezzo_unitario, o.stato_id FROM ordini o JOIN utenti u ON(o.utente_id =u.id )\n" +
                 "JOIN prodotti og ON(o.prodotto_id =og.id )\n" +
-                "WHERE nome_utente = ? AND o.id = ?";
+                "WHERE o.utente_id = ? AND o.id = ?";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet rs = null;
@@ -147,7 +147,7 @@ public class OrdineRepository implements ordiniCRUD {
             //Connessione al db
             connection = DBConnection.sqlConnect();
             preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, nomeUtente);
+            preparedStatement.setInt(1, idUtente);
             preparedStatement.setInt(2, idOrdine);
             rs = preparedStatement.executeQuery();
 
@@ -274,7 +274,7 @@ public class OrdineRepository implements ordiniCRUD {
     public Ordine getOrdineTotGiorWithDB(Utente u, String data) {
         String sql = "SELECT u.nome as nome_utente, u.cognome as cognome_utente, o.data_ordine, sum(o.quantita*o.prezzo_unitario) AS tot_ord_gior FROM ordini o JOIN utenti u ON(o.utente_id =u.id )\n" +
                 "JOIN prodotti p ON(o.prodotto_id =p.id )\n" +
-                "WHERE u.nome = ? AND u.cognome = ? AND o.data_ordine LIKE ? AND o.stato_id = 2\n" +
+                "WHERE u.id = ? AND o.data_ordine LIKE ? AND o.stato_id = 2\n" +
                 "GROUP BY o.data_ordine ";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -285,9 +285,8 @@ public class OrdineRepository implements ordiniCRUD {
             //Connessione al db
             connection = DBConnection.sqlConnect();
             preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, u.getNome());
-            preparedStatement.setString(2, u.getCognome());
-            preparedStatement.setString(3, data + "%");
+            preparedStatement.setInt(1, u.getId());
+            preparedStatement.setString(2, data + "%");
             rs = preparedStatement.executeQuery();
 
             while(rs.next()){

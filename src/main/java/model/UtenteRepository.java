@@ -123,8 +123,8 @@ public class UtenteRepository implements utentiCRUD {
     }
 
     @Override
-    public Utente getUtenteWithDB(String nome) {
-        String sql = "select * from utenti u where u.nome = ? ";
+    public Utente getUtenteWithDB(Integer id) {
+        String sql = "select * from utenti u where u.id = ? ";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet rs = null;
@@ -133,7 +133,7 @@ public class UtenteRepository implements utentiCRUD {
             //Connessione al db
             connection = DBConnection.sqlConnect();
             preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, nome);
+            preparedStatement.setInt(1, id);
             rs = preparedStatement.executeQuery();
 
             while(rs.next()){
@@ -184,7 +184,16 @@ public class UtenteRepository implements utentiCRUD {
     }
 
     public Cliente checkCliente(String email, String password) {
-        String sql = "select * from utenti u where u.email = ? and u.password = ? ";
+        String sql = "";
+        boolean pwdEmpty = false;
+
+        if(password != null){
+            sql = "select * from utenti u where u.email = ? and u.password = ? ";
+        }
+        else{
+            sql = "select * from utenti u where u.email = ? and u.password is null ";
+            pwdEmpty = true;
+        }
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet rs = null;
@@ -194,7 +203,9 @@ public class UtenteRepository implements utentiCRUD {
             connection = DBConnection.sqlConnect();
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, email);
-            preparedStatement.setString(2, password);
+            if(!pwdEmpty){
+                preparedStatement.setString(2, password);
+            }
             rs = preparedStatement.executeQuery();
 
             while(rs.next()){
@@ -219,7 +230,25 @@ public class UtenteRepository implements utentiCRUD {
     }
 
     public Amministratore checkAdmin(String email, String password, String codeAdmin) {
-        String sql = "select * from utenti u where u.email = ? and u.password = ? and u.codice_admin = ? ";
+        String sql = "";
+        boolean pwdEmpty = false, codeEmpty = false;
+
+        if(password != null && codeAdmin != null){
+            sql = "select * from utenti u where u.email = ? and u.password = ? and u.codice_admin = ? ";
+        }
+        else if(password != null && codeAdmin == null){
+            sql = "select * from utenti u where u.email = ? and u.password = ? and u.codice_admin is null ";
+            codeEmpty = true;
+        }
+        else if(password == null && codeAdmin != null){
+            sql = "select * from utenti u where u.email = ? and u.password is null and u.codice_admin = ? ";
+            pwdEmpty = true;
+        }
+        else {
+            sql = "select * from utenti u where u.email = ? and u.password is null and u.codice_admin is null ";
+            pwdEmpty = true;
+            codeEmpty = true;
+        }
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet rs = null;
@@ -229,8 +258,16 @@ public class UtenteRepository implements utentiCRUD {
             connection = DBConnection.sqlConnect();
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, email);
-            preparedStatement.setString(2, password);
-            preparedStatement.setString(3, codeAdmin);
+            if(!pwdEmpty && !codeEmpty){
+                preparedStatement.setString(2, password);
+                preparedStatement.setString(3, codeAdmin);
+            }
+            else if(!pwdEmpty && codeEmpty){
+                preparedStatement.setString(2, password);
+            }
+            else if(pwdEmpty && !codeEmpty){
+                preparedStatement.setString(2, codeAdmin);
+            }
             rs = preparedStatement.executeQuery();
 
             while(rs.next()){

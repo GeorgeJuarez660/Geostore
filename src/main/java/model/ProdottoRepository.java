@@ -139,12 +139,12 @@ public class ProdottoRepository implements prodottiCRUD {
         return prodotti;
     }
 
-    public HashMap<Integer, Prodotto> getProdottiViaCategoriaWithDB(String nomeCat) {
+    public HashMap<Integer, Prodotto> getProdottiViaCategoriaWithDB(Integer idCat) {
         String sql = "select o.id, o.nome, o.prezzo, o.disponibilita, c.nome as categoria_code, m.nome as materia_code, o.quantita_disp \n" +
                 "from prodotti o \n" +
                 "join Materie m on (o.materia = m.id)\n" +
                 "join Categorie c on (o.categoria = c.id)\n" +
-                "where categoria_code = ?";
+                "where o.categoria = ?";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet rs = null;
@@ -154,7 +154,7 @@ public class ProdottoRepository implements prodottiCRUD {
             //Connessione al db
             connection = DBConnection.sqlConnect();
             preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, nomeCat);
+            preparedStatement.setInt(1, idCat);
             rs = preparedStatement.executeQuery();
             Prodotto ogg;
 
@@ -187,12 +187,12 @@ public class ProdottoRepository implements prodottiCRUD {
         return prodotti;
     }
 
-    public HashMap<Integer, Prodotto> getProdottiViaMateriaWithDB(String nomeMat) {
+    public HashMap<Integer, Prodotto> getProdottiViaMateriaWithDB(Integer idMat) {
         String sql = "select o.id, o.nome, o.prezzo, o.disponibilita, c.nome as categoria_code, m.nome as materia_code, o.quantita_disp \n" +
                 "from prodotti o \n" +
                 "join Materie m on (o.materia = m.id)\n" +
                 "join Categorie c on (o.categoria = c.id)\n" +
-                "where materia_code = ?";
+                "where o.materia = ?";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet rs = null;
@@ -202,7 +202,7 @@ public class ProdottoRepository implements prodottiCRUD {
             //Connessione al db
             connection = DBConnection.sqlConnect();
             preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, nomeMat);
+            preparedStatement.setInt(1, idMat);
             rs = preparedStatement.executeQuery();
             Prodotto ogg;
 
@@ -236,12 +236,12 @@ public class ProdottoRepository implements prodottiCRUD {
     }
 
     @Override
-    public Prodotto getProdottoWithDB(String nome) {
+    public Prodotto getProdottoWithDB(Integer id) {
         String sql = "select o.id, o.nome, o.prezzo, o.disponibilita, c.nome as categoria_code, m.nome as materia_code, o.quantita_disp \n" +
                 "from prodotti o \n" +
                 "join Materie m on (o.materia = m.id)\n" +
                 "join Categorie c on (o.categoria = c.id)\n" +
-                "where o.nome = ?";
+                "where o.id = ?";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet rs = null;
@@ -250,7 +250,7 @@ public class ProdottoRepository implements prodottiCRUD {
             //Connessione al db
             connection = DBConnection.sqlConnect();
             preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, nome);
+            preparedStatement.setInt(1, id);
             rs = preparedStatement.executeQuery();
 
             while(rs.next()){
@@ -279,12 +279,12 @@ public class ProdottoRepository implements prodottiCRUD {
         return prodotto;
     }
 
-    public Prodotto getProdottoDispWithDB(String nome) {
+    public Prodotto getProdottoDispWithDB(Integer id) {
         String sql = "select o.id, o.nome, o.prezzo, o.disponibilita, c.nome as categoria_code, m.nome as materia_code, o.quantita_disp \n" +
                 "from prodotti o \n" +
                 "join Materie m on (o.materia = m.id)\n" +
                 "join Categorie c on (o.categoria = c.id)\n" +
-                "where o.nome = ? AND (o.disponibilita = 1 OR o.disponibilita = 3)";
+                "where o.id = ? AND (o.disponibilita = 1 OR o.disponibilita = 3)";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet rs = null;
@@ -293,7 +293,7 @@ public class ProdottoRepository implements prodottiCRUD {
             //Connessione al db
             connection = DBConnection.sqlConnect();
             preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, nome);
+            preparedStatement.setInt(1, id);
             rs = preparedStatement.executeQuery();
 
             while(rs.next()){

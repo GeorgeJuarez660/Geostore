@@ -12,7 +12,7 @@ public interface materieCRUD {
     //metodi override per operazioni CRUD con database
     public void insertMateriaWithDB(Integer id, Materia m);
     public HashMap<Integer, Materia> getMaterieWithDB();
-    public Materia getMateriaWithDB(String nome);
+    public Materia getMateriaWithDB(Integer id);
     public int updateMateriaWithDB(Integer id, Materia newM);
     public void deleteMateriaWithDB(Integer id);
 

@@ -125,25 +125,25 @@ public class View {
     }
 
     public void maskObjViaCat(Categoria c){
-        String nome = Utility.insertString("Inserisci il nome categoria:");
+        Integer id = Utility.insertInt("Inserisci l'id categoria:");
 
-        if(!nome.isEmpty()){
-            c.setNome(nome);
+        if(id != null){
+            c.setId(id);
         }
         else{
-            c.setNome(null);
+            c.setId(0);
         }
 
     }
 
     public void maskObjViaMat(Materia m){
-        String nome = Utility.insertString("Inserisci il nome materia:");
+        Integer id = Utility.insertInt("Inserisci l'id materia:");
 
-        if(!nome.isEmpty()){
-            m.setNome(nome);
+        if(id != null){
+            m.setId(id);
         }
         else{
-            m.setNome(null);
+            m.setId(0);
         }
 
     }
@@ -160,7 +160,7 @@ public class View {
         o.setStato(stato);
         o.setUtente(utente);
         Prodotto prodotto = new Prodotto();
-        prodotto.setNome(Utility.insertString("Inserisci il nome prodotto"));
+        prodotto.setId(Utility.insertInt("Inserisci l'id prodotto"));
         o.setProdotto(prodotto);
         o.setQuantita(Utility.insertInt("Inserisci la quantità"));
     }

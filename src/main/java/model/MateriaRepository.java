@@ -73,8 +73,8 @@ public class MateriaRepository implements materieCRUD {
     }
 
     @Override
-    public Materia getMateriaWithDB(String nome) {
-        String sql = "SELECT * FROM Materie m WHERE m.NOME = ?";
+    public Materia getMateriaWithDB(Integer id) {
+        String sql = "SELECT * FROM Materie m WHERE m.ID = ?";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet rs = null;
@@ -84,7 +84,7 @@ public class MateriaRepository implements materieCRUD {
             //Connessione al db
             connection = DBConnection.sqlConnect();
             preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, nome);
+            preparedStatement.setInt(1, id);
             rs = preparedStatement.executeQuery();
 
             while(rs.next()){

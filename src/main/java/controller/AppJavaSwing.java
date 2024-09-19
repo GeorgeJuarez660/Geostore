@@ -106,7 +106,7 @@ public class AppJavaSwing {
                     view.maskCheckUser(c);
                     c = ur.checkCliente(c.getEmail(), c.getPassword());
 
-                    if(c != null && c.getEmail() != null && c.getPassword() != null){
+                    if(c != null && c.getEmail() != null){
                          Utility.msgInf("GEOSTORE", "Accesso approvato\n");
                          do{
                               valueInput = view.readMenuCliente();
@@ -116,11 +116,11 @@ public class AppJavaSwing {
                                         break;
                                    case 1:
                                         Utility.msgInf("GEOSTORE", "Profilo utente\n\n");
-                                        view.printUtente(ur.getUtenteWithDB(c.getNome()));
+                                        view.printUtente(ur.getUtenteWithDB(c.getId()));
                                         break;
                                    case 2:
                                         Utility.msgInf("GEOSTORE", "Modifica profilo utente\n\n");
-                                        u = ur.getUtenteWithDB(c.getNome());
+                                        u = ur.getUtenteWithDB(c.getId());
 
                                         if(u != null && u.getNome() != null){
                                              Utility.msgInf("GEOSTORE", "Utente trovato\n");
@@ -166,7 +166,7 @@ public class AppJavaSwing {
                                         view.printProdotti(pr.getProdottiDispWithDB());
                                         o = new Ordine();
                                         view.maskInsertOrdine(o, c);
-                                        p = pr.getProdottoDispWithDB(o.getProdotto().getNome());
+                                        p = pr.getProdottoDispWithDB(o.getProdotto().getId());
 
                                         if(p != null && p.getNome() != null){
                                              Utility.msgInf("GEOSTORE", "Il prodotto è disponibile\n");
@@ -193,13 +193,13 @@ public class AppJavaSwing {
                                         break;
                                    case 5:
                                         Utility.msgInf("GEOSTORE", "Elenco ordini effettuati\n\n");
-                                        view.printOrdini(odr.getOrdiniByUserWithDB(c.getNome()));
+                                        view.printOrdini(odr.getOrdiniByUserWithDB(c.getId()));
                                         break;
                                    case 6:
                                         Utility.msgInf("GEOSTORE", "Eliminazione ordine\n\n");
-                                        view.printOrdini(odr.getOrdiniByUserWithDB(c.getNome()));
+                                        view.printOrdini(odr.getOrdiniByUserWithDB(c.getId()));
 
-                                        o = odr.getOrdineByUserAndProdNameWithDB(c.getNome(), Utility.insertInt("Inserisci l'id ordine"));
+                                        o = odr.getOrdineByUserAndProdNameWithDB(c.getId(), Utility.insertInt("Inserisci l'id ordine"));
 
                                         if(o != null && o.getProdotto() != null && o.getProdotto().getNome() != null){
                                              Utility.msgInf("GEOSTORE", "Ordine trovato\n");
@@ -220,14 +220,14 @@ public class AppJavaSwing {
                                         view.printCategorie(car.getCategorieWithDB());
                                         cat = new Categoria();
                                         view.maskObjViaCat(cat);
-                                        view.printProdotti(pr.getProdottiViaCategoriaWithDB(cat.getNome()));
+                                        view.printProdotti(pr.getProdottiViaCategoriaWithDB(cat.getId()));
                                         break;
                                    case 8:
                                         Utility.msgInf("GEOSTORE", "Elenco prodotti per materia\n\n");
                                         view.printMaterie(mr.getMaterieWithDB());
                                         m = new Materia();
                                         view.maskObjViaMat(m);
-                                        view.printProdotti(pr.getProdottiViaMateriaWithDB(m.getNome()));
+                                        view.printProdotti(pr.getProdottiViaMateriaWithDB(m.getId()));
                                         break;
                                    case 9:
                                         Utility.msgInf("GEOSTORE", "Elenco prodotti disponibili\n\n");
@@ -272,11 +272,11 @@ public class AppJavaSwing {
 
                }
                else if(valueInput == 2){
-                    Utility.msgInf("GEOSTORE", "Sei un amministratore Geostore\n");
+                    Utility.msgInf("GEOSTORE", "Accedi come amministratore Geostore\n");
                     Amministratore a = new Amministratore();
                     view.maskCheckUser(a);
                     a = ur.checkAdmin(a.getEmail(), a.getPassword(), a.getCodeAdmin());
-                    if(a != null && a.getEmail() != null && a.getPassword() != null && a.getCodeAdmin() != null){
+                    if(a != null && a.getEmail() != null){
                          Utility.msgInf("GEOSTORE", "Accesso approvato\n");
 
                          do{
@@ -287,7 +287,7 @@ public class AppJavaSwing {
                                         break;
                                    case 1:
                                         Utility.msgInf("GEOSTORE", "Profilo utente\n\n");
-                                        view.printUtente(ur.getUtenteWithDB(a.getNome()));
+                                        view.printUtente(ur.getUtenteWithDB(a.getId()));
                                         break;
                                    case 2:
                                         Utility.msgInf("GEOSTORE", "Utenti iscritti su Geostore\n\n");
@@ -329,7 +329,7 @@ public class AppJavaSwing {
                                         }
                                         else if(chooseC == 2){
                                              view.printUtenti(ur.getUtentiWithDB());
-                                             u = ur.getUtenteWithDB(Utility.insertString("Inserisci il nome utente"));
+                                             u = ur.getUtenteWithDB(Utility.insertInt("Inserisci l'id utente"));
 
                                              if(u != null && u.getNome() != null){
                                                   Utility.msgInf("GEOSTORE", "Utente trovato\n");
@@ -368,7 +368,7 @@ public class AppJavaSwing {
                                         }
                                         else if(chooseC == 3){
                                              view.printUtenti(ur.getUtentiWithDB());
-                                             u = ur.getUtenteWithDB(Utility.insertString("Inserisci il nome utente"));
+                                             u = ur.getUtenteWithDB(Utility.insertInt("Inserisci l'id utente"));
 
                                              if(u != null && u.getNome() != null){
                                                   Utility.msgInf("GEOSTORE", "Utente trovato\n");
@@ -407,8 +407,8 @@ public class AppJavaSwing {
                                              p = new Prodotto();
                                              view.maskInsertProdotto(p);
 
-                                             cat = car.getCategoriaWithDB(p.getCategoria().getNome());
-                                             m = mr.getMateriaWithDB(p.getMateria().getNome());
+                                             cat = car.getCategoriaWithDB(p.getCategoria().getId());
+                                             m = mr.getMateriaWithDB(p.getMateria().getId());
 
                                              if(cat != null && m != null && cat.getNome() != null && m.getNome() != null){
                                                   p.setCategoria(cat);
@@ -429,15 +429,15 @@ public class AppJavaSwing {
                                         }
                                         else if(chooseP == 2){
                                              view.printProdotti(pr.getProdottiWithDB());
-                                             p = pr.getProdottoWithDB(Utility.insertString("Inserisci il nome prodotto"));
+                                             p = pr.getProdottoWithDB(Utility.insertInt("Inserisci l'id prodotto"));
 
                                              if(p != null && p.getNome() != null){
                                                   Utility.msgInf("GEOSTORE", "Prodotto trovato\n");
 
                                                   Prodotto pNew = view.maskUpdateProdotto(p, new Prodotto());
 
-                                                  cat = car.getCategoriaWithDB(pNew.getCategoria().getNome());
-                                                  m = mr.getMateriaWithDB(pNew.getMateria().getNome());
+                                                  cat = car.getCategoriaWithDB(pNew.getCategoria().getId());
+                                                  m = mr.getMateriaWithDB(pNew.getMateria().getId());
 
                                                   if(cat != null && m != null && cat.getNome() != null && m.getNome() != null){
                                                        pNew.setCategoria(cat);
@@ -462,7 +462,7 @@ public class AppJavaSwing {
                                         }
                                         else if(chooseP == 3){
                                              view.printProdotti(pr.getProdottiWithDB());
-                                             p = pr.getProdottoWithDB(Utility.insertString("Inserisci il nome prodotto"));
+                                             p = pr.getProdottoWithDB(Utility.insertInt("Inserisci l'id prodotto"));
 
                                              if(p != null && p.getNome() != null){
                                                   Utility.msgInf("GEOSTORE", "Prodotto trovato\n");
@@ -494,7 +494,7 @@ public class AppJavaSwing {
                                         view.printProdotti(pr.getProdottiDispWithDB());
                                         o = new Ordine();
                                         view.maskInsertOrdine(o, a);
-                                        p = pr.getProdottoDispWithDB(o.getProdotto().getNome());
+                                        p = pr.getProdottoDispWithDB(o.getProdotto().getId());
 
                                         if(p != null && p.getNome() != null){
                                              Utility.msgInf("GEOSTORE", "Il prodotto è disponibile\n");
@@ -524,12 +524,14 @@ public class AppJavaSwing {
                                         int choose = Utility.insertInt("1 - tuoi ordini, 2 - di un'altra persona ");
                                         if(choose == 1){
                                              Utility.msgInf("GEOSTORE", "Hai scelto i tuoi ordini\n");
-                                             view.printOrdini(odr.getOrdiniByUserWithDB(a.getNome()));
+                                             view.printOrdini(odr.getOrdiniByUserWithDB(a.getId()));
                                         }
                                         else if(choose == 2){
                                              Utility.msgInf("GEOSTORE", "Hai scelto di sapere quello di qualcun'altro\n");
-                                             String anotherName = Utility.insertString("Inserisci il nome di un'altra persona");
-                                             view.printOrdini(odr.getOrdiniByUserWithDB(anotherName));
+
+                                             view.printUtenti(ur.getUtentiWithDB());
+                                             Integer anotherUser = Utility.insertInt("Inserisci l'id di un'altra persona");
+                                             view.printOrdini(odr.getOrdiniByUserWithDB(anotherUser));
                                         }
                                         else{
                                              Utility.msgInf("GEOSTORE", "Non so cosa hai inserito\n");
@@ -594,14 +596,14 @@ public class AppJavaSwing {
                                         view.printCategorie(car.getCategorieWithDB());
                                         cat = new Categoria();
                                         view.maskObjViaCat(cat);
-                                        view.printProdotti(pr.getProdottiViaCategoriaWithDB(cat.getNome()));
+                                        view.printProdotti(pr.getProdottiViaCategoriaWithDB(cat.getId()));
                                         break;
                                    case 11:
                                         Utility.msgInf("GEOSTORE", "Elenco prodotti per materia\n\n");
                                         view.printMaterie(mr.getMaterieWithDB());
                                         m = new Materia();
                                         view.maskObjViaMat(m);
-                                        view.printProdotti(pr.getProdottiViaMateriaWithDB(m.getNome()));
+                                        view.printProdotti(pr.getProdottiViaMateriaWithDB(m.getId()));
                                         break;
                                    case 12:
                                         Utility.msgInf("GEOSTORE", "Elenco prodotti disponibili\n\n");
@@ -618,7 +620,8 @@ public class AppJavaSwing {
                                              Utility.msgInf("GEOSTORE", "Nuova categoria aggiunta\n");
                                         }
                                         else if(choose3 == 2){
-                                             cat = car.getCategoriaWithDB(Utility.insertString("Inserisci il nome categoria"));
+                                             view.printCategorie(car.getCategorie());
+                                             cat = car.getCategoriaWithDB(Utility.insertInt("Inserisci l'id categoria"));
 
                                              if(cat != null && cat.getNome() != null){
                                                   Utility.msgInf("GEOSTORE", "Categoria trovata\n");
@@ -640,7 +643,8 @@ public class AppJavaSwing {
                                              }
                                         }
                                         else if(choose3 == 3){
-                                             cat = car.getCategoriaWithDB(Utility.insertString("Inserisci il nome categoria"));
+                                             view.printCategorie(car.getCategorieWithDB());
+                                             cat = car.getCategoriaWithDB(Utility.insertInt("Inserisci l'id categoria"));
 
                                              if(cat != null && cat.getNome() != null){
                                                   Utility.msgInf("GEOSTORE", "Categoria trovata\n");
@@ -672,7 +676,8 @@ public class AppJavaSwing {
                                              Utility.msgInf("GEOSTORE", "Nuova materia aggiunta\n");
                                         }
                                         else if(choose4 == 2){
-                                             m = mr.getMateriaWithDB(Utility.insertString("Inserisci il nome materia"));
+                                             view.printMaterie(mr.getMaterieWithDB());
+                                             m = mr.getMateriaWithDB(Utility.insertInt("Inserisci l'id materia"));
 
                                              if(m != null && m.getNome() != null){
                                                   Utility.msgInf("GEOSTORE", "Materia trovata\n");
@@ -694,7 +699,8 @@ public class AppJavaSwing {
                                              }
                                         }
                                         else if(choose4 == 3){
-                                             m = mr.getMateriaWithDB(Utility.insertString("Inserisci il nome materia"));
+                                             view.printMaterie(mr.getMaterieWithDB());
+                                             m = mr.getMateriaWithDB(Utility.insertInt("Inserisci l'id materia"));
 
                                              if(m != null && m.getNome() != null){
                                                   Utility.msgInf("GEOSTORE", "Materia trovata\n");
@@ -786,7 +792,7 @@ public class AppJavaSwing {
           if(oOld.getStato().getId() == 1 && oNew.getStato().getCode().equals("ACCETTATO")){
                Prodotto p;
                ProdottoRepository pr = new ProdottoRepository();
-               p = pr.getProdottoWithDB(oOld.getProdotto().getNome());
+               p = pr.getProdottoWithDB(oOld.getProdotto().getId());
 
                Integer subQuantita = p.getQuantita_disp() - oNew.getQuantita();
                p.setQuantita_disp(subQuantita);
