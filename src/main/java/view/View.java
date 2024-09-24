@@ -1,17 +1,20 @@
 package src.main.java.view;
 
-import jdk.jshell.execution.Util;
 import src.main.java.model.*;
 import src.main.java.utility.Utility;
 
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 
 public class View {
+
+    ProdottoRepository pr = new ProdottoRepository();
+    CategoriaRepository car = new CategoriaRepository();
+    MateriaRepository mr = new MateriaRepository();
+    DisponibilitaRepository dr = new DisponibilitaRepository();
+    StatusRepository sr = new StatusRepository();
 
     public int readMenuCliente(){
         System.out.println("***MENU GEOSTORE***\n");
@@ -39,15 +42,14 @@ public class View {
         System.out.println("4) Visualizza prodotti");
         System.out.println("5) Crea/Modifica/Elimina prodotto");
         System.out.println("6) Ordina prodotto");
-        System.out.println("7) Visualizza i tuoi ordini");
-        System.out.println("8) Visualizza gli ordini");
-        System.out.println("9) Modifica/Elimina ordine");
-        System.out.println("10) Visualizza prodotti per categoria");
-        System.out.println("11) Visualizza prodotti per materia");
-        System.out.println("12) Visualizza prodotti disponibili");
-        System.out.println("13) Crea/Modifica/Elimina categoria");
-        System.out.println("14) Crea/Modifica/Elimina materia");
-        System.out.println("15) Visualizza ordini totali giornalieri");
+        System.out.println("7) Visualizza gli ordini");
+        System.out.println("8) Modifica/Elimina ordine");
+        System.out.println("9) Visualizza prodotti per categoria");
+        System.out.println("10) Visualizza prodotti per materia");
+        System.out.println("11) Visualizza prodotti disponibili");
+        System.out.println("12) Crea/Modifica/Elimina categoria");
+        System.out.println("13) Crea/Modifica/Elimina materia");
+        System.out.println("14) Visualizza ordini totali giornalieri");
 
         System.out.println("0) ESCI");
 
@@ -72,6 +74,17 @@ public class View {
         return Utility.insertInt("******");
     }
 
+    public void readDisponibilita(){
+        System.out.println("\n");
+
+        System.out.println("1) DISPONIBILE");
+        System.out.println("2) ARRIVO");
+        System.out.println("3) ESAURIMENTO");
+        System.out.println("4) ESAURITO");
+        System.out.println("5) N/A");
+
+        System.out.println("\n");
+    }
     public void maskCheckUser(Utente u){
 
         if(u instanceof Amministratore){
@@ -156,12 +169,14 @@ public class View {
 
         o.setData_ordine(Timestamp.valueOf(strDateTime));
         Stato stato = new Stato();
-        stato.setCode("ELABORAZIONE");
+        stato.setId(1);
         o.setStato(stato);
         o.setUtente(utente);
+
         Prodotto prodotto = new Prodotto();
         prodotto.setId(Utility.insertInt("Inserisci l'id prodotto"));
         o.setProdotto(prodotto);
+
         o.setQuantita(Utility.insertInt("Inserisci la quantità"));
     }
 
@@ -201,35 +216,21 @@ public class View {
         p.setNome(Utility.insertString("Inserisci il nome prodotto"));
         p.setPrezzo(Utility.insertBigDecimal("Inserisci il prezzo unitario prodotto"));
         p.setQuantita_disp(Utility.insertInt("Inserisci la quantità disponibile prodotto"));
-        Categoria c = new Categoria();
-        c.setNome(Utility.insertString("Inserisci il nome categoria appartenente"));
-        p.setCategoria(c);
-        Materia m = new Materia();
-        m.setNome(Utility.insertString("Inserisci il nome materia appartenente"));
-        p.setMateria(m);
-        String dispn = Utility.insertString("Inserisci la disponibilità prodotto");
-        Disponibilita disp = new Disponibilita();
 
-        if(dispn.equalsIgnoreCase("DISPONIBILE")){
-            disp.setCode("DISPONIBILE");
-            p.setDisponibilita(disp);
-        }
-        else if(dispn.equalsIgnoreCase("ESAURITO")){
-            disp.setCode("ESAURITO");
-            p.setDisponibilita(disp);
-        }
-        else if(dispn.equalsIgnoreCase("ESAURIMENTO")){
-            disp.setCode("ESAURIMENTO");
-            p.setDisponibilita(disp);
-        }
-        else if(dispn.equalsIgnoreCase("ARRIVO")){
-            disp.setCode("ARRIVO");
-            p.setDisponibilita(disp);
-        }
-        else{
-            disp.setCode("N/A");
-            p.setDisponibilita(disp);
-        }
+        Categoria c = new Categoria();
+        printCategorie(car.getCategorieWithDB());
+        c.setId(Utility.insertInt("\nInserisci l'id categoria appartenente"));
+        p.setCategoria(c);
+
+        Materia m = new Materia();
+        printMaterie(mr.getMaterieWithDB());
+        m.setId(Utility.insertInt("\nInserisci l'id materia appartenente"));
+        p.setMateria(m);
+
+        Disponibilita d = new Disponibilita();
+        printDisponibilita(dr.getDisponibilitaWithDB());
+        d.setId(Utility.insertInt("\nInserisci l'id disponibilita prodotto"));
+        p.setDisponibilita(d);
 
         p.setCount();
     }
@@ -379,9 +380,7 @@ public class View {
 
     public Prodotto maskUpdateProdotto(Prodotto pOld, Prodotto pNew){
         String nome = Utility.insertString("Inserisci il nome da " + pOld.getNome() + " a: ");
-        String disponibilita = Utility.insertString("Inserisci la disponibilità da " + pOld.getDisponibilita().fromIntToString(pOld.getDisponibilita().getId()) + " a: ");
-        String categoria = Utility.insertString("Inserisci la categoria da " + pOld.getCategoria().getNome() + " a: ");
-        String materia = Utility.insertString("Inserisci la materia da " + pOld.getMateria().getNome() + " a: ");
+
         pNew.setId(pOld.getId());
 
         if(!nome.isEmpty()){
@@ -392,6 +391,82 @@ public class View {
         }
 
         boolean flag;
+
+        Categoria categoria = new Categoria();
+        do {
+            flag = false;
+            printCategorie(car.getCategorieWithDB());
+            String cat = Utility.insertString("Inserisci l'id categoria da " + Utility.changeIntToStringCategoria(pOld.getCategoria().getId()) + " a: ");
+            if(!cat.isEmpty()) {
+                try {
+                    categoria.setId(Integer.parseInt(cat));
+                    pNew.setCategoria(categoria);
+                }
+                catch(NumberFormatException e){
+                    Utility.msgInf("GEOSTORE","ATTENZIONE: inserisci un numero valido");
+                    flag=true;
+                }
+                catch(Exception e) {
+                    Utility.msgInf("GEOSTORE","ERRORE");
+                    flag=true;
+                }
+            }
+            else {
+                categoria.setId(pOld.getCategoria().getId());
+                pNew.setCategoria(categoria);
+            }
+        }while(flag);
+
+        Materia materia = new Materia();
+        do {
+            flag = false;
+            printMaterie(mr.getMaterieWithDB());
+            String mat = Utility.insertString("Inserisci l'id materia da " + Utility.changeIntToStringMateria(pOld.getMateria().getId()) + " a: ");
+            if(!mat.isEmpty()) {
+                try {
+                    materia.setId(Integer.parseInt(mat));
+                    pNew.setMateria(materia);
+                }
+                catch(NumberFormatException e){
+                    Utility.msgInf("GEOSTORE","ATTENZIONE: inserisci un numero valido");
+                    flag=true;
+                }
+                catch(Exception e) {
+                    Utility.msgInf("GEOSTORE","ERRORE");
+                    flag=true;
+                }
+            }
+            else {
+                materia.setId(pOld.getMateria().getId());
+                pNew.setMateria(materia);
+            }
+        }while(flag);
+
+        Disponibilita disponibilita = new Disponibilita();
+        do {
+            flag = false;
+            printDisponibilita(dr.getDisponibilitaWithDB());
+            String disp = Utility.insertString("Inserisci l'id disponibilita da " + Utility.changeIntToStringDisponibilita(pOld.getDisponibilita().getId()) + " a: ");
+            if(!disp.isEmpty()) {
+                try {
+                    disponibilita.setId(Integer.parseInt(disp));
+                    pNew.setDisponibilita(disponibilita);
+                }
+                catch(NumberFormatException e){
+                    Utility.msgInf("GEOSTORE","ATTENZIONE: inserisci un numero valido");
+                    flag=true;
+                }
+                catch(Exception e) {
+                    Utility.msgInf("GEOSTORE","ERRORE");
+                    flag=true;
+                }
+            }
+            else {
+                disponibilita.setId(pOld.getDisponibilita().getId());
+                pNew.setDisponibilita(disponibilita);
+            }
+        }while(flag);
+
         do {
             flag = false;
             String prezzo = Utility.insertString("Inserisci il prezzo unitario prodotto da " + pOld.getPrezzo() + " a: ");
@@ -434,58 +509,6 @@ public class View {
             }
         }while(flag);
 
-
-        Disponibilita disp = new Disponibilita();
-
-        if(!disponibilita.isEmpty()){
-            if(disponibilita.equalsIgnoreCase("DISPONIBILE")){
-                disp.setCode("DISPONIBILE");
-                pNew.setDisponibilita(disp);
-            }
-            else if(disponibilita.equalsIgnoreCase("ESAURITO")){
-                disp.setCode("ESAURITO");
-                pNew.setDisponibilita(disp);
-            }
-            else if(disponibilita.equalsIgnoreCase("ESAURIMENTO")){
-                disp.setCode("ESAURIMENTO");
-                pNew.setDisponibilita(disp);
-            }
-            else if(disponibilita.equalsIgnoreCase("ARRIVO")){
-                disp.setCode("ARRIVO");
-                pNew.setDisponibilita(disp);
-            }
-            else if(disponibilita.equalsIgnoreCase("N/A")){
-                disp.setCode("N/A");
-                pNew.setDisponibilita(disp);
-            }
-            else{
-                disp.setCode(pOld.getDisponibilita().fromIntToString(pOld.getDisponibilita().getId()));
-                pNew.setDisponibilita(disp);
-            }
-        }
-        else{
-            disp.setCode(pOld.getDisponibilita().fromIntToString(pOld.getDisponibilita().getId()));
-            pNew.setDisponibilita(disp);
-        }
-
-        if(!categoria.isEmpty()){
-            Categoria c = new Categoria();
-            c.setNome(categoria);
-            pNew.setCategoria(c);
-        }
-        else{
-            pNew.setCategoria(pOld.getCategoria());
-        }
-
-        if(!materia.isEmpty()){
-            Materia m = new Materia();
-            m.setNome(materia);
-            pNew.setMateria(m);
-        }
-        else{
-            pNew.setMateria(pOld.getMateria());
-        }
-
         Prodotto updatePr = null;
 
         if(Utility.insertString("Vuoi apportare modifiche?").equalsIgnoreCase("s")){
@@ -499,7 +522,6 @@ public class View {
     }
 
     public Ordine maskUpdateOrdine(Ordine oOld, Ordine oNew){
-        String stato = Utility.insertString("Inserisci lo stato da " + oOld.getStato().fromIntToString(oOld.getStato().getId()) + " a: ");
         oNew.setId(oOld.getId());
 
         boolean flag;
@@ -525,29 +547,30 @@ public class View {
             }
         }while(flag);
 
-        Stato st = new Stato();
-        if(!stato.isEmpty()){
-            if(stato.equalsIgnoreCase("ELABORAZIONE")){
-                st.setCode("ELABORAZIONE");
-                oNew.setStato(st);
+        Stato stato = new Stato();
+        do {
+            flag = false;
+            printStatus(sr.getStatusWithDB());
+            String st = Utility.insertString("Inserisci l'id stato da " + Utility.changeIntToStringStato(oOld.getStato().getId()) + " a: ");
+            if(!st.isEmpty()) {
+                try {
+                    stato.setId(Integer.parseInt(st));
+                    oNew.setStato(stato);
+                }
+                catch(NumberFormatException e){
+                    Utility.msgInf("GEOSTORE","ATTENZIONE: inserisci un numero valido");
+                    flag=true;
+                }
+                catch(Exception e) {
+                    Utility.msgInf("GEOSTORE","ERRORE");
+                    flag=true;
+                }
             }
-            else if(stato.equalsIgnoreCase("ACCETTATO")){
-                st.setCode("ACCETTATO");
-                oNew.setStato(st);
+            else {
+                stato.setId(oOld.getStato().getId());
+                oNew.setStato(stato);
             }
-            else if(stato.equalsIgnoreCase("RIFIUTATO")){
-                st.setCode("RIFIUTATO");
-                oNew.setStato(st);
-            }
-            else{
-                st.setCode(oOld.getStato().fromIntToString(oOld.getStato().getId()));
-                oNew.setStato(st);
-            }
-        }
-        else{
-            st.setCode(oOld.getStato().fromIntToString(oOld.getStato().getId()));
-            oNew.setStato(st);
-        }
+        }while(flag);
 
         Ordine updateOrd = null;
 
@@ -591,12 +614,42 @@ public class View {
 
     }
 
+    public void printDisponibilita(HashMap<Integer, Disponibilita> disponibilitas){
+        if(!disponibilitas.isEmpty()){
+            System.out.println("***DISPONIBILITA PRESENTI***\n");
+
+            for(Disponibilita disponibilita : disponibilitas.values()){
+                System.out.println("ID: " + disponibilita.getId() + ", \nCodice: " + disponibilita.getCode());
+                System.out.println("-----------------------------------------------------------");
+            }
+        }
+        else{
+            System.out.println("***NESSUNA DISPONIBILITA PRESENTE***\n");
+        }
+
+    }
+
+    public void printStatus(HashMap<Integer, Stato> stati){
+        if(!stati.isEmpty()){
+            System.out.println("***STATI PRESENTI***\n");
+
+            for(Stato stato : stati.values()){
+                System.out.println("ID: " + stato.getId() + ", \nCodice: " + stato.getCode());
+                System.out.println("-----------------------------------------------------------");
+            }
+        }
+        else{
+            System.out.println("***NESSUN STATO PRESENTE***\n");
+        }
+
+    }
+
     public void printProdotti(HashMap<Integer, Prodotto> prodotti){
         if(!prodotti.isEmpty()){
             System.out.println("***PRODOTTI PRESENTI NEL GEOSTORE***\n");
 
             for(Prodotto prodotto : prodotti.values()){
-                System.out.println("ID: " + prodotto.getId() + ", \nNome: " + prodotto.getNome() + ", \nPrezzo: " + prodotto.getPrezzo()+ ", \nDisponibilità: " + prodotto.getDisponibilita().fromIntToString(prodotto.getDisponibilita().getId()) + ", \nCategoria: " + prodotto.getCategoria().getNome() + ", \nMateria: " + prodotto.getMateria().getNome() + ", \nQuantità disponibile: " + prodotto.getQuantita_disp());
+                System.out.println("ID: " + prodotto.getId() + ", \nNome: " + prodotto.getNome() + ", \nPrezzo: " + prodotto.getPrezzo()+ ", \nDisponibilità: " + Utility.changeIntToStringDisponibilita(prodotto.getDisponibilita().getId()) + ", \nCategoria: " + Utility.changeIntToStringCategoria(prodotto.getCategoria().getId()) + ", \nMateria: " + Utility.changeIntToStringMateria(prodotto.getMateria().getId()) + ", \nQuantità disponibile: " + prodotto.getQuantita_disp());
                 System.out.println("-----------------------------------------------------------");
             }
         }
@@ -611,7 +664,7 @@ public class View {
             System.out.println("***ORDINI EFFETTUATI NEL GEOSTORE***\n");
 
             for(Ordine ordine : ordini.values()){
-                System.out.println("ID: " + ordine.getId() + ", \nNome utente: " + ordine.getUtente().getNome() + ", \nCognome utente: " + ordine.getUtente().getCognome() + ", \nNome prodotto: " + ordine.getProdotto().getNome() + ", \nData ordine: " + ordine.getData_ordine() + ", \nQuantità ordinata: " + ordine.getQuantita() + ", \nPrezzo unitario: " + ordine.getPrezzo_unitario()+ ", \nStato ordine: " + ordine.getStato().fromIntToString(ordine.getStato().getId()));
+                System.out.println("ID: " + ordine.getId() + ", \nNome utente: " + ordine.getUtente().getNome() + ", \nCognome utente: " + ordine.getUtente().getCognome() + ", \nNome prodotto: " + ordine.getProdotto().getNome() + ", \nData ordine: " + ordine.getData_ordine() + ", \nQuantità ordinata: " + ordine.getQuantita() + ", \nPrezzo unitario: " + ordine.getPrezzo_unitario()+ ", \nStato ordine: " + Utility.changeIntToStringStato(ordine.getStato().getId()));
                 System.out.println("-----------------------------------------------------------");
             }
         }
@@ -673,6 +726,7 @@ public class View {
                     Cliente cliente = (Cliente) utente;
                     System.out.println("ID: " + cliente.getId() + ", \nNome: " + cliente.getNome() + ", \nCognome: " + cliente.getCognome()+ ", \nEmail: " + cliente.getEmail()+ ", \nPassword: " + cliente.getPassword()+ ", \nTelefono: " + cliente.getTelefono()+ ", \nIndirizzo: " + cliente.getIndirizzo()+ ", \nPortafoglio: " + cliente.getPortafoglio());
                 }
+                System.out.println("-----------------------------------------------------------");
             }
         }
         else{

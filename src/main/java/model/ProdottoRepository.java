@@ -29,7 +29,7 @@ public class ProdottoRepository implements prodottiCRUD {
 
             preparedStatement.setString(1, p.getNome());
             preparedStatement.setBigDecimal(2, p.getPrezzo());
-            preparedStatement.setInt(3, p.getDisponibilita().fromStringToInt(p.getDisponibilita().getCode()));
+            preparedStatement.setInt(3, p.getDisponibilita().getId());
             preparedStatement.setInt(4, p.getCategoria().getId());
             preparedStatement.setInt(5, p.getMateria().getId());
             preparedStatement.setInt(6, p.getQuantita_disp());
@@ -47,10 +47,7 @@ public class ProdottoRepository implements prodottiCRUD {
 
     @Override
     public HashMap<Integer, Prodotto> getProdottiWithDB() {
-        String sql = "select o.id, o.nome, o.prezzo, o.disponibilita, c.nome as categoria_code, m.nome as materia_code, o.quantita_disp \n" +
-                "from prodotti o \n" +
-                "join Materie m on (o.materia = m.id)\n" +
-                "join Categorie c on (o.categoria = c.id) ";
+        String sql = "select o.id, o.nome, o.prezzo, o.disponibilita, o.categoria, o.materia, o.quantita_disp from prodotti o \n";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet rs = null;
@@ -72,10 +69,10 @@ public class ProdottoRepository implements prodottiCRUD {
                 disponibilita.setId(rs.getInt("disponibilita"));
                 ogg.setDisponibilita(disponibilita);
                 Categoria categoria = new Categoria();
-                categoria.setNome(rs.getString("categoria_code"));
+                categoria.setId(rs.getInt("categoria"));
                 ogg.setCategoria(categoria);
                 Materia materia = new Materia();
-                materia.setNome(rs.getString("materia_code"));
+                materia.setId(rs.getInt("materia"));
                 ogg.setMateria(materia);
                 ogg.setQuantita_disp(rs.getInt("quantita_disp"));
 
@@ -93,10 +90,8 @@ public class ProdottoRepository implements prodottiCRUD {
     }
 
     public HashMap<Integer, Prodotto> getProdottiDispWithDB() {
-        String sql = "select o.id, o.nome, o.prezzo, o.disponibilita, c.nome as categoria_code, m.nome as materia_code, o.quantita_disp \n" +
+        String sql = "select o.id, o.nome, o.prezzo, o.disponibilita, o.categoria, o.materia, o.quantita_disp \n" +
                 "from prodotti o \n" +
-                "join Materie m on (o.materia = m.id)\n" +
-                "join Categorie c on (o.categoria = c.id)\n" +
                 "where o.disponibilita = 1 OR o.disponibilita = 3";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -119,10 +114,10 @@ public class ProdottoRepository implements prodottiCRUD {
                 disponibilita.setId(rs.getInt("disponibilita"));
                 p.setDisponibilita(disponibilita);
                 Categoria categoria = new Categoria();
-                categoria.setNome(rs.getString("categoria_code"));
+                categoria.setId(rs.getInt("categoria"));
                 p.setCategoria(categoria);
                 Materia materia = new Materia();
-                materia.setNome(rs.getString("materia_code"));
+                materia.setId(rs.getInt("materia"));
                 p.setMateria(materia);
                 p.setQuantita_disp(rs.getInt("quantita_disp"));
 
@@ -140,10 +135,8 @@ public class ProdottoRepository implements prodottiCRUD {
     }
 
     public HashMap<Integer, Prodotto> getProdottiViaCategoriaWithDB(Integer idCat) {
-        String sql = "select o.id, o.nome, o.prezzo, o.disponibilita, c.nome as categoria_code, m.nome as materia_code, o.quantita_disp \n" +
+        String sql = "select o.id, o.nome, o.prezzo, o.disponibilita, o.categoria, o.materia, o.quantita_disp \n" +
                 "from prodotti o \n" +
-                "join Materie m on (o.materia = m.id)\n" +
-                "join Categorie c on (o.categoria = c.id)\n" +
                 "where o.categoria = ?";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -167,10 +160,10 @@ public class ProdottoRepository implements prodottiCRUD {
                 disponibilita.setId(rs.getInt("disponibilita"));
                 ogg.setDisponibilita(disponibilita);
                 Categoria categoria = new Categoria();
-                categoria.setNome(rs.getString("categoria_code"));
+                categoria.setId(rs.getInt("categoria"));
                 ogg.setCategoria(categoria);
                 Materia materia = new Materia();
-                materia.setNome(rs.getString("materia_code"));
+                materia.setId(rs.getInt("materia"));
                 ogg.setMateria(materia);
                 ogg.setQuantita_disp(rs.getInt("quantita_disp"));
 
@@ -188,10 +181,8 @@ public class ProdottoRepository implements prodottiCRUD {
     }
 
     public HashMap<Integer, Prodotto> getProdottiViaMateriaWithDB(Integer idMat) {
-        String sql = "select o.id, o.nome, o.prezzo, o.disponibilita, c.nome as categoria_code, m.nome as materia_code, o.quantita_disp \n" +
+        String sql = "select o.id, o.nome, o.prezzo, o.disponibilita, o.categoria, o.materia, o.quantita_disp \n" +
                 "from prodotti o \n" +
-                "join Materie m on (o.materia = m.id)\n" +
-                "join Categorie c on (o.categoria = c.id)\n" +
                 "where o.materia = ?";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -215,10 +206,10 @@ public class ProdottoRepository implements prodottiCRUD {
                 disponibilita.setId(rs.getInt("disponibilita"));
                 ogg.setDisponibilita(disponibilita);
                 Categoria categoria = new Categoria();
-                categoria.setNome(rs.getString("categoria_code"));
+                categoria.setId(rs.getInt("categoria"));
                 ogg.setCategoria(categoria);
                 Materia materia = new Materia();
-                materia.setNome(rs.getString("materia_code"));
+                materia.setId(rs.getInt("materia"));
                 ogg.setMateria(materia);
                 ogg.setQuantita_disp(rs.getInt("quantita_disp"));
 
@@ -237,10 +228,8 @@ public class ProdottoRepository implements prodottiCRUD {
 
     @Override
     public Prodotto getProdottoWithDB(Integer id) {
-        String sql = "select o.id, o.nome, o.prezzo, o.disponibilita, c.nome as categoria_code, m.nome as materia_code, o.quantita_disp \n" +
+        String sql = "select o.id, o.nome, o.prezzo, o.disponibilita, o.categoria, o.materia, o.quantita_disp \n" +
                 "from prodotti o \n" +
-                "join Materie m on (o.materia = m.id)\n" +
-                "join Categorie c on (o.categoria = c.id)\n" +
                 "where o.id = ?";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -261,10 +250,10 @@ public class ProdottoRepository implements prodottiCRUD {
                 disponibilita.setId(rs.getInt("disponibilita"));
                 prodotto.setDisponibilita(disponibilita);
                 Categoria categoria = new Categoria();
-                categoria.setNome(rs.getString("categoria_code"));
+                categoria.setId(rs.getInt("categoria"));
                 prodotto.setCategoria(categoria);
                 Materia materia = new Materia();
-                materia.setNome(rs.getString("materia_code"));
+                materia.setId(rs.getInt("materia"));
                 prodotto.setMateria(materia);
                 prodotto.setQuantita_disp(rs.getInt("quantita_disp"));
             }
@@ -280,10 +269,8 @@ public class ProdottoRepository implements prodottiCRUD {
     }
 
     public Prodotto getProdottoDispWithDB(Integer id) {
-        String sql = "select o.id, o.nome, o.prezzo, o.disponibilita, c.nome as categoria_code, m.nome as materia_code, o.quantita_disp \n" +
+        String sql = "select o.id, o.nome, o.prezzo, o.disponibilita, o.categoria, o.materia, o.quantita_disp \n" +
                 "from prodotti o \n" +
-                "join Materie m on (o.materia = m.id)\n" +
-                "join Categorie c on (o.categoria = c.id)\n" +
                 "where o.id = ? AND (o.disponibilita = 1 OR o.disponibilita = 3)";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -304,10 +291,10 @@ public class ProdottoRepository implements prodottiCRUD {
                 disponibilita.setId(rs.getInt("disponibilita"));
                 prodotto.setDisponibilita(disponibilita);
                 Categoria categoria = new Categoria();
-                categoria.setNome(rs.getString("categoria_code"));
+                categoria.setId(rs.getInt("categoria"));
                 prodotto.setCategoria(categoria);
                 Materia materia = new Materia();
-                materia.setNome(rs.getString("materia_code"));
+                materia.setId(rs.getInt("materia"));
                 prodotto.setMateria(materia);
                 prodotto.setQuantita_disp(rs.getInt("quantita_disp"));
             }
@@ -337,7 +324,7 @@ public class ProdottoRepository implements prodottiCRUD {
 
             preparedStatement.setString(1, newP.getNome());
             preparedStatement.setBigDecimal(2, newP.getPrezzo());
-            preparedStatement.setInt(3, newP.getDisponibilita().fromStringToInt(newP.getDisponibilita().getCode()));
+            preparedStatement.setInt(3, newP.getDisponibilita().getId());
             preparedStatement.setInt(4, newP.getCategoria().getId());
             preparedStatement.setInt(5, newP.getMateria().getId());
             preparedStatement.setInt(6, newP.getQuantita_disp());
@@ -406,8 +393,6 @@ public class ProdottoRepository implements prodottiCRUD {
 
         return num;
     }
-
-    //metodi override per operazioni CRUD
 
 
 

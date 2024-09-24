@@ -16,9 +16,9 @@ public class DBConnection {
         Connection connection = null;
 
         try{
+            //Connessione al db stabilita
             Class.forName("org.sqlite.JDBC"); //driver sqlite
             connection = DriverManager.getConnection(URL); //creazione della connessione
-            Utility.msgInf("GEOSTORE", "Connessione al db stabilita");
         }
         catch(SQLException e){ //errore connessione
             Utility.msgInf("GEOSTORE", "Errore alla connessione al db: " + e.getMessage());

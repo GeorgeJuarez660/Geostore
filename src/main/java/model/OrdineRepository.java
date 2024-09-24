@@ -29,7 +29,7 @@ public class OrdineRepository implements ordiniCRUD {
             preparedStatement.setString(3, String.valueOf(o.getData_ordine()));
             preparedStatement.setInt(4, o.getQuantita());
             preparedStatement.setBigDecimal(5, o.getPrezzo_unitario());
-            preparedStatement.setInt(6, o.getStato().fromStringToInt(o.getStato().getCode()));
+            preparedStatement.setInt(6, o.getStato().getId());
             num = preparedStatement.executeUpdate();
             //chiudi la connessione
             preparedStatement.close();
@@ -134,7 +134,7 @@ public class OrdineRepository implements ordiniCRUD {
         return ordini;
     }
 
-    public Ordine getOrdineByUserAndProdNameWithDB(Integer idUtente, Integer idOrdine) {
+    public Ordine getOrdineByUserWithDB(Integer idUtente, Integer idOrdine) {
         String sql = "SELECT o.id, u.nome AS nome_utente, u.cognome AS cognome_utente, og.nome AS nome_prodotto, o.data_ordine, o.quantita, o.prezzo_unitario, o.stato_id FROM ordini o JOIN utenti u ON(o.utente_id =u.id )\n" +
                 "JOIN prodotti og ON(o.prodotto_id =og.id )\n" +
                 "WHERE o.utente_id = ? AND o.id = ?";
@@ -235,7 +235,7 @@ public class OrdineRepository implements ordiniCRUD {
             preparedStatement = connection.prepareStatement(sql);
             //int num = 0;
 
-            preparedStatement.setInt(1, newO.getStato().fromStringToInt(newO.getStato().getCode()));
+            preparedStatement.setInt(1, newO.getStato().getId());
             preparedStatement.setInt(2, newO.getQuantita());
             preparedStatement.setInt(3, id);
             num = preparedStatement.executeUpdate();

@@ -1,11 +1,22 @@
 package src.main.java.utility;
 
+import src.main.java.model.CategoriaRepository;
+import src.main.java.model.DisponibilitaRepository;
+import src.main.java.model.MateriaRepository;
+import src.main.java.model.StatusRepository;
+
 import java.math.BigDecimal;
 import java.util.Scanner;
 
 public class Utility {
 
     static Scanner input = new Scanner(System.in);
+
+    static CategoriaRepository car = new CategoriaRepository();
+    static MateriaRepository mr = new MateriaRepository();
+    static DisponibilitaRepository dr = new DisponibilitaRepository();
+    static StatusRepository sr = new StatusRepository();
+
 
     public static void msgInf(String owner, String text) //metodo di messaggio info
     {
@@ -64,5 +75,25 @@ public class Utility {
 
         return word;
 
+    }
+
+    public static String changeIntToStringCategoria(Integer id){
+
+        return car.changeIntToStringCategoria(id);
+    }
+
+    public static String changeIntToStringMateria(Integer id){
+
+        return mr.changeIntToStringMateria(id);
+    }
+
+    public static String changeIntToStringDisponibilita(Integer id){
+
+        return dr.changeIntToStringDisponibilita(id);
+    }
+
+    public static String changeIntToStringStato(Integer id){
+
+        return sr.changeIntToStringStato(id);
     }
 }
