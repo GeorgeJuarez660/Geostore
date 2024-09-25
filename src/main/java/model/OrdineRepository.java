@@ -222,6 +222,109 @@ public class OrdineRepository implements ordiniCRUD {
         return ordine;
     }
 
+    public Utente getUtenteByOrdine(Integer id) {
+        String sql = "SELECT u.* \n" +
+                     "FROM utenti u JOIN ordini o ON(o.utente_id=u.id)\n" +
+                     "WHERE o.id = ? ";
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet rs = null;
+        Utente foundUtente = null, utente = null;
+        try{
+            //Connessione al db
+            connection = DBConnection.sqlConnect();
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, id);
+            rs = preparedStatement.executeQuery();
+
+            while(rs.next()){
+                String codeAdmin = rs.getString("codice_admin");
+
+                if(codeAdmin != null) {
+                    foundUtente = new Amministratore();
+                }
+                else {
+                    foundUtente = new Cliente();
+                }
+
+                if(foundUtente instanceof Amministratore){
+                    Amministratore foundAdmin = (Amministratore) foundUtente;
+                    foundAdmin.setId(rs.getInt("id"));
+                    foundAdmin.setNome(rs.getString("nome"));
+                    foundAdmin.setCognome(rs.getString("cognome"));
+                    foundAdmin.setEmail(rs.getString("email"));
+                    foundAdmin.setPassword(rs.getString("password"));
+                    foundAdmin.setIndirizzo(rs.getString("indirizzo"));
+                    foundAdmin.setTelefono(rs.getString("telefono"));
+                    foundAdmin.setCodeAdmin(codeAdmin);
+                    foundAdmin.setPortafoglio(rs.getBigDecimal("portafoglio"));
+                    utente = foundAdmin;
+                }
+                else{
+                    Cliente foundCliente = (Cliente) foundUtente;
+                    foundCliente.setId(rs.getInt("id"));
+                    foundCliente.setNome(rs.getString("nome"));
+                    foundCliente.setCognome(rs.getString("cognome"));
+                    foundCliente.setEmail(rs.getString("email"));
+                    foundCliente.setPassword(rs.getString("password"));
+                    foundCliente.setIndirizzo(rs.getString("indirizzo"));
+                    foundCliente.setTelefono(rs.getString("telefono"));
+                    foundCliente.setPortafoglio(rs.getBigDecimal("portafoglio"));
+                    utente = foundCliente;
+                }
+            }
+            //chiudi la connessione
+            rs.close();
+            preparedStatement.close();
+            connection.close();
+        }catch(SQLException e){
+            Utility.msgInf("GEOSTORE", "Errore nel getUtenteWithDB: " + e.getMessage());
+        }
+
+        return utente;
+    }
+
+    public Prodotto getProdottoByOrdine(Integer id) {
+        String sql = "SELECT p.* \n" +
+                "FROM prodotti p JOIN ordini o ON(o.prodotto_id=p.id)\n" +
+                "WHERE o.id = ? ";
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet rs = null;
+        Prodotto prodotto = new Prodotto();
+        try{
+            //Connessione al db
+            connection = DBConnection.sqlConnect();
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, id);
+            rs = preparedStatement.executeQuery();
+
+            while(rs.next()){
+                prodotto.setId(rs.getInt("id"));
+                prodotto.setNome(rs.getString("nome"));
+                prodotto.setPrezzo(rs.getBigDecimal("prezzo"));
+                Disponibilita disponibilita = new Disponibilita();
+                disponibilita.setId(rs.getInt("disponibilita"));
+                prodotto.setDisponibilita(disponibilita);
+                Categoria categoria = new Categoria();
+                categoria.setId(rs.getInt("categoria"));
+                prodotto.setCategoria(categoria);
+                Materia materia = new Materia();
+                materia.setId(rs.getInt("materia"));
+                prodotto.setMateria(materia);
+                prodotto.setQuantita_disp(rs.getInt("quantita_disp"));
+            }
+            //chiudi la connessione
+            rs.close();
+            preparedStatement.close();
+            connection.close();
+        }catch(SQLException e){
+            Utility.msgInf("GEOSTORE", "Errore nel getProdottoWithDB: " + e.getMessage());
+        }
+
+        return prodotto;
+    }
+
     @Override
     public int updateOrdineWithDB(Integer id, Ordine newO) {
         String sql = "UPDATE `ordini` SET `stato_id` = ?, `quantita` = ? WHERE id = ? ";

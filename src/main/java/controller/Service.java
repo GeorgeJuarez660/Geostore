@@ -4,6 +4,8 @@ import src.main.java.model.*;
 import src.main.java.utility.Utility;
 import src.main.java.view.View;
 
+import java.math.BigDecimal;
+
 public class Service {
 
     View view = new View();
@@ -244,34 +246,22 @@ public class Service {
 
     public void ordinazioneProdotto(Utente u){
         Ordine o;
-        Prodotto p;
         view.printProdotti(pr.getProdottiDispWithDB());
         o = new Ordine();
         view.maskInsertOrdine(o, u);
-        p = pr.getProdottoDispWithDB(o.getProdotto().getId());
 
-        if(p != null && p.getNome() != null){
-            Utility.msgInf("GEOSTORE", "Il prodotto è disponibile\n");
-            o.setProdotto(p);
+        boolean canOrder = checkAmountOrderAndSufficientWallet(o, u);
 
-            if(o.getQuantita() <= p.getQuantita_disp()){
-                o.setPrezzo_unitario(p.getPrezzo());
-
-                int num = odr.insertOrdineWithDB(null, o);
-                if(num > 0){
-                    Utility.msgInf("GEOSTORE", "Ordine effettuato\n");
-                }
-                else{
-                    Utility.msgInf("GEOSTORE", "Ordine non effettuato\n");
-                }
+        if(canOrder){
+            int num = odr.insertOrdineWithDB(null, o);
+            if(num > 0){
+                Utility.msgInf("GEOSTORE", "Ordine effettuato\n");
             }
             else{
-                Utility.msgInf("GEOSTORE", "La quantità ordinata supera quella disponibile\n");
+                Utility.msgInf("GEOSTORE", "Ordine non effettuato\n");
             }
         }
-        else{
-            Utility.msgInf("GEOSTORE", "L'oggetto ordinato non è disponibile oppure è inesistente\n");
-        }
+
     }
 
     public void modificaOrdine(){
@@ -303,11 +293,81 @@ public class Service {
         }
     }
 
+    private static boolean checkAmountOrderAndSufficientWallet(Ordine o, Utente u){
+        boolean canOrder = true;
+        ProdottoRepository pr = new ProdottoRepository();
+        UtenteRepository ur = new UtenteRepository();
+
+        Prodotto p = pr.getProdottoDispWithDB(o.getProdotto().getId());
+        if(p != null && p.getNome() != null){
+            Utility.msgInf("GEOSTORE", "Il prodotto è disponibile\n");
+            o.setProdotto(p);
+
+            if(o.getQuantita() <= p.getQuantita_disp()){
+                o.setPrezzo_unitario(p.getPrezzo());
+
+                BigDecimal pagamento = o.getPrezzo_unitario().multiply(BigDecimal.valueOf(o.getQuantita()));
+                BigDecimal denaro = new BigDecimal(0);
+
+                if(u instanceof Amministratore){
+                    Amministratore aDenaro = (Amministratore) u;
+                    denaro = aDenaro.getPortafoglio();
+                }
+                else{
+                    Cliente cDenaro = (Cliente) u;
+                    denaro = cDenaro.getPortafoglio();
+                }
+
+                if(pagamento.compareTo(denaro) <= 0){
+
+                    denaro = denaro.subtract(pagamento);
+
+                    if(u instanceof Amministratore){
+                        Amministratore aDenaro = (Amministratore) u;
+                        aDenaro.setPortafoglio(denaro);
+                        u = aDenaro;
+                    }
+                    else{
+                        Cliente cDenaro = (Cliente) u;
+                        cDenaro.setPortafoglio(denaro);
+                        u = cDenaro;
+                    }
+
+                    int num = ur.updateUtenteWithDB(u.getId(), u);
+
+                    if(num > 0){
+                        Utility.msgInf("GEOSTORE", "Pagamento riuscito\n");
+                    }
+                    else{
+                        Utility.msgInf("GEOSTORE", "Pagamento non riuscito\n");
+                    }
+
+                }
+                else{
+                    Utility.msgInf("GEOSTORE", "Non hai abbastanza denaro\n");
+                    canOrder = false;
+                }
+            }
+            else{
+                Utility.msgInf("GEOSTORE", "La quantità ordinata supera quella disponibile\n");
+                canOrder = false;
+            }
+        }
+        else{
+            Utility.msgInf("GEOSTORE", "L'oggetto ordinato non è disponibile oppure è inesistente\n");
+            canOrder = false;
+        }
+        return canOrder;
+    }
+
     private static void changeStatusProdottoAfterOrder(Ordine oOld, Ordine oNew){
+        OrdineRepository or = new OrdineRepository();
+
         if(oOld.getStato().getId() == 1 && oNew.getStato().getId() == 2){
             Prodotto p;
             ProdottoRepository pr = new ProdottoRepository();
-            p = pr.getProdottoWithDB(oOld.getProdotto().getId());
+
+            p = or.getProdottoByOrdine(oOld.getId());
 
             Integer subQuantita = p.getQuantita_disp() - oNew.getQuantita();
             p.setQuantita_disp(subQuantita);
@@ -331,6 +391,33 @@ public class Service {
             }
             else{
                 Utility.msgInf("GEOSTORE", "Quantità e/o disponibilità non aggiornati\n");
+            }
+        }
+        else if(oOld.getStato().getId() == 1 && oNew.getStato().getId() == 3){
+            UtenteRepository ur = new UtenteRepository();
+
+            BigDecimal pagamento = oOld.getPrezzo_unitario().multiply(BigDecimal.valueOf(oOld.getQuantita()));
+
+            Utente u = or.getUtenteByOrdine(oOld.getId());
+
+            if(u instanceof Amministratore){
+                Amministratore aDenaro = (Amministratore) u;
+                aDenaro.setPortafoglio(aDenaro.getPortafoglio().add(pagamento));
+                u = aDenaro;
+            }
+            else{
+                Cliente cDenaro = (Cliente) u;
+                cDenaro.setPortafoglio(cDenaro.getPortafoglio().add(pagamento));
+                u = cDenaro;
+            }
+
+            int num = ur.updateUtenteWithDB(u.getId(), u);
+
+            if(num > 0){
+                Utility.msgInf("GEOSTORE", "Denaro rimborsato\n");
+            }
+            else{
+                Utility.msgInf("GEOSTORE", "Denaro non rimborsato\n");
             }
         }
     }
