@@ -56,11 +56,11 @@ public class CategoriaRepository implements categorieCRUD {
     //metodi override per operazioni CRUD con database
 
     @Override
-    public void insertCategoriaWithDB(Integer id, Categoria c) {
+    public int insertCategoriaWithDB(Integer id, Categoria c) {
         String sql = "INSERT INTO `categorie`(`nome`) VALUES (?) ";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
-
+        int num = 0;
         try{
             //Connessione al db
             connection = DBConnection.sqlConnect();
@@ -68,13 +68,15 @@ public class CategoriaRepository implements categorieCRUD {
             //int num = 0;
 
             preparedStatement.setString(1, c.getNome());
-            preparedStatement.executeUpdate();
+            num = preparedStatement.executeUpdate();
             //chiudi la connessione
             preparedStatement.close();
             connection.close();
         }catch(SQLException e){
             Utility.msgInf("GEOSTORE", "Errore nel insertCategoriaWithDB: " + e.getMessage());
         }
+
+        return num;
     }
 
     @Override
@@ -167,11 +169,11 @@ public class CategoriaRepository implements categorieCRUD {
     }
 
     @Override
-    public void deleteCategoriaWithDB(Integer id) {
+    public int deleteCategoriaWithDB(Integer id) {
         String sql = "DELETE FROM `categorie` WHERE id = ? ";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
-
+        int num = 0;
         try{
             //Connessione al db
             connection = DBConnection.sqlConnect();
@@ -179,13 +181,15 @@ public class CategoriaRepository implements categorieCRUD {
             //int num = 0;
 
             preparedStatement.setInt(1, id);
-            preparedStatement.executeUpdate();
+            num = preparedStatement.executeUpdate();
             //chiudi la connessione
             preparedStatement.close();
             connection.close();
         }catch(SQLException e){
             Utility.msgInf("GEOSTORE", "Errore nel deleteCategoriaWithDB: " + e.getMessage());
         }
+
+        return num;
     }
 
     public String changeIntToStringCategoria(Integer id) {

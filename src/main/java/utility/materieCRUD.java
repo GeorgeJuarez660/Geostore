@@ -10,10 +10,10 @@ public interface materieCRUD {
     //Interfaccia dove dichiaro metodi astratti che mi serviranno per andare a implementarli nella classe MateriaRepository
 
     //metodi override per operazioni CRUD con database
-    public void insertMateriaWithDB(Integer id, Materia m);
+    public int insertMateriaWithDB(Integer id, Materia m);
     public HashMap<Integer, Materia> getMaterieWithDB();
     public Materia getMateriaWithDB(Integer id);
     public int updateMateriaWithDB(Integer id, Materia newM);
-    public void deleteMateriaWithDB(Integer id);
+    public int deleteMateriaWithDB(Integer id);
 
 }

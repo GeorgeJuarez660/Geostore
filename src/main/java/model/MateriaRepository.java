@@ -18,11 +18,11 @@ public class MateriaRepository implements materieCRUD {
     //metodi override per operazioni CRUD con database
 
     @Override
-    public void insertMateriaWithDB(Integer id, Materia m) {
+    public int insertMateriaWithDB(Integer id, Materia m) {
         String sql = "INSERT INTO `materie`(`nome`) VALUES (?) ";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
-
+        int num = 0;
         try{
             //Connessione al db
             connection = DBConnection.sqlConnect();
@@ -30,13 +30,15 @@ public class MateriaRepository implements materieCRUD {
             //int num = 0;
 
             preparedStatement.setString(1, m.getNome());
-            preparedStatement.executeUpdate();
+            num = preparedStatement.executeUpdate();
             //chiudi la connessione
             preparedStatement.close();
             connection.close();
         }catch(SQLException e){
             Utility.msgInf("GEOSTORE", "Errore nel insertMateriaWithDB: " + e.getMessage());
         }
+
+        return num;
     }
 
     @Override
@@ -129,11 +131,11 @@ public class MateriaRepository implements materieCRUD {
     }
 
     @Override
-    public void deleteMateriaWithDB(Integer id) {
+    public int deleteMateriaWithDB(Integer id) {
         String sql = "DELETE FROM `materie` WHERE id = ? ";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
-
+        int num = 0;
         try{
             //Connessione al db
             connection = DBConnection.sqlConnect();
@@ -141,13 +143,15 @@ public class MateriaRepository implements materieCRUD {
             //int num = 0;
 
             preparedStatement.setInt(1, id);
-            preparedStatement.executeUpdate();
+            num = preparedStatement.executeUpdate();
             //chiudi la connessione
             preparedStatement.close();
             connection.close();
         }catch(SQLException e){
             Utility.msgInf("GEOSTORE", "Errore nel deleteMateriaWithDB: " + e.getMessage());
         }
+
+        return num;
     }
 
     public String changeIntToStringMateria(Integer id) {

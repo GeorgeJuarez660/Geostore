@@ -55,7 +55,29 @@ public class AppJavaSwing {
                                                   break;
                                              case 4:
                                                   Utility.msgInf("GEOSTORE", "Ordinazione di un prodotto\n\n");
-                                                  service.ordinazioneProdotto(c);
+                                                  boolean flagOrder;
+                                                  do{
+                                                       service.ordinazioneProdotto(c);
+                                                       boolean flagQuestion;
+                                                       do{
+                                                            String cQuestion = Utility.insertString("\nVUOI RIPETERE? (s/n)");
+                                                            if(cQuestion.equalsIgnoreCase("s")){
+                                                                 flagOrder = true;
+                                                                 flagQuestion = false;
+                                                                 System.out.println("\n***VA BENE***");
+                                                            }
+                                                            else if(cQuestion.equalsIgnoreCase("n")){
+                                                                 flagOrder = false;
+                                                                 flagQuestion = false;
+                                                                 System.out.println("\n***OK COME VUOI***");
+                                                            }
+                                                            else{
+                                                                 flagOrder = false;
+                                                                 flagQuestion = true;
+                                                                 System.out.println("\n***RILEGGI LA DOMANDA***");
+                                                            }
+                                                       }while(flagQuestion);
+                                                  }while(flagOrder);
                                                   break;
                                              case 5:
                                                   Utility.msgInf("GEOSTORE", "Elenco ordini effettuati\n\n");
@@ -176,7 +198,29 @@ public class AppJavaSwing {
                                                   break;
                                              case 6:
                                                   Utility.msgInf("GEOSTORE", "Ordinazione di un prodotto\n\n");
-                                                  service.ordinazioneProdotto(a);
+                                                  boolean flagOrder;
+                                                  do{
+                                                       service.ordinazioneProdotto(a);
+                                                       boolean flagQuestion;
+                                                       do{
+                                                            String cQuestion = Utility.insertString("\nVUOI RIPETERE? (s/n)");
+                                                            if(cQuestion.equalsIgnoreCase("s")){
+                                                                 flagOrder = true;
+                                                                 flagQuestion = false;
+                                                                 System.out.println("\n***VA BENE***");
+                                                            }
+                                                            else if(cQuestion.equalsIgnoreCase("n")){
+                                                                 flagOrder = false;
+                                                                 flagQuestion = false;
+                                                                 System.out.println("\n***OK COME VUOI***");
+                                                            }
+                                                            else{
+                                                                 flagOrder = false;
+                                                                 flagQuestion = true;
+                                                                 System.out.println("\n***RILEGGI LA DOMANDA***");
+                                                            }
+                                                       }while(flagQuestion);
+                                                  }while(flagOrder);
                                                   break;
                                              case 7:
                                                   Utility.msgInf("GEOSTORE", "Elenco ordini effettuati\n\n");

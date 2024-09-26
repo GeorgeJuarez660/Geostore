@@ -13,6 +13,6 @@ public interface ordiniCRUD {
     public HashMap<Integer, Ordine> getOrdiniWithDB();
     public Ordine getOrdineWithDB(Integer id);
     public int updateOrdineWithDB(Integer id, Ordine newO);
-    public void deleteOrdineWithDB(Integer id);
+    public int deleteOrdineWithDB(Integer id);
 
 }

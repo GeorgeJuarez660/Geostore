@@ -158,6 +158,7 @@ public class Service {
 
     public void creazioneProdotto(){
         Prodotto p = new Prodotto();
+        boolean flagInsert;
         view.maskInsertProdotto(p);
 
         Categoria cat = car.getCategoriaWithDB(p.getCategoria().getId());
@@ -168,14 +169,31 @@ public class Service {
             p.setCategoria(cat);
             p.setMateria(m);
             p.setDisponibilita(d);
-            int num = pr.insertProdottoWithDB(p.getId(), p);
 
-            if(num > 0){
-                Utility.msgInf("GEOSTORE", "Nuovo prodotto aggiunto\n");
-            }
-            else{
-                Utility.msgInf("GEOSTORE", "Prodotto non aggiunto\n");
-            }
+            do{
+                String question = Utility.insertString("Vuoi procedere? (s/n)");
+                if(question.equalsIgnoreCase("s")) {
+                    int num = pr.insertProdottoWithDB(p.getId(), p);
+
+                    if(num > 0){
+                        Utility.msgInf("GEOSTORE", "Nuovo prodotto aggiunto\n");
+                    }
+                    else{
+                        Utility.msgInf("GEOSTORE", "Prodotto non aggiunto\n");
+                    }
+
+                    flagInsert = false;
+                }else if(question.equalsIgnoreCase("n")){
+                    Utility.msgInf("GEOSTORE", "Operazione annullata\n");
+                    flagInsert = false;
+                }
+                else{
+                    Utility.msgInf("GEOSTORE", "Rileggi la domanda\n");
+                    flagInsert = true;
+                }
+            }while(flagInsert);
+
+
         }
         else{
             Utility.msgInf("GEOSTORE", "Categoria e/o Materia inesistenti\n");
@@ -251,15 +269,30 @@ public class Service {
         view.maskInsertOrdine(o, u);
 
         boolean canOrder = checkAmountOrderAndSufficientWallet(o, u);
-
+        boolean flagInsert;
         if(canOrder){
-            int num = odr.insertOrdineWithDB(null, o);
-            if(num > 0){
-                Utility.msgInf("GEOSTORE", "Ordine effettuato\n");
-            }
-            else{
-                Utility.msgInf("GEOSTORE", "Ordine non effettuato\n");
-            }
+            do{
+                String question = Utility.insertString("Vuoi procedere? (s/n)");
+                if(question.equalsIgnoreCase("s")) {
+                    int num = odr.insertOrdineWithDB(null, o);
+                    if(num > 0){
+                        Utility.msgInf("GEOSTORE", "Ordine effettuato\n");
+                    }
+                    else{
+                        Utility.msgInf("GEOSTORE", "Ordine non effettuato\n");
+                    }
+
+                    flagInsert = false;
+                }else if(question.equalsIgnoreCase("n")){
+                    Utility.msgInf("GEOSTORE", "Operazione annullata\n");
+                    flagInsert = false;
+                }
+                else{
+                    Utility.msgInf("GEOSTORE", "Rileggi la domanda\n");
+                    flagInsert = true;
+                }
+            }while(flagInsert);
+
         }
 
     }
@@ -362,7 +395,7 @@ public class Service {
 
     private static void changeStatusProdottoAfterOrder(Ordine oOld, Ordine oNew){
         OrdineRepository or = new OrdineRepository();
-
+        //TODO: da rivedere...
         if(oOld.getStato().getId() == 1 && oNew.getStato().getId() == 2){
             Prodotto p;
             ProdottoRepository pr = new ProdottoRepository();
@@ -437,8 +470,13 @@ public class Service {
         if(o != null && o.getProdotto() != null && o.getProdotto().getNome() != null){
             Utility.msgInf("GEOSTORE", "Ordine trovato\n");
             if(Utility.insertString("Sei sicuro di voler eliminare quest'ordine?").equalsIgnoreCase("s")){
-                odr.deleteOrdineWithDB(o.getId());
-                Utility.msgInf("GEOSTORE", "Ordine eliminato");
+                int num = odr.deleteOrdineWithDB(o.getId());
+                if(num > 0){
+                    Utility.msgInf("GEOSTORE", "Ordine eliminato\n");
+                }
+                else{
+                    Utility.msgInf("GEOSTORE", "Ordine non eliminato\n");
+                }
             }
             else{
                 Utility.msgInf("GEOSTORE", "Operazione annullata");
@@ -456,8 +494,29 @@ public class Service {
     public void creazioneCategoria(){
         Categoria cat = new Categoria();
         view.maskInsertCategoria(cat);
-        car.insertCategoriaWithDB(cat.getId(), cat);
-        Utility.msgInf("GEOSTORE", "Nuova categoria aggiunta\n");
+        boolean flagInsert;
+        do{
+            String question = Utility.insertString("Vuoi procedere? (s/n)");
+            if(question.equalsIgnoreCase("s")) {
+                int num = car.insertCategoriaWithDB(cat.getId(), cat);
+
+                if (num > 0) {
+                    Utility.msgInf("GEOSTORE", "Nuova categoria aggiunta\n");
+                } else {
+                    Utility.msgInf("GEOSTORE", "Categoria non aggiunta\n");
+                }
+
+                flagInsert = false;
+            }else if(question.equalsIgnoreCase("n")){
+                Utility.msgInf("GEOSTORE", "Operazione annullata\n");
+                flagInsert = false;
+            }
+            else{
+                Utility.msgInf("GEOSTORE", "Rileggi la domanda\n");
+                flagInsert = true;
+            }
+        }while(flagInsert);
+
     }
 
     public void modificaCategoria(){
@@ -491,8 +550,13 @@ public class Service {
         if(cat != null && cat.getNome() != null){
             Utility.msgInf("GEOSTORE", "Categoria trovata\n");
             if(Utility.insertString("Sei sicuro di voler eliminare questa categoria?").equalsIgnoreCase("s")){
-                car.deleteCategoriaWithDB(cat.getId());
-                Utility.msgInf("GEOSTORE", "Categoria eliminata\n");
+                int num = car.deleteCategoriaWithDB(cat.getId());
+                if(num > 0){
+                    Utility.msgInf("GEOSTORE", "Categoria eliminata\n");
+                }
+                else{
+                    Utility.msgInf("GEOSTORE", "Categoria non eliminata\n");
+                }
             }
             else{
                 Utility.msgInf("GEOSTORE", "Operazione annullata\n");
@@ -513,8 +577,29 @@ public class Service {
     public void creazioneMateria(){
         Materia m = new Materia();
         view.maskInsertMateria(m);
-        mr.insertMateriaWithDB(m.getId(), m);
-        Utility.msgInf("GEOSTORE", "Nuova materia aggiunta\n");
+        boolean flagInsert;
+        do{
+            String question = Utility.insertString("Vuoi procedere? (s/n)");
+            if(question.equalsIgnoreCase("s")) {
+                int num = mr.insertMateriaWithDB(m.getId(), m);
+
+
+                if (num > 0) {
+                    Utility.msgInf("GEOSTORE", "Nuova materia aggiunta\n");
+                } else {
+                    Utility.msgInf("GEOSTORE", "Materia non aggiunta\n");
+                }
+
+                flagInsert = false;
+            }else if(question.equalsIgnoreCase("n")){
+                Utility.msgInf("GEOSTORE", "Operazione annullata\n");
+                flagInsert = false;
+            }
+            else{
+                Utility.msgInf("GEOSTORE", "Rileggi la domanda\n");
+                flagInsert = true;
+            }
+        }while(flagInsert);
     }
 
     public void modificaMateria(){
@@ -548,8 +633,13 @@ public class Service {
         if(m != null && m.getNome() != null){
             Utility.msgInf("GEOSTORE", "Materia trovata\n");
             if(Utility.insertString("Sei sicuro di voler eliminare questa materia?").equalsIgnoreCase("s")){
-                mr.deleteMateriaWithDB(m.getId());
-                Utility.msgInf("GEOSTORE", "Materia eliminata\n");
+                int num = mr.deleteMateriaWithDB(m.getId());
+                if(num > 0){
+                    Utility.msgInf("GEOSTORE", "Materia eliminata\n");
+                }
+                else{
+                    Utility.msgInf("GEOSTORE", "Materia non eliminata\n");
+                }
             }
             else{
                 Utility.msgInf("GEOSTORE", "Operazione annullata\n");

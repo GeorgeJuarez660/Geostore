@@ -16,10 +16,10 @@ public interface categorieCRUD {
     public boolean deleteCategoria(Integer id);
 
     //metodi override per operazioni CRUD con database
-    public void insertCategoriaWithDB(Integer id, Categoria c);
+    public int insertCategoriaWithDB(Integer id, Categoria c);
     public HashMap<Integer, Categoria> getCategorieWithDB();
     public Categoria getCategoriaWithDB(Integer id);
     public int updateCategoriaWithDB(Integer id, Categoria newC);
-    public void deleteCategoriaWithDB(Integer id);
+    public int deleteCategoriaWithDB(Integer id);
 
 }

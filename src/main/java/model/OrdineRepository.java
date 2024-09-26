@@ -353,25 +353,26 @@ public class OrdineRepository implements ordiniCRUD {
     }
 
     @Override
-    public void deleteOrdineWithDB(Integer id) {
+    public int deleteOrdineWithDB(Integer id) {
         String sql = "DELETE FROM `ordini` WHERE id = ? ";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
-
+        int num = 0;
         try{
             //Connessione al db
             connection = DBConnection.sqlConnect();
             preparedStatement = connection.prepareStatement(sql);
-            //int num = 0;
 
             preparedStatement.setInt(1, id);
-            preparedStatement.executeUpdate();
+            num = preparedStatement.executeUpdate();
             //chiudi la connessione
             preparedStatement.close();
             connection.close();
         }catch(SQLException e){
             Utility.msgInf("GEOSTORE", "Errore nel deleteOrdineWithDB: " + e.getMessage());
         }
+
+        return num;
     }
 
     public Ordine getOrdineTotGiorWithDB(Utente u, String data) {
