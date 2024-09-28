@@ -43,7 +43,9 @@ public class OrdineRepository implements ordiniCRUD {
 
     @Override
     public HashMap<Integer, Ordine> getOrdiniWithDB() {
-        String sql = "SELECT o.id, u.nome AS nome_utente, u.cognome AS cognome_utente, og.nome AS nome_prodotto, o.data_ordine, o.quantita, o.prezzo_unitario, o.stato_id FROM ordini o JOIN utenti u ON(o.utente_id =u.id )\n" +
+        String sql = "SELECT o.id, u.id AS id_utente, u.nome AS nome_utente, u.cognome AS cognome_utente, u.portafoglio AS portafoglio_utente, u.codice_admin AS code_admin, og.id AS id_prodotto, og.nome AS nome_prodotto, og.quantita_disp AS quant_disp_prod, o.data_ordine, o.quantita, o.prezzo_unitario, s.id as st_id, s.code as st_code " +
+                " FROM ordini o JOIN utenti u ON(o.utente_id =u.id ) \n" +
+                " JOIN stato s ON(o.stato_id=s.id)\n" +
                 "JOIN prodotti og ON(o.prodotto_id =og.id ) ";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -56,22 +58,51 @@ public class OrdineRepository implements ordiniCRUD {
             preparedStatement = connection.prepareStatement(sql);
             rs = preparedStatement.executeQuery();
             Ordine ord;
+            Utente foundUtente;
 
             while(rs.next()){
+
+                String codeAdmin = rs.getString("code_admin");
+
+                if(codeAdmin != null) {
+                    foundUtente = new Amministratore();
+                }
+                else {
+                    foundUtente = new Cliente();
+                }
+
+                if(foundUtente instanceof Amministratore){
+                    Amministratore foundAdmin = (Amministratore) foundUtente;
+                    foundAdmin.setId(rs.getInt("id_utente"));
+                    foundAdmin.setNome(rs.getString("nome_utente"));
+                    foundAdmin.setCognome(rs.getString("cognome_utente"));
+                    foundAdmin.setCodeAdmin(codeAdmin);
+                    foundAdmin.setPortafoglio(rs.getBigDecimal("portafoglio_utente"));
+                    foundUtente = foundAdmin;
+                }
+                else{
+                    Cliente foundCliente = (Cliente) foundUtente;
+                    foundCliente.setId(rs.getInt("id_utente"));
+                    foundCliente.setNome(rs.getString("nome_utente"));
+                    foundCliente.setCognome(rs.getString("cognome_utente"));
+                    foundCliente.setPortafoglio(rs.getBigDecimal("portafoglio_utente"));
+                    foundUtente = foundCliente;
+                }
+
                 ord = new Ordine();
                 ord.setId(rs.getInt("id"));
-                Utente utente = new Utente();
-                utente.setNome(rs.getString("nome_utente"));
-                utente.setCognome(rs.getString("cognome_utente"));
-                ord.setUtente(utente);
+                ord.setUtente(foundUtente);
                 Prodotto prodotto = new Prodotto();
+                prodotto.setId(rs.getInt("id_prodotto"));
                 prodotto.setNome(rs.getString("nome_prodotto"));
+                prodotto.setQuantita_disp(rs.getInt("quant_disp_prod"));
                 ord.setProdotto(prodotto);
                 ord.setData_ordine(Timestamp.valueOf(rs.getString("data_ordine")));
                 ord.setQuantita(rs.getInt("quantita"));
                 ord.setPrezzo_unitario(rs.getBigDecimal("prezzo_unitario"));
                 Stato stato = new Stato();
-                stato.setId(rs.getInt("stato_id"));
+                stato.setId(rs.getInt("st_id"));
+                stato.setCode(rs.getString("st_code"));
                 ord.setStato(stato);
 
                 ordini.put(ord.getId(), ord);
@@ -88,7 +119,9 @@ public class OrdineRepository implements ordiniCRUD {
     }
 
     public HashMap<Integer, Ordine> getOrdiniByUserWithDB(Integer idUtente) {
-        String sql = "SELECT o.id, u.nome AS nome_utente, u.cognome AS cognome_utente, og.nome AS nome_prodotto, o.data_ordine, o.quantita, o.prezzo_unitario, o.stato_id FROM ordini o JOIN utenti u ON(o.utente_id =u.id )\n" +
+        String sql = "SELECT o.id, u.id AS id_utente, u.nome AS nome_utente, u.cognome AS cognome_utente, u.portafoglio AS portafoglio_utente, u.codice_admin AS code_admin, og.nome AS nome_prodotto, og.id AS id_prodotto, og.quantita_disp AS quant_disp_prod, o.data_ordine, o.quantita, o.prezzo_unitario, s.id as st_id, s.code as st_code " +
+                " FROM ordini o JOIN utenti u ON(o.utente_id =u.id ) \n" +
+                " JOIN stato s ON(o.stato_id=s.id)\n" +
                 "JOIN prodotti og ON(o.prodotto_id =og.id )\n" +
                 "WHERE o.utente_id = ?";
         Connection connection = null;
@@ -103,22 +136,50 @@ public class OrdineRepository implements ordiniCRUD {
             preparedStatement.setInt(1, idUtente);
             rs = preparedStatement.executeQuery();
             Ordine ord;
+            Utente foundUtente;
 
             while(rs.next()){
+                String codeAdmin = rs.getString("code_admin");
+
+                if(codeAdmin != null) {
+                    foundUtente = new Amministratore();
+                }
+                else {
+                    foundUtente = new Cliente();
+                }
+
+                if(foundUtente instanceof Amministratore){
+                    Amministratore foundAdmin = (Amministratore) foundUtente;
+                    foundAdmin.setId(rs.getInt("id_utente"));
+                    foundAdmin.setNome(rs.getString("nome_utente"));
+                    foundAdmin.setCognome(rs.getString("cognome_utente"));
+                    foundAdmin.setCodeAdmin(codeAdmin);
+                    foundAdmin.setPortafoglio(rs.getBigDecimal("portafoglio_utente"));
+                    foundUtente = foundAdmin;
+                }
+                else{
+                    Cliente foundCliente = (Cliente) foundUtente;
+                    foundCliente.setId(rs.getInt("id_utente"));
+                    foundCliente.setNome(rs.getString("nome_utente"));
+                    foundCliente.setCognome(rs.getString("cognome_utente"));
+                    foundCliente.setPortafoglio(rs.getBigDecimal("portafoglio_utente"));
+                    foundUtente = foundCliente;
+                }
+
                 ord = new Ordine();
                 ord.setId(rs.getInt("id"));
-                Utente utente = new Utente();
-                utente.setNome(rs.getString("nome_utente"));
-                utente.setCognome(rs.getString("cognome_utente"));
-                ord.setUtente(utente);
+                ord.setUtente(foundUtente);
                 Prodotto prodotto = new Prodotto();
+                prodotto.setId(rs.getInt("id_prodotto"));
                 prodotto.setNome(rs.getString("nome_prodotto"));
+                prodotto.setQuantita_disp(rs.getInt("quant_disp_prod"));
                 ord.setProdotto(prodotto);
                 ord.setData_ordine(Timestamp.valueOf(rs.getString("data_ordine")));
                 ord.setQuantita(rs.getInt("quantita"));
                 ord.setPrezzo_unitario(rs.getBigDecimal("prezzo_unitario"));
                 Stato stato = new Stato();
-                stato.setId(rs.getInt("stato_id"));
+                stato.setId(rs.getInt("st_id"));
+                stato.setCode(rs.getString("st_code"));
                 ord.setStato(stato);
 
                 ordini.put(ord.getId(), ord);
@@ -135,13 +196,16 @@ public class OrdineRepository implements ordiniCRUD {
     }
 
     public Ordine getOrdineByUserWithDB(Integer idUtente, Integer idOrdine) {
-        String sql = "SELECT o.id, u.nome AS nome_utente, u.cognome AS cognome_utente, og.nome AS nome_prodotto, o.data_ordine, o.quantita, o.prezzo_unitario, o.stato_id FROM ordini o JOIN utenti u ON(o.utente_id =u.id )\n" +
-                "JOIN prodotti og ON(o.prodotto_id =og.id )\n" +
+        String sql = "SELECT o.id, u.id AS id_utente, u.nome AS nome_utente, u.cognome AS cognome_utente, u.portafoglio AS portafoglio_utente, u.codice_admin AS code_admin, og.nome AS nome_prodotto, og.id AS id_prodotto, og.quantita_disp AS quant_disp_prod, o.data_ordine, o.quantita, o.prezzo_unitario, s.id as st_id, s.code as st_code " +
+                " FROM ordini o JOIN utenti u ON(o.utente_id =u.id ) \n" +
+                " JOIN stato s ON(o.stato_id=s.id)\n" +
+                " JOIN prodotti og ON(o.prodotto_id=og.id)\n" +
                 "WHERE o.utente_id = ? AND o.id = ?";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet rs = null;
-        Ordine ordine = new Ordine();
+        Ordine ord = new Ordine();
+        Utente foundUtente;
 
         try{
             //Connessione al db
@@ -152,93 +216,7 @@ public class OrdineRepository implements ordiniCRUD {
             rs = preparedStatement.executeQuery();
 
             while(rs.next()){
-                ordine.setId(rs.getInt("id"));
-                Utente utente = new Utente();
-                utente.setNome(rs.getString("nome_utente"));
-                utente.setCognome(rs.getString("cognome_utente"));
-                ordine.setUtente(utente);
-                Prodotto prodotto = new Prodotto();
-                prodotto.setNome(rs.getString("nome_prodotto"));
-                ordine.setProdotto(prodotto);
-                ordine.setData_ordine(Timestamp.valueOf(rs.getString("data_ordine")));
-                ordine.setQuantita(rs.getInt("quantita"));
-                ordine.setPrezzo_unitario(rs.getBigDecimal("prezzo_unitario"));
-                Stato stato = new Stato();
-                stato.setId(rs.getInt("stato_id"));
-                ordine.setStato(stato);
-            }
-            //chiudi la connessione
-            rs.close();
-            preparedStatement.close();
-            connection.close();
-        }catch(SQLException e){
-            Utility.msgInf("GEOSTORE", "Errore nel getOrdiniByUserWithDB: " + e.getMessage());
-        }
-
-        return ordine;
-    }
-
-    @Override
-    public Ordine getOrdineWithDB(Integer id) {
-        String sql = "SELECT o.id, u.nome AS nome_utente, u.cognome AS cognome_utente, og.nome AS nome_prodotto, o.data_ordine, o.quantita, o.prezzo_unitario, o.stato_id FROM ordini o JOIN utenti u ON(o.utente_id =u.id )\n" +
-                "JOIN prodotti og ON(o.prodotto_id =og.id )\n" +
-                "WHERE o.id = ?";
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet rs = null;
-        Ordine ordine = new Ordine();
-
-        try{
-            //Connessione al db
-            connection = DBConnection.sqlConnect();
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, id);
-            rs = preparedStatement.executeQuery();
-
-            while(rs.next()){
-                ordine.setId(rs.getInt("id"));
-                Utente utente = new Utente();
-                utente.setNome(rs.getString("nome_utente"));
-                utente.setCognome(rs.getString("cognome_utente"));
-                ordine.setUtente(utente);
-                Prodotto prodotto = new Prodotto();
-                prodotto.setNome(rs.getString("nome_prodotto"));
-                ordine.setProdotto(prodotto);
-                ordine.setData_ordine(Timestamp.valueOf(rs.getString("data_ordine")));
-                ordine.setQuantita(rs.getInt("quantita"));
-                ordine.setPrezzo_unitario(rs.getBigDecimal("prezzo_unitario"));
-                Stato stato = new Stato();
-                stato.setId(rs.getInt("stato_id"));
-                ordine.setStato(stato);
-            }
-            //chiudi la connessione
-            rs.close();
-            preparedStatement.close();
-            connection.close();
-        }catch(SQLException e){
-            Utility.msgInf("GEOSTORE", "Errore nel getOrdineWithDB: " + e.getMessage());
-        }
-
-        return ordine;
-    }
-
-    public Utente getUtenteByOrdine(Integer id) {
-        String sql = "SELECT u.* \n" +
-                     "FROM utenti u JOIN ordini o ON(o.utente_id=u.id)\n" +
-                     "WHERE o.id = ? ";
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet rs = null;
-        Utente foundUtente = null, utente = null;
-        try{
-            //Connessione al db
-            connection = DBConnection.sqlConnect();
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, id);
-            rs = preparedStatement.executeQuery();
-
-            while(rs.next()){
-                String codeAdmin = rs.getString("codice_admin");
+                String codeAdmin = rs.getString("code_admin");
 
                 if(codeAdmin != null) {
                     foundUtente = new Amministratore();
@@ -249,49 +227,62 @@ public class OrdineRepository implements ordiniCRUD {
 
                 if(foundUtente instanceof Amministratore){
                     Amministratore foundAdmin = (Amministratore) foundUtente;
-                    foundAdmin.setId(rs.getInt("id"));
-                    foundAdmin.setNome(rs.getString("nome"));
-                    foundAdmin.setCognome(rs.getString("cognome"));
-                    foundAdmin.setEmail(rs.getString("email"));
-                    foundAdmin.setPassword(rs.getString("password"));
-                    foundAdmin.setIndirizzo(rs.getString("indirizzo"));
-                    foundAdmin.setTelefono(rs.getString("telefono"));
+                    foundAdmin.setId(rs.getInt("id_utente"));
+                    foundAdmin.setNome(rs.getString("nome_utente"));
+                    foundAdmin.setCognome(rs.getString("cognome_utente"));
                     foundAdmin.setCodeAdmin(codeAdmin);
-                    foundAdmin.setPortafoglio(rs.getBigDecimal("portafoglio"));
-                    utente = foundAdmin;
+                    foundAdmin.setPortafoglio(rs.getBigDecimal("portafoglio_utente"));
+                    foundUtente = foundAdmin;
                 }
                 else{
                     Cliente foundCliente = (Cliente) foundUtente;
-                    foundCliente.setId(rs.getInt("id"));
-                    foundCliente.setNome(rs.getString("nome"));
-                    foundCliente.setCognome(rs.getString("cognome"));
-                    foundCliente.setEmail(rs.getString("email"));
-                    foundCliente.setPassword(rs.getString("password"));
-                    foundCliente.setIndirizzo(rs.getString("indirizzo"));
-                    foundCliente.setTelefono(rs.getString("telefono"));
-                    foundCliente.setPortafoglio(rs.getBigDecimal("portafoglio"));
-                    utente = foundCliente;
+                    foundCliente.setId(rs.getInt("id_utente"));
+                    foundCliente.setNome(rs.getString("nome_utente"));
+                    foundCliente.setCognome(rs.getString("cognome_utente"));
+                    foundCliente.setPortafoglio(rs.getBigDecimal("portafoglio_utente"));
+                    foundUtente = foundCliente;
                 }
+
+                ord = new Ordine();
+                ord.setId(rs.getInt("id"));
+                ord.setUtente(foundUtente);
+                Prodotto prodotto = new Prodotto();
+                prodotto.setId(rs.getInt("id_prodotto"));
+                prodotto.setNome(rs.getString("nome_prodotto"));
+                prodotto.setQuantita_disp(rs.getInt("quant_disp_prod"));
+                ord.setProdotto(prodotto);
+                ord.setData_ordine(Timestamp.valueOf(rs.getString("data_ordine")));
+                ord.setQuantita(rs.getInt("quantita"));
+                ord.setPrezzo_unitario(rs.getBigDecimal("prezzo_unitario"));
+                Stato stato = new Stato();
+                stato.setId(rs.getInt("st_id"));
+                stato.setCode(rs.getString("st_code"));
+                ord.setStato(stato);
             }
             //chiudi la connessione
             rs.close();
             preparedStatement.close();
             connection.close();
         }catch(SQLException e){
-            Utility.msgInf("GEOSTORE", "Errore nel getUtenteWithDB: " + e.getMessage());
+            Utility.msgInf("GEOSTORE", "Errore nel getOrdiniByUserWithDB: " + e.getMessage());
         }
 
-        return utente;
+        return ord;
     }
 
-    public Prodotto getProdottoByOrdine(Integer id) {
-        String sql = "SELECT p.* \n" +
-                "FROM prodotti p JOIN ordini o ON(o.prodotto_id=p.id)\n" +
-                "WHERE o.id = ? ";
+    @Override
+    public Ordine getOrdineWithDB(Integer id) {
+        String sql = "SELECT o.id, u.id AS id_utente, u.nome AS nome_utente, u.cognome AS cognome_utente, u.portafoglio AS portafoglio_utente, u.codice_admin AS code_admin, og.nome AS nome_prodotto, og.id AS id_prodotto, og.quantita_disp AS quant_disp_prod, o.data_ordine, o.quantita, o.prezzo_unitario, s.id as st_id, s.code as st_code " +
+                " FROM ordini o JOIN utenti u ON(o.utente_id =u.id ) \n" +
+                " JOIN stato s ON(o.stato_id=s.id)\n" +
+                " JOIN prodotti og ON(o.prodotto_id=og.id)\n" +
+                "WHERE o.id = ?";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet rs = null;
-        Prodotto prodotto = new Prodotto();
+        Ordine ord = new Ordine();
+        Utente foundUtente;
+
         try{
             //Connessione al db
             connection = DBConnection.sqlConnect();
@@ -300,29 +291,58 @@ public class OrdineRepository implements ordiniCRUD {
             rs = preparedStatement.executeQuery();
 
             while(rs.next()){
-                prodotto.setId(rs.getInt("id"));
-                prodotto.setNome(rs.getString("nome"));
-                prodotto.setPrezzo(rs.getBigDecimal("prezzo"));
-                Disponibilita disponibilita = new Disponibilita();
-                disponibilita.setId(rs.getInt("disponibilita"));
-                prodotto.setDisponibilita(disponibilita);
-                Categoria categoria = new Categoria();
-                categoria.setId(rs.getInt("categoria"));
-                prodotto.setCategoria(categoria);
-                Materia materia = new Materia();
-                materia.setId(rs.getInt("materia"));
-                prodotto.setMateria(materia);
-                prodotto.setQuantita_disp(rs.getInt("quantita_disp"));
+                String codeAdmin = rs.getString("code_admin");
+
+                if(codeAdmin != null) {
+                    foundUtente = new Amministratore();
+                }
+                else {
+                    foundUtente = new Cliente();
+                }
+
+                if(foundUtente instanceof Amministratore){
+                    Amministratore foundAdmin = (Amministratore) foundUtente;
+                    foundAdmin.setId(rs.getInt("id_utente"));
+                    foundAdmin.setNome(rs.getString("nome_utente"));
+                    foundAdmin.setCognome(rs.getString("cognome_utente"));
+                    foundAdmin.setCodeAdmin(codeAdmin);
+                    foundAdmin.setPortafoglio(rs.getBigDecimal("portafoglio_utente"));
+                    foundUtente = foundAdmin;
+                }
+                else{
+                    Cliente foundCliente = (Cliente) foundUtente;
+                    foundCliente.setId(rs.getInt("id_utente"));
+                    foundCliente.setNome(rs.getString("nome_utente"));
+                    foundCliente.setCognome(rs.getString("cognome_utente"));
+                    foundCliente.setPortafoglio(rs.getBigDecimal("portafoglio_utente"));
+                    foundUtente = foundCliente;
+                }
+
+                ord = new Ordine();
+                ord.setId(rs.getInt("id"));
+                ord.setUtente(foundUtente);
+                Prodotto prodotto = new Prodotto();
+                prodotto.setId(rs.getInt("id_prodotto"));
+                prodotto.setNome(rs.getString("nome_prodotto"));
+                prodotto.setQuantita_disp(rs.getInt("quant_disp_prod"));
+                ord.setProdotto(prodotto);
+                ord.setData_ordine(Timestamp.valueOf(rs.getString("data_ordine")));
+                ord.setQuantita(rs.getInt("quantita"));
+                ord.setPrezzo_unitario(rs.getBigDecimal("prezzo_unitario"));
+                Stato stato = new Stato();
+                stato.setId(rs.getInt("st_id"));
+                stato.setCode(rs.getString("st_code"));
+                ord.setStato(stato);
             }
             //chiudi la connessione
             rs.close();
             preparedStatement.close();
             connection.close();
         }catch(SQLException e){
-            Utility.msgInf("GEOSTORE", "Errore nel getProdottoWithDB: " + e.getMessage());
+            Utility.msgInf("GEOSTORE", "Errore nel getOrdineWithDB: " + e.getMessage());
         }
 
-        return prodotto;
+        return ord;
     }
 
     @Override
@@ -411,10 +431,5 @@ public class OrdineRepository implements ordiniCRUD {
 
         return ordine;
     }
-
-    //metodi override per operazioni CRUD
-
-
-
 
 }

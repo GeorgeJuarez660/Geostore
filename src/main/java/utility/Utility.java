@@ -76,24 +76,4 @@ public class Utility {
         return word;
 
     }
-
-    public static String changeIntToStringCategoria(Integer id){
-
-        return car.changeIntToStringCategoria(id);
-    }
-
-    public static String changeIntToStringMateria(Integer id){
-
-        return mr.changeIntToStringMateria(id);
-    }
-
-    public static String changeIntToStringDisponibilita(Integer id){
-
-        return dr.changeIntToStringDisponibilita(id);
-    }
-
-    public static String changeIntToStringStato(Integer id){
-
-        return sr.changeIntToStringStato(id);
-    }
 }

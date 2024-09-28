@@ -397,27 +397,22 @@ public class Service {
         OrdineRepository or = new OrdineRepository();
         //TODO: da rivedere...
         if(oOld.getStato().getId() == 1 && oNew.getStato().getId() == 2){
-            Prodotto p;
             ProdottoRepository pr = new ProdottoRepository();
 
-            p = or.getProdottoByOrdine(oOld.getId());
+            Integer subQuantita = oOld.getProdotto().getQuantita_disp() - oNew.getQuantita();
+            Integer newDisp;
 
-            Integer subQuantita = p.getQuantita_disp() - oNew.getQuantita();
-            p.setQuantita_disp(subQuantita);
-            Disponibilita newDisp = new Disponibilita();
-
-            if(p.getQuantita_disp() == 0){
-                newDisp.setId(4);
+            if(subQuantita == 0){
+                newDisp = 4;
             }
-            else if(p.getQuantita_disp() >= 1 && p.getQuantita_disp() <=3){
-                newDisp.setId(3);
+            else if(subQuantita >= 1 && subQuantita <=3){
+                newDisp = 3;
             }
             else{
-                newDisp.setId(1);
+                newDisp = 1;
             }
-            p.setDisponibilita(newDisp);
 
-            int num = pr.updateProdottoAfterAccOrdineWithDB(p.getId(), p);
+            int num = pr.updateProdottoAfterAccOrdineWithDB(oOld.getProdotto().getId(), newDisp, subQuantita);
 
             if(num > 0){
                 Utility.msgInf("GEOSTORE", "Quantità e/o disponibilità aggiornati\n");
@@ -431,7 +426,7 @@ public class Service {
 
             BigDecimal pagamento = oOld.getPrezzo_unitario().multiply(BigDecimal.valueOf(oOld.getQuantita()));
 
-            Utente u = or.getUtenteByOrdine(oOld.getId());
+            Utente u = oOld.getUtente();
 
             if(u instanceof Amministratore){
                 Amministratore aDenaro = (Amministratore) u;

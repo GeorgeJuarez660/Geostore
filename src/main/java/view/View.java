@@ -396,7 +396,7 @@ public class View {
         do {
             flag = false;
             printCategorie(car.getCategorieWithDB());
-            String cat = Utility.insertString("Inserisci l'id categoria da " + Utility.changeIntToStringCategoria(pOld.getCategoria().getId()) + " a: ");
+            String cat = Utility.insertString("Inserisci l'id categoria da " + pOld.getCategoria().getNome() + " a: ");
             if(!cat.isEmpty()) {
                 try {
                     categoria.setId(Integer.parseInt(cat));
@@ -421,7 +421,7 @@ public class View {
         do {
             flag = false;
             printMaterie(mr.getMaterieWithDB());
-            String mat = Utility.insertString("Inserisci l'id materia da " + Utility.changeIntToStringMateria(pOld.getMateria().getId()) + " a: ");
+            String mat = Utility.insertString("Inserisci l'id materia da " + pOld.getMateria().getId() + " a: ");
             if(!mat.isEmpty()) {
                 try {
                     materia.setId(Integer.parseInt(mat));
@@ -446,7 +446,7 @@ public class View {
         do {
             flag = false;
             printDisponibilita(dr.getDisponibilitaWithDB());
-            String disp = Utility.insertString("Inserisci l'id disponibilita da " + Utility.changeIntToStringDisponibilita(pOld.getDisponibilita().getId()) + " a: ");
+            String disp = Utility.insertString("Inserisci l'id disponibilita da " + pOld.getDisponibilita().getId() + " a: ");
             if(!disp.isEmpty()) {
                 try {
                     disponibilita.setId(Integer.parseInt(disp));
@@ -551,7 +551,7 @@ public class View {
         do {
             flag = false;
             printStatus(sr.getStatusWithDB());
-            String st = Utility.insertString("Inserisci l'id stato da " + Utility.changeIntToStringStato(oOld.getStato().getId()) + " a: ");
+            String st = Utility.insertString("Inserisci l'id stato da " + oOld.getStato().getCode() + " a: ");
             if(!st.isEmpty()) {
                 try {
                     stato.setId(Integer.parseInt(st));
@@ -649,7 +649,7 @@ public class View {
             System.out.println("***PRODOTTI PRESENTI NEL GEOSTORE***\n");
 
             for(Prodotto prodotto : prodotti.values()){
-                System.out.println("ID: " + prodotto.getId() + ", \nNome: " + prodotto.getNome() + ", \nPrezzo: " + prodotto.getPrezzo()+ ", \nDisponibilità: " + Utility.changeIntToStringDisponibilita(prodotto.getDisponibilita().getId()) + ", \nCategoria: " + Utility.changeIntToStringCategoria(prodotto.getCategoria().getId()) + ", \nMateria: " + Utility.changeIntToStringMateria(prodotto.getMateria().getId()) + ", \nQuantità disponibile: " + prodotto.getQuantita_disp());
+                System.out.println("ID: " + prodotto.getId() + ", \nNome: " + prodotto.getNome() + ", \nPrezzo: " + prodotto.getPrezzo()+ ", \nDisponibilità: " + prodotto.getDisponibilita().getCode() + ", \nCategoria: " + prodotto.getCategoria().getNome() + ", \nMateria: " + prodotto.getMateria().getNome() + ", \nQuantità disponibile: " + prodotto.getQuantita_disp());
                 System.out.println("-----------------------------------------------------------");
             }
         }
@@ -664,7 +664,7 @@ public class View {
             System.out.println("***ORDINI EFFETTUATI NEL GEOSTORE***\n");
 
             for(Ordine ordine : ordini.values()){
-                System.out.println("ID: " + ordine.getId() + ", \nNome utente: " + ordine.getUtente().getNome() + ", \nCognome utente: " + ordine.getUtente().getCognome() + ", \nNome prodotto: " + ordine.getProdotto().getNome() + ", \nData ordine: " + ordine.getData_ordine() + ", \nQuantità ordinata: " + ordine.getQuantita() + ", \nPrezzo unitario: " + ordine.getPrezzo_unitario()+ ", \nStato ordine: " + Utility.changeIntToStringStato(ordine.getStato().getId()));
+                System.out.println("ID: " + ordine.getId() + ", \nNome utente: " + ordine.getUtente().getNome() + ", \nCognome utente: " + ordine.getUtente().getCognome() + ", \nNome prodotto: " + ordine.getProdotto().getNome() + ", \nData ordine: " + ordine.getData_ordine() + ", \nQuantità ordinata: " + ordine.getQuantita() + ", \nPrezzo unitario: " + ordine.getPrezzo_unitario()+ ", \nStato ordine: " + ordine.getStato().getCode());
                 System.out.println("-----------------------------------------------------------");
             }
         }
