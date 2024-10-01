@@ -522,6 +522,8 @@ public class View {
     }
 
     public Ordine maskUpdateOrdine(Ordine oOld, Ordine oNew){
+        oNew.setPrezzo_unitario(oOld.getPrezzo_unitario());
+        oNew.setData_ordine(oOld.getData_ordine());
         oNew.setId(oOld.getId());
 
         boolean flag;

@@ -5,6 +5,7 @@ import src.main.java.utility.Utility;
 import src.main.java.view.View;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public class Service {
 
@@ -305,10 +306,13 @@ public class Service {
             Utility.msgInf("GEOSTORE", "Ordine trovato\n");
 
             Ordine oNew = view.maskUpdateOrdine(o, new Ordine());
-
+            //TODO: inserire il check
             Stato s = sr.getStatoWithDB(oNew.getStato().getId());
 
             if(s != null && s.getCode() != null){
+                Utente u = ur.getUtenteWithDB(o.getUtente().getId());
+                checkOrderChanged(o, oNew, u);
+
                 changeStatusProdottoAfterOrder(o, oNew);
 
                 int num = odr.updateOrdineWithDB(oNew.getId(), oNew);
@@ -391,6 +395,101 @@ public class Service {
             canOrder = false;
         }
         return canOrder;
+    }
+
+    private static void checkOrderChanged(Ordine oOld, Ordine oNew, Utente u){
+        UtenteRepository ur = new UtenteRepository();
+        BigDecimal pagamentoNuovo = new BigDecimal(0);
+        BigDecimal pagamentoVecchio = new BigDecimal(0);
+        BigDecimal pagamentoDecisivo = new BigDecimal(0);
+        BigDecimal denaro;
+        String choose = "";
+
+        if(!Objects.equals(oOld.getQuantita(), oNew.getQuantita())){
+            Utility.msgInf("GEOSTORE", "è stata modificata la quantità ordinata\n");
+
+            if(oOld.getQuantita() < oNew.getQuantita()) {
+                Utility.msgInf("GEOSTORE", "Procediamo con il pagamento del denaro richiesto\n");
+
+                pagamentoNuovo = oNew.getPrezzo_unitario().multiply(BigDecimal.valueOf(oNew.getQuantita()));
+                pagamentoVecchio = oOld.getPrezzo_unitario().multiply(BigDecimal.valueOf(oOld.getQuantita()));
+
+                pagamentoDecisivo = pagamentoNuovo.subtract(pagamentoVecchio);
+                denaro = new BigDecimal(0);
+
+                choose = "S";
+            }
+            else if(oOld.getQuantita() > oNew.getQuantita()) {
+                Utility.msgInf("GEOSTORE", "Procediamo con il rimborso del denaro in eccesso\n");
+
+                pagamentoNuovo = oNew.getPrezzo_unitario().multiply(BigDecimal.valueOf(oNew.getQuantita()));
+                pagamentoVecchio = oOld.getPrezzo_unitario().multiply(BigDecimal.valueOf(oOld.getQuantita()));
+
+                pagamentoDecisivo = pagamentoVecchio.subtract(pagamentoNuovo);
+                denaro = new BigDecimal(0);
+
+                choose = "A";
+            }
+
+            if (u instanceof Amministratore) {
+                Amministratore aDenaro = (Amministratore) u;
+                denaro = aDenaro.getPortafoglio();
+            } else {
+                Cliente cDenaro = (Cliente) u;
+                denaro = cDenaro.getPortafoglio();
+            }
+
+            if(choose.equals("S")){
+                if (pagamentoDecisivo.compareTo(denaro) <= 0) {
+
+                    denaro = denaro.subtract(pagamentoDecisivo);
+
+                    if (u instanceof Amministratore) {
+                        Amministratore aDenaro = (Amministratore) u;
+                        aDenaro.setPortafoglio(denaro);
+                        u = aDenaro;
+                    } else {
+                        Cliente cDenaro = (Cliente) u;
+                        cDenaro.setPortafoglio(denaro);
+                        u = cDenaro;
+                    }
+
+                    int num = ur.updateUtenteWithDB(u.getId(), u);
+
+                    if(num > 0){
+                        Utility.msgInf("GEOSTORE", "Pagamento riuscito\n");
+                    }
+                    else{
+                        Utility.msgInf("GEOSTORE", "Pagamento non riuscito\n");
+                    }
+                }
+                else{
+                    Utility.msgInf("GEOSTORE", "Denaro insufficiente\n");
+                }
+            }
+            else if(choose.equals("A")){
+                denaro = denaro.add(pagamentoDecisivo);
+
+                if (u instanceof Amministratore) {
+                    Amministratore aDenaro = (Amministratore) u;
+                    aDenaro.setPortafoglio(denaro);
+                    u = aDenaro;
+                } else {
+                    Cliente cDenaro = (Cliente) u;
+                    cDenaro.setPortafoglio(denaro);
+                    u = cDenaro;
+                }
+
+                int num = ur.updateUtenteWithDB(u.getId(), u);
+
+                if(num > 0){
+                    Utility.msgInf("GEOSTORE", "Rimborso riuscito\n");
+                }
+                else{
+                    Utility.msgInf("GEOSTORE", "Rimborso non riuscito\n");
+                }
+            }
+        }
     }
 
     private static void changeStatusProdottoAfterOrder(Ordine oOld, Ordine oNew){
