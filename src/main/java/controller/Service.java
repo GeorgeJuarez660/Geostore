@@ -5,6 +5,8 @@ import src.main.java.utility.Utility;
 import src.main.java.view.View;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
 public class Service {
@@ -244,7 +246,24 @@ public class Service {
         if(p != null && p.getNome() != null){
             Utility.msgInf("GEOSTORE", "Prodotto trovato\n");
             if(Utility.insertString("Sei sicuro di voler eliminare questo prodotto?").equalsIgnoreCase("s")){
-                int num = pr.deleteProdottoWithDB(p.getId());
+
+                HashMap<Integer, Ordine> ordini = odr.getOrdiniByProductWithDB(p.getId());
+
+                for(Ordine ordine : ordini.values()){
+                    refundAfterDeleteOrder(ordine, ordine.getUtente());
+                }
+
+                int num = odr.deleteOrdineAfterDeleteProduct(p.getId());
+
+                if(num > 0){
+                    Utility.msgInf("GEOSTORE", "Ordini eliminati\n");
+                }
+                else{
+                    Utility.msgInf("GEOSTORE", "Ordini non eliminati\n");
+                }
+
+                num = 0;
+                num = pr.deleteProdottoWithDB(p.getId());
 
                 if(num > 0){
                     Utility.msgInf("GEOSTORE", "Prodotto eliminato\n");
@@ -269,12 +288,14 @@ public class Service {
         o = new Ordine();
         view.maskInsertOrdine(o, u);
 
-        boolean canOrder = checkAmountOrderAndSufficientWallet(o, u);
         boolean flagInsert;
-        if(canOrder){
-            do{
-                String question = Utility.insertString("Vuoi procedere? (s/n)");
-                if(question.equalsIgnoreCase("s")) {
+        do{
+            String question = Utility.insertString("Vuoi procedere? (s/n)");
+            if(question.equalsIgnoreCase("s")) {
+
+                boolean canOrder = checkAmountOrderAndSufficientWallet(o, u);
+
+                if(canOrder) {
                     int num = odr.insertOrdineWithDB(null, o);
                     if(num > 0){
                         Utility.msgInf("GEOSTORE", "Ordine effettuato\n");
@@ -282,20 +303,18 @@ public class Service {
                     else{
                         Utility.msgInf("GEOSTORE", "Ordine non effettuato\n");
                     }
-
-                    flagInsert = false;
-                }else if(question.equalsIgnoreCase("n")){
-                    Utility.msgInf("GEOSTORE", "Operazione annullata\n");
-                    flagInsert = false;
                 }
-                else{
-                    Utility.msgInf("GEOSTORE", "Rileggi la domanda\n");
-                    flagInsert = true;
-                }
-            }while(flagInsert);
 
-        }
-
+                flagInsert = false;
+            }else if(question.equalsIgnoreCase("n")){
+                Utility.msgInf("GEOSTORE", "Operazione annullata\n");
+                flagInsert = false;
+            }
+            else{
+                Utility.msgInf("GEOSTORE", "Rileggi la domanda\n");
+                flagInsert = true;
+            }
+        }while(flagInsert);
     }
 
     public void modificaOrdine(){
@@ -370,7 +389,7 @@ public class Service {
                         u = cDenaro;
                     }
 
-                    int num = ur.updateUtenteWithDB(u.getId(), u);
+                    int num = ur.updateWalletUtente(u.getId(), u);
 
                     if(num > 0){
                         Utility.msgInf("GEOSTORE", "Pagamento riuscito\n");
@@ -454,7 +473,7 @@ public class Service {
                         u = cDenaro;
                     }
 
-                    int num = ur.updateUtenteWithDB(u.getId(), u);
+                    int num = ur.updateWalletUtente(u.getId(), u);
 
                     if(num > 0){
                         Utility.msgInf("GEOSTORE", "Pagamento riuscito\n");
@@ -480,7 +499,7 @@ public class Service {
                     u = cDenaro;
                 }
 
-                int num = ur.updateUtenteWithDB(u.getId(), u);
+                int num = ur.updateWalletUtente(u.getId(), u);
 
                 if(num > 0){
                     Utility.msgInf("GEOSTORE", "Rimborso riuscito\n");
@@ -492,9 +511,8 @@ public class Service {
         }
     }
 
-    private static void changeStatusProdottoAfterOrder(Ordine oOld, Ordine oNew){
+    public void changeStatusProdottoAfterOrder(Ordine oOld, Ordine oNew){
         OrdineRepository or = new OrdineRepository();
-        //TODO: da rivedere...
         if(oOld.getStato().getId() == 1 && oNew.getStato().getId() == 2){
             ProdottoRepository pr = new ProdottoRepository();
 
@@ -521,31 +539,9 @@ public class Service {
             }
         }
         else if(oOld.getStato().getId() == 1 && oNew.getStato().getId() == 3){
-            UtenteRepository ur = new UtenteRepository();
-
-            BigDecimal pagamento = oOld.getPrezzo_unitario().multiply(BigDecimal.valueOf(oOld.getQuantita()));
-
             Utente u = oOld.getUtente();
 
-            if(u instanceof Amministratore){
-                Amministratore aDenaro = (Amministratore) u;
-                aDenaro.setPortafoglio(aDenaro.getPortafoglio().add(pagamento));
-                u = aDenaro;
-            }
-            else{
-                Cliente cDenaro = (Cliente) u;
-                cDenaro.setPortafoglio(cDenaro.getPortafoglio().add(pagamento));
-                u = cDenaro;
-            }
-
-            int num = ur.updateUtenteWithDB(u.getId(), u);
-
-            if(num > 0){
-                Utility.msgInf("GEOSTORE", "Denaro rimborsato\n");
-            }
-            else{
-                Utility.msgInf("GEOSTORE", "Denaro non rimborsato\n");
-            }
+            refundAfterDeleteOrder(oOld, u);
         }
     }
 
@@ -564,16 +560,26 @@ public class Service {
         if(o != null && o.getProdotto() != null && o.getProdotto().getNome() != null){
             Utility.msgInf("GEOSTORE", "Ordine trovato\n");
             if(Utility.insertString("Sei sicuro di voler eliminare quest'ordine?").equalsIgnoreCase("s")){
-                int num = odr.deleteOrdineWithDB(o.getId());
-                if(num > 0){
-                    Utility.msgInf("GEOSTORE", "Ordine eliminato\n");
+
+                if(o.getStato().getId() == 1){
+                    Utente uOrd = o.getUtente();
+                    refundAfterDeleteOrder(o, uOrd);
+
+                    int num = odr.deleteOrdineWithDB(o.getId());
+                    if(num > 0){
+                        Utility.msgInf("GEOSTORE", "Ordine eliminato\n");
+                    }
+                    else{
+                        Utility.msgInf("GEOSTORE", "Ordine non eliminato\n");
+                    }
                 }
                 else{
-                    Utility.msgInf("GEOSTORE", "Ordine non eliminato\n");
+                    Utility.msgInf("GEOSTORE", "Non puoi eliminare l'ordine perchè lo stato è in " + o.getStato().getCode());
                 }
+
             }
             else{
-                Utility.msgInf("GEOSTORE", "Operazione annullata");
+                Utility.msgInf("GEOSTORE", "Operazione annullata\n");
             }
         }
         else{
@@ -644,7 +650,17 @@ public class Service {
         if(cat != null && cat.getNome() != null){
             Utility.msgInf("GEOSTORE", "Categoria trovata\n");
             if(Utility.insertString("Sei sicuro di voler eliminare questa categoria?").equalsIgnoreCase("s")){
-                int num = car.deleteCategoriaWithDB(cat.getId());
+
+                int num = pr.updateIdAfterDeleteCategory(0, cat.getId());
+                if(num > 0){
+                    Utility.msgInf("GEOSTORE", "Prodotti aggiornati\n");
+                }
+                else{
+                    Utility.msgInf("GEOSTORE", "Prodotti non aggiornati\n");
+                }
+
+                num = 0;
+                num = car.deleteCategoriaWithDB(cat.getId());
                 if(num > 0){
                     Utility.msgInf("GEOSTORE", "Categoria eliminata\n");
                 }
@@ -658,6 +674,30 @@ public class Service {
         }
         else{
             Utility.msgInf("GEOSTORE", "Categoria non trovata\n");
+        }
+    }
+
+    private void refundAfterDeleteOrder(Ordine o, Utente u){
+        BigDecimal pagamento = o.getPrezzo_unitario().multiply(BigDecimal.valueOf(o.getQuantita()));
+
+        if(u instanceof Amministratore){
+            Amministratore aDenaro = (Amministratore) u;
+            aDenaro.setPortafoglio(aDenaro.getPortafoglio().add(pagamento));
+            u = aDenaro;
+        }
+        else{
+            Cliente cDenaro = (Cliente) u;
+            cDenaro.setPortafoglio(cDenaro.getPortafoglio().add(pagamento));
+            u = cDenaro;
+        }
+
+        int num = ur.updateWalletUtente(u.getId(), u);
+
+        if(num > 0){
+            Utility.msgInf("GEOSTORE", "Denaro rimborsato\n");
+        }
+        else{
+            Utility.msgInf("GEOSTORE", "Denaro non rimborsato\n");
         }
     }
 
@@ -727,7 +767,17 @@ public class Service {
         if(m != null && m.getNome() != null){
             Utility.msgInf("GEOSTORE", "Materia trovata\n");
             if(Utility.insertString("Sei sicuro di voler eliminare questa materia?").equalsIgnoreCase("s")){
-                int num = mr.deleteMateriaWithDB(m.getId());
+
+                int num = pr.updateIdAfterDeleteMaterial(0, m.getId());
+                if(num > 0){
+                    Utility.msgInf("GEOSTORE", "Prodotti aggiornati\n");
+                }
+                else{
+                    Utility.msgInf("GEOSTORE", "Prodotti non aggiornati\n");
+                }
+
+                num = 0;
+                num = mr.deleteMateriaWithDB(m.getId());
                 if(num > 0){
                     Utility.msgInf("GEOSTORE", "Materia eliminata\n");
                 }

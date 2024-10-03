@@ -154,31 +154,4 @@ public class MateriaRepository implements materieCRUD {
         return num;
     }
 
-    public String changeIntToStringMateria(Integer id) {
-        String sql = "SELECT m.nome FROM Materie m WHERE m.ID = ?";
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet rs = null;
-        String nome = "";
-
-        try{
-            //Connessione al db
-            connection = DBConnection.sqlConnect();
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, id);
-            rs = preparedStatement.executeQuery();
-
-            while(rs.next()){
-                nome = rs.getString("nome");
-            }
-            //chiudi la connessione
-            rs.close();
-            preparedStatement.close();
-            connection.close();
-        }catch(SQLException e){
-            Utility.msgInf("GEOSTORE", "Errore nel changeIntToStringMateria: " + e.getMessage());
-        }
-        return nome;
-    }
-
 }

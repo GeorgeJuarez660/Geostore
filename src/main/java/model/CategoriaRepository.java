@@ -178,7 +178,6 @@ public class CategoriaRepository implements categorieCRUD {
             //Connessione al db
             connection = DBConnection.sqlConnect();
             preparedStatement = connection.prepareStatement(sql);
-            //int num = 0;
 
             preparedStatement.setInt(1, id);
             num = preparedStatement.executeUpdate();
@@ -191,33 +190,5 @@ public class CategoriaRepository implements categorieCRUD {
 
         return num;
     }
-
-    public String changeIntToStringCategoria(Integer id) {
-        String sql = "SELECT c.nome FROM Categorie c WHERE c.ID = ?";
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet rs = null;
-        String nome = "";
-
-        try{
-            //Connessione al db
-            connection = DBConnection.sqlConnect();
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, id);
-            rs = preparedStatement.executeQuery();
-
-            while(rs.next()){
-                nome = rs.getString("nome");
-            }
-            //chiudi la connessione
-            rs.close();
-            preparedStatement.close();
-            connection.close();
-        }catch(SQLException e){
-            Utility.msgInf("GEOSTORE", "Errore nel changeIntToStringCategoria: " + e.getMessage());
-        }
-        return nome;
-    }
-
 
 }

@@ -401,6 +401,58 @@ public class ProdottoRepository implements prodottiCRUD {
         return num;
     }
 
+    public int updateIdAfterDeleteCategory(Integer idNew, Integer idOld) {
+        String sql = "UPDATE `prodotti` SET `categoria` = ? WHERE categoria = ? ";
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        int num = 0;
+
+        try{
+            //Connessione al db
+            connection = DBConnection.sqlConnect();
+            preparedStatement = connection.prepareStatement(sql);
+            //int num = 0;
+
+            preparedStatement.setInt(1, idNew);
+            preparedStatement.setInt(2, idOld);
+
+            num = preparedStatement.executeUpdate();
+            //chiudi la connessione
+            preparedStatement.close();
+            connection.close();
+        }catch(SQLException e){
+            Utility.msgInf("GEOSTORE", "Errore nel updateIdAfterDeleteCategory: " + e.getMessage());
+        }
+
+        return num;
+    }
+
+    public int updateIdAfterDeleteMaterial(Integer idNew, Integer idOld) {
+        String sql = "UPDATE `prodotti` SET `materia` = ? WHERE materia = ? ";
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        int num = 0;
+
+        try{
+            //Connessione al db
+            connection = DBConnection.sqlConnect();
+            preparedStatement = connection.prepareStatement(sql);
+            //int num = 0;
+
+            preparedStatement.setInt(1, idNew);
+            preparedStatement.setInt(2, idOld);
+
+            num = preparedStatement.executeUpdate();
+            //chiudi la connessione
+            preparedStatement.close();
+            connection.close();
+        }catch(SQLException e){
+            Utility.msgInf("GEOSTORE", "Errore nel updateIdAfterDeleteMaterial: " + e.getMessage());
+        }
+
+        return num;
+    }
+
     @Override
     public int deleteProdottoWithDB(Integer id) {
         String sql = "DELETE FROM `prodotti` WHERE id = ? ";

@@ -43,7 +43,7 @@ public class OrdineRepository implements ordiniCRUD {
 
     @Override
     public HashMap<Integer, Ordine> getOrdiniWithDB() {
-        String sql = "SELECT o.id, u.id AS id_utente, u.nome AS nome_utente, u.cognome AS cognome_utente, u.portafoglio AS portafoglio_utente, u.codice_admin AS code_admin, og.id AS id_prodotto, og.nome AS nome_prodotto, og.quantita_disp AS quant_disp_prod, o.data_ordine, o.quantita, o.prezzo_unitario, s.id as st_id, s.code as st_code " +
+        String sql = "SELECT o.id, u.id AS id_utente, u.nome AS nome_utente, u.cognome AS cognome_utente, u.email AS email_utente, u.telefono AS telefono_utente, u.codice_admin AS code_admin, u.portafoglio AS portafoglio_utente, u.codice_admin AS code_admin, og.id AS id_prodotto, og.nome AS nome_prodotto, og.quantita_disp AS quant_disp_prod, o.data_ordine, o.quantita, o.prezzo_unitario, s.id as st_id, s.code as st_code " +
                 " FROM ordini o JOIN utenti u ON(o.utente_id =u.id ) \n" +
                 " JOIN stato s ON(o.stato_id=s.id)\n" +
                 "JOIN prodotti og ON(o.prodotto_id =og.id ) ";
@@ -78,6 +78,8 @@ public class OrdineRepository implements ordiniCRUD {
                     foundAdmin.setCognome(rs.getString("cognome_utente"));
                     foundAdmin.setCodeAdmin(codeAdmin);
                     foundAdmin.setPortafoglio(rs.getBigDecimal("portafoglio_utente"));
+                    foundAdmin.setEmail(rs.getString("email_utente"));
+                    foundAdmin.setTelefono(rs.getString("telefono_utente"));
                     foundUtente = foundAdmin;
                 }
                 else{
@@ -85,6 +87,8 @@ public class OrdineRepository implements ordiniCRUD {
                     foundCliente.setId(rs.getInt("id_utente"));
                     foundCliente.setNome(rs.getString("nome_utente"));
                     foundCliente.setCognome(rs.getString("cognome_utente"));
+                    foundCliente.setEmail(rs.getString("email_utente"));
+                    foundCliente.setTelefono(rs.getString("telefono_utente"));
                     foundCliente.setPortafoglio(rs.getBigDecimal("portafoglio_utente"));
                     foundUtente = foundCliente;
                 }
@@ -119,7 +123,7 @@ public class OrdineRepository implements ordiniCRUD {
     }
 
     public HashMap<Integer, Ordine> getOrdiniByUserWithDB(Integer idUtente) {
-        String sql = "SELECT o.id, u.id AS id_utente, u.nome AS nome_utente, u.cognome AS cognome_utente, u.portafoglio AS portafoglio_utente, u.codice_admin AS code_admin, og.nome AS nome_prodotto, og.id AS id_prodotto, og.quantita_disp AS quant_disp_prod, o.data_ordine, o.quantita, o.prezzo_unitario, s.id as st_id, s.code as st_code " +
+        String sql = "SELECT o.id, u.id AS id_utente, u.nome AS nome_utente, u.cognome AS cognome_utente, u.email AS email_utente, u.telefono AS telefono_utente, u.portafoglio AS portafoglio_utente, u.codice_admin AS code_admin, og.nome AS nome_prodotto, og.id AS id_prodotto, og.quantita_disp AS quant_disp_prod, o.data_ordine, o.quantita, o.prezzo_unitario, s.id as st_id, s.code as st_code " +
                 " FROM ordini o JOIN utenti u ON(o.utente_id =u.id ) \n" +
                 " JOIN stato s ON(o.stato_id=s.id)\n" +
                 "JOIN prodotti og ON(o.prodotto_id =og.id )\n" +
@@ -154,6 +158,8 @@ public class OrdineRepository implements ordiniCRUD {
                     foundAdmin.setNome(rs.getString("nome_utente"));
                     foundAdmin.setCognome(rs.getString("cognome_utente"));
                     foundAdmin.setCodeAdmin(codeAdmin);
+                    foundAdmin.setEmail(rs.getString("email_utente"));
+                    foundAdmin.setTelefono(rs.getString("telefono_utente"));
                     foundAdmin.setPortafoglio(rs.getBigDecimal("portafoglio_utente"));
                     foundUtente = foundAdmin;
                 }
@@ -162,6 +168,89 @@ public class OrdineRepository implements ordiniCRUD {
                     foundCliente.setId(rs.getInt("id_utente"));
                     foundCliente.setNome(rs.getString("nome_utente"));
                     foundCliente.setCognome(rs.getString("cognome_utente"));
+                    foundCliente.setEmail(rs.getString("email_utente"));
+                    foundCliente.setTelefono(rs.getString("telefono_utente"));
+                    foundCliente.setPortafoglio(rs.getBigDecimal("portafoglio_utente"));
+                    foundUtente = foundCliente;
+                }
+
+                ord = new Ordine();
+                ord.setId(rs.getInt("id"));
+                ord.setUtente(foundUtente);
+                Prodotto prodotto = new Prodotto();
+                prodotto.setId(rs.getInt("id_prodotto"));
+                prodotto.setNome(rs.getString("nome_prodotto"));
+                prodotto.setQuantita_disp(rs.getInt("quant_disp_prod"));
+                ord.setProdotto(prodotto);
+                ord.setData_ordine(Timestamp.valueOf(rs.getString("data_ordine")));
+                ord.setQuantita(rs.getInt("quantita"));
+                ord.setPrezzo_unitario(rs.getBigDecimal("prezzo_unitario"));
+                Stato stato = new Stato();
+                stato.setId(rs.getInt("st_id"));
+                stato.setCode(rs.getString("st_code"));
+                ord.setStato(stato);
+
+                ordini.put(ord.getId(), ord);
+            }
+            //chiudi la connessione
+            rs.close();
+            preparedStatement.close();
+            connection.close();
+        }catch(SQLException e){
+            Utility.msgInf("GEOSTORE", "Errore nel getOrdiniByUserWithDB: " + e.getMessage());
+        }
+
+        return ordini;
+    }
+
+    public HashMap<Integer, Ordine> getOrdiniByProductWithDB(Integer idProdotto) {
+        String sql = "SELECT o.id, u.id AS id_utente, u.nome AS nome_utente, u.cognome AS cognome_utente, u.email AS email_utente, u.telefono AS telefono_utente, u.portafoglio AS portafoglio_utente, u.codice_admin AS code_admin, og.nome AS nome_prodotto, og.id AS id_prodotto, og.quantita_disp AS quant_disp_prod, o.data_ordine, o.quantita, o.prezzo_unitario, s.id as st_id, s.code as st_code " +
+                " FROM ordini o JOIN utenti u ON(o.utente_id =u.id ) \n" +
+                " JOIN stato s ON(o.stato_id=s.id)\n" +
+                "JOIN prodotti og ON(o.prodotto_id =og.id )\n" +
+                "WHERE o.prodotto_id = ?";
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet rs = null;
+        ordini = new HashMap<>();
+
+        try{
+            //Connessione al db
+            connection = DBConnection.sqlConnect();
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, idProdotto);
+            rs = preparedStatement.executeQuery();
+            Ordine ord;
+            Utente foundUtente;
+
+            while(rs.next()){
+                String codeAdmin = rs.getString("code_admin");
+
+                if(codeAdmin != null) {
+                    foundUtente = new Amministratore();
+                }
+                else {
+                    foundUtente = new Cliente();
+                }
+
+                if(foundUtente instanceof Amministratore){
+                    Amministratore foundAdmin = (Amministratore) foundUtente;
+                    foundAdmin.setId(rs.getInt("id_utente"));
+                    foundAdmin.setNome(rs.getString("nome_utente"));
+                    foundAdmin.setCognome(rs.getString("cognome_utente"));
+                    foundAdmin.setCodeAdmin(codeAdmin);
+                    foundAdmin.setEmail(rs.getString("email_utente"));
+                    foundAdmin.setTelefono(rs.getString("telefono_utente"));
+                    foundAdmin.setPortafoglio(rs.getBigDecimal("portafoglio_utente"));
+                    foundUtente = foundAdmin;
+                }
+                else{
+                    Cliente foundCliente = (Cliente) foundUtente;
+                    foundCliente.setId(rs.getInt("id_utente"));
+                    foundCliente.setNome(rs.getString("nome_utente"));
+                    foundCliente.setCognome(rs.getString("cognome_utente"));
+                    foundCliente.setEmail(rs.getString("email_utente"));
+                    foundCliente.setTelefono(rs.getString("telefono_utente"));
                     foundCliente.setPortafoglio(rs.getBigDecimal("portafoglio_utente"));
                     foundUtente = foundCliente;
                 }
@@ -196,7 +285,7 @@ public class OrdineRepository implements ordiniCRUD {
     }
 
     public Ordine getOrdineByUserWithDB(Integer idUtente, Integer idOrdine) {
-        String sql = "SELECT o.id, u.id AS id_utente, u.nome AS nome_utente, u.cognome AS cognome_utente, u.portafoglio AS portafoglio_utente, u.codice_admin AS code_admin, og.nome AS nome_prodotto, og.id AS id_prodotto, og.quantita_disp AS quant_disp_prod, o.data_ordine, o.quantita, o.prezzo_unitario, s.id as st_id, s.code as st_code " +
+        String sql = "SELECT o.id, u.id AS id_utente, u.nome AS nome_utente, u.cognome AS cognome_utente, u.email AS email_utente, u.telefono AS telefono_utente, u.portafoglio AS portafoglio_utente, u.codice_admin AS code_admin, og.nome AS nome_prodotto, og.id AS id_prodotto, og.quantita_disp AS quant_disp_prod, o.data_ordine, o.quantita, o.prezzo_unitario, s.id as st_id, s.code as st_code " +
                 " FROM ordini o JOIN utenti u ON(o.utente_id =u.id ) \n" +
                 " JOIN stato s ON(o.stato_id=s.id)\n" +
                 " JOIN prodotti og ON(o.prodotto_id=og.id)\n" +
@@ -231,6 +320,8 @@ public class OrdineRepository implements ordiniCRUD {
                     foundAdmin.setNome(rs.getString("nome_utente"));
                     foundAdmin.setCognome(rs.getString("cognome_utente"));
                     foundAdmin.setCodeAdmin(codeAdmin);
+                    foundAdmin.setEmail(rs.getString("email_utente"));
+                    foundAdmin.setTelefono(rs.getString("telefono_utente"));
                     foundAdmin.setPortafoglio(rs.getBigDecimal("portafoglio_utente"));
                     foundUtente = foundAdmin;
                 }
@@ -239,6 +330,8 @@ public class OrdineRepository implements ordiniCRUD {
                     foundCliente.setId(rs.getInt("id_utente"));
                     foundCliente.setNome(rs.getString("nome_utente"));
                     foundCliente.setCognome(rs.getString("cognome_utente"));
+                    foundCliente.setEmail(rs.getString("email_utente"));
+                    foundCliente.setTelefono(rs.getString("telefono_utente"));
                     foundCliente.setPortafoglio(rs.getBigDecimal("portafoglio_utente"));
                     foundUtente = foundCliente;
                 }
@@ -272,7 +365,7 @@ public class OrdineRepository implements ordiniCRUD {
 
     @Override
     public Ordine getOrdineWithDB(Integer id) {
-        String sql = "SELECT o.id, u.id AS id_utente, u.nome AS nome_utente, u.cognome AS cognome_utente, u.portafoglio AS portafoglio_utente, u.codice_admin AS code_admin, og.nome AS nome_prodotto, og.id AS id_prodotto, og.quantita_disp AS quant_disp_prod, o.data_ordine, o.quantita, o.prezzo_unitario, s.id as st_id, s.code as st_code " +
+        String sql = "SELECT o.id, u.id AS id_utente, u.nome AS nome_utente, u.cognome AS cognome_utente, u.email AS email_utente, u.telefono AS telefono_utente, u.portafoglio AS portafoglio_utente, u.codice_admin AS code_admin, og.nome AS nome_prodotto, og.id AS id_prodotto, og.quantita_disp AS quant_disp_prod, o.data_ordine, o.quantita, o.prezzo_unitario, s.id as st_id, s.code as st_code " +
                 " FROM ordini o JOIN utenti u ON(o.utente_id =u.id ) \n" +
                 " JOIN stato s ON(o.stato_id=s.id)\n" +
                 " JOIN prodotti og ON(o.prodotto_id=og.id)\n" +
@@ -306,6 +399,8 @@ public class OrdineRepository implements ordiniCRUD {
                     foundAdmin.setNome(rs.getString("nome_utente"));
                     foundAdmin.setCognome(rs.getString("cognome_utente"));
                     foundAdmin.setCodeAdmin(codeAdmin);
+                    foundAdmin.setEmail(rs.getString("email_utente"));
+                    foundAdmin.setTelefono(rs.getString("telefono_utente"));
                     foundAdmin.setPortafoglio(rs.getBigDecimal("portafoglio_utente"));
                     foundUtente = foundAdmin;
                 }
@@ -314,6 +409,8 @@ public class OrdineRepository implements ordiniCRUD {
                     foundCliente.setId(rs.getInt("id_utente"));
                     foundCliente.setNome(rs.getString("nome_utente"));
                     foundCliente.setCognome(rs.getString("cognome_utente"));
+                    foundCliente.setEmail(rs.getString("email_utente"));
+                    foundCliente.setTelefono(rs.getString("telefono_utente"));
                     foundCliente.setPortafoglio(rs.getBigDecimal("portafoglio_utente"));
                     foundUtente = foundCliente;
                 }
@@ -390,6 +487,28 @@ public class OrdineRepository implements ordiniCRUD {
             connection.close();
         }catch(SQLException e){
             Utility.msgInf("GEOSTORE", "Errore nel deleteOrdineWithDB: " + e.getMessage());
+        }
+
+        return num;
+    }
+
+    public int deleteOrdineAfterDeleteProduct(Integer idProd) {
+        String sql = "DELETE FROM `ordini` WHERE prodotto_id = ? ";
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        int num = 0;
+        try{
+            //Connessione al db
+            connection = DBConnection.sqlConnect();
+            preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setInt(1, idProd);
+            num = preparedStatement.executeUpdate();
+            //chiudi la connessione
+            preparedStatement.close();
+            connection.close();
+        }catch(SQLException e){
+            Utility.msgInf("GEOSTORE", "Errore nel deleteOrdineAfterDeleteProduct: " + e.getMessage());
         }
 
         return num;

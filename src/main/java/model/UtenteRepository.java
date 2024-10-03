@@ -338,6 +338,41 @@ public class UtenteRepository implements utentiCRUD {
         return num;
     }
 
+    public int updateWalletUtente(Integer id, Utente newU) {
+        String sql = "UPDATE `utenti` SET `portafoglio` = ? WHERE id = ? ";
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        int num = 0;
+
+        try{
+            //Connessione al db
+            connection = DBConnection.sqlConnect();
+            preparedStatement = connection.prepareStatement(sql);
+            //int num = 0;
+
+
+            if(newU instanceof Amministratore){
+                Amministratore newA = (Amministratore) newU;
+                preparedStatement.setBigDecimal(1, newA.getPortafoglio());
+            }
+            else if(newU instanceof Cliente){
+                Cliente newC = (Cliente) newU;
+                preparedStatement.setBigDecimal(1, newC.getPortafoglio());
+            }
+
+            preparedStatement.setInt(2, id);
+
+            num = preparedStatement.executeUpdate();
+            //chiudi la connessione
+            preparedStatement.close();
+            connection.close();
+        }catch(SQLException e){
+            Utility.msgInf("GEOSTORE", "Errore nel updateWalletUtente: " + e.getMessage());
+        }
+
+        return num;
+    }
+
     @Override
     public int deleteUtenteWithDB(Integer id) {
         String sql = "DELETE FROM `utenti` WHERE id = ? ";
