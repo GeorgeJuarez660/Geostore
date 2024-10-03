@@ -250,7 +250,13 @@ public class Service {
                 HashMap<Integer, Ordine> ordini = odr.getOrdiniByProductWithDB(p.getId());
 
                 for(Ordine ordine : ordini.values()){
-                    refundAfterDeleteOrder(ordine, ordine.getUtente());
+                    //il prodotto è più cruciale rispetto all'ordine, motivo per cui vengono rimborsati anche se gli ordini sono in stato divrso da RIFIUTATO
+                    if(ordine.getStato().getId() != 3){
+                        refundAfterDeleteOrder(ordine, ordine.getUtente());
+                    }
+                    else{
+                        Utility.msgInf("GEOSTORE", "L'ordine è già stato rifiutato\n");
+                    }
                 }
 
                 int num = odr.deleteOrdineAfterDeleteProduct(p.getId());
@@ -562,6 +568,7 @@ public class Service {
             if(Utility.insertString("Sei sicuro di voler eliminare quest'ordine?").equalsIgnoreCase("s")){
 
                 if(o.getStato().getId() == 1){
+                    //solo l'ordine con stato ELABORAZIONE si può effettuare il rimborso
                     Utente uOrd = o.getUtente();
                     refundAfterDeleteOrder(o, uOrd);
 
