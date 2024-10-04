@@ -251,11 +251,11 @@ public class Service {
 
                 for(Ordine ordine : ordini.values()){
                     //il prodotto è più cruciale rispetto all'ordine, motivo per cui vengono rimborsati anche se gli ordini sono in stato divrso da RIFIUTATO
-                    if(ordine.getStato().getId() != 3){
+                    if(ordine.getStato().getId() != 3 || ordine.getStato().getId() != 5){
                         refundAfterDeleteOrder(ordine, ordine.getUtente());
                     }
                     else{
-                        Utility.msgInf("GEOSTORE", "L'ordine è già stato rifiutato\n");
+                        Utility.msgInf("GEOSTORE", "L'ordine è già stato rifiutato oppure consegnato\n");
                     }
                 }
 
