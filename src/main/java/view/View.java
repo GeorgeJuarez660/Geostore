@@ -242,7 +242,6 @@ public class View {
         String indirizzo = Utility.insertString("Inserisci l'indirizzo da " + uOld.getIndirizzo() + " a: ");
         uNew.setId(uOld.getId());
 
-        //TODO: da continuare...
         if(!nome.isEmpty()){
             uNew.setNome(nome);
         }
@@ -299,6 +298,28 @@ public class View {
             else {
                 aNew.setCodeAdmin(aOld.getCodeAdmin());
             }
+
+            boolean flag;
+            do {
+                flag = false;
+                String portafoglio = Utility.insertString("Inserisci il portafoglio da " + Utility.formatValueBigDecimal(aOld.getPortafoglio()) + " a: ");
+                if(!portafoglio.isEmpty()) {
+                    try {
+                        aNew.setPortafoglio(new BigDecimal(portafoglio));
+                    }
+                    catch(NumberFormatException e){
+                        Utility.msgInf("GEOSTORE","ATTENZIONE: inserisci un numero valido");
+                        flag=true;
+                    }
+                    catch(Exception e) {
+                        Utility.msgInf("GEOSTORE","ERRORE");
+                        flag=true;
+                    }
+                }
+                else {
+                    aNew.setPortafoglio(aOld.getPortafoglio());
+                }
+            }while(flag);
         }
         else if(uOld instanceof Cliente){
             Cliente cOld = (Cliente) uOld;
@@ -469,7 +490,7 @@ public class View {
 
         do {
             flag = false;
-            String prezzo = Utility.insertString("Inserisci il prezzo unitario prodotto da " + pOld.getPrezzo() + " a: ");
+            String prezzo = Utility.insertString("Inserisci il prezzo unitario prodotto da " + Utility.formatValueBigDecimal(pOld.getPrezzo()) + " a: ");
             if(!prezzo.isEmpty()) {
                 try {
                     pNew.setPrezzo(new BigDecimal(prezzo));
@@ -490,7 +511,7 @@ public class View {
 
         do {
             flag = false;
-            String quantita_disp = Utility.insertString("Inserisci la quantità disponibile da " + pOld.getQuantita_disp() + " a: ");
+            String quantita_disp = Utility.insertString("Inserisci la quantità disponibile da " + Utility.formatValueInteger(pOld.getQuantita_disp()) + " a: ");
             if(!quantita_disp.isEmpty()) {
                 try {
                     pNew.setQuantita_disp(Integer.parseInt(quantita_disp));
@@ -530,7 +551,7 @@ public class View {
 
         do {
             flag = false;
-            String quantita_ord = Utility.insertString("Inserisci la quantità ordinata da " + oOld.getQuantita() + " a: ");
+            String quantita_ord = Utility.insertString("Inserisci la quantità ordinata da " + Utility.formatValueInteger(oOld.getQuantita()) + " a: ");
             if(!quantita_ord.isEmpty()) {
                 try {
                     oNew.setQuantita(Integer.parseInt(quantita_ord));
@@ -591,7 +612,7 @@ public class View {
             System.out.println("***CATEGORIE DISPONIBILI***\n");
 
             for(Categoria categoria : categorie.values()){
-                System.out.println("ID: " + categoria.getId() + ", \nNome: " + categoria.getNome());
+                System.out.println("ID: " + categoria.getId() + "; \nNome: " + categoria.getNome());
                 System.out.println("-----------------------------------------------------------");
             }
         }
@@ -606,7 +627,7 @@ public class View {
             System.out.println("***MATERIE DISPONIBILI***\n");
 
             for(Materia materia : materie.values()){
-                System.out.println("ID: " + materia.getId() + ", \nNome: " + materia.getNome());
+                System.out.println("ID: " + materia.getId() + "; \nNome: " + materia.getNome());
                 System.out.println("-----------------------------------------------------------");
             }
         }
@@ -621,7 +642,7 @@ public class View {
             System.out.println("***DISPONIBILITA PRESENTI***\n");
 
             for(Disponibilita disponibilita : disponibilitas.values()){
-                System.out.println("ID: " + disponibilita.getId() + ", \nCodice: " + disponibilita.getCode());
+                System.out.println("ID: " + disponibilita.getId() + "; \nCodice: " + disponibilita.getCode());
                 System.out.println("-----------------------------------------------------------");
             }
         }
@@ -636,7 +657,7 @@ public class View {
             System.out.println("***STATI PRESENTI***\n");
 
             for(Stato stato : stati.values()){
-                System.out.println("ID: " + stato.getId() + ", \nCodice: " + stato.getCode());
+                System.out.println("ID: " + stato.getId() + "; \nCodice: " + stato.getCode());
                 System.out.println("-----------------------------------------------------------");
             }
         }
@@ -651,7 +672,7 @@ public class View {
             System.out.println("***PRODOTTI PRESENTI NEL GEOSTORE***\n");
 
             for(Prodotto prodotto : prodotti.values()){
-                System.out.println("ID: " + prodotto.getId() + ", \nNome: " + prodotto.getNome() + ", \nPrezzo: " + prodotto.getPrezzo()+ ", \nDisponibilità: " + prodotto.getDisponibilita().getCode() + ", \nCategoria: " + prodotto.getCategoria().getNome() + ", \nMateria: " + prodotto.getMateria().getNome() + ", \nQuantità disponibile: " + prodotto.getQuantita_disp());
+                System.out.println("ID: " + prodotto.getId() + "; \nNome: " + prodotto.getNome() + "; \nPrezzo: " + Utility.formatValueBigDecimal(prodotto.getPrezzo()) + "; \nDisponibilità: " + prodotto.getDisponibilita().getCode() + "; \nCategoria: " + prodotto.getCategoria().getNome() + "; \nMateria: " + prodotto.getMateria().getNome() + "; \nQuantità disponibile: " + Utility.formatValueInteger(prodotto.getQuantita_disp()));
                 System.out.println("-----------------------------------------------------------");
             }
         }
@@ -666,7 +687,7 @@ public class View {
             System.out.println("***ORDINI EFFETTUATI NEL GEOSTORE***\n");
 
             for(Ordine ordine : ordini.values()){
-                System.out.println("ID: " + ordine.getId() + ", \nNome utente: " + ordine.getUtente().getNome() + ", \nCognome utente: " + ordine.getUtente().getCognome() + ", \nNome prodotto: " + ordine.getProdotto().getNome() + ", \nData ordine: " + ordine.getData_ordine() + ", \nQuantità ordinata: " + ordine.getQuantita() + ", \nPrezzo unitario: " + ordine.getPrezzo_unitario()+ ", \nStato ordine: " + ordine.getStato().getCode());
+                System.out.println("ID: " + ordine.getId() + "; \nNome utente: " + ordine.getUtente().getNome() + "; \nCognome utente: " + ordine.getUtente().getCognome() + "; \nNome prodotto: " + ordine.getProdotto().getNome() + "; \nData ordine: " + ordine.getData_ordine() + "; \nQuantità ordinata: " + Utility.formatValueInteger(ordine.getQuantita()) + "; \nPrezzo unitario: " + Utility.formatValueBigDecimal(ordine.getPrezzo_unitario()) + "; \nStato ordine: " + ordine.getStato().getCode());
                 System.out.println("-----------------------------------------------------------");
             }
         }
@@ -680,7 +701,7 @@ public class View {
         if(ordine != null && ordine.getPrezzo_unitario() != null){
             System.out.println("***ORDINI TOTALI EFFETTUATI NEL GIORNO " + ordine.getData_ordine().toString().substring(0, 10) + " SU GEOSTORE***\n");
 
-            System.out.println("Nome utente: " + ordine.getUtente().getNome() + "\nCognome utente: " + ordine.getUtente().getCognome() + ", \nData ordine totale: " + ordine.getData_ordine().toString().substring(0, 10) + ", \nPrezzo totale speso: " + ordine.getPrezzo_unitario());
+            System.out.println("Nome utente: " + ordine.getUtente().getNome() + "; \nCognome utente: " + ordine.getUtente().getCognome() + "; \nData ordine totale: " + ordine.getData_ordine().toString().substring(0, 10) + "; \nPrezzo totale speso: " + Utility.formatValueBigDecimal(ordine.getPrezzo_unitario()));
         }
         else{
             System.out.println("***NESSUN ORDINE TOTALE PRESENTE NEL GIORNO PRESTABILITO***\n");
@@ -689,7 +710,7 @@ public class View {
 
     public void printCategoria(Categoria categoria){
         if(categoria != null && categoria.getNome() != null){
-            System.out.println("ID: " + categoria.getId() + ", \nNome: " + categoria.getNome());
+            System.out.println("ID: " + categoria.getId() + "; \nNome: " + categoria.getNome());
         }
         else{
             System.out.println("***NESSUNA CATEGORIA***");
@@ -703,11 +724,11 @@ public class View {
 
             if(utente instanceof Amministratore){
                 Amministratore admin = (Amministratore) utente;
-                System.out.println("ID: " + admin.getId() + ", \nNome: " + admin.getNome() + ", \nCognome: " + admin.getCognome()+ ", \nEmail: " + admin.getEmail()+ ", \nPassword: " + admin.getPassword()+ ", \nTelefono: " + admin.getTelefono()+ ", \nIndirizzo: " + admin.getIndirizzo()+ ", \nCodice admin: " + admin.getCodeAdmin()+ ", \nPortafoglio: " + admin.getPortafoglio());
+                System.out.println("ID: " + admin.getId() + "; \nNome: " + admin.getNome() + "; \nCognome: " + admin.getCognome()+ "; \nEmail: " + admin.getEmail()+ "; \nPassword: " + admin.getPassword()+ "; \nTelefono: " + admin.getTelefono()+ "; \nIndirizzo: " + admin.getIndirizzo()+ "; \nCodice admin: " + admin.getCodeAdmin()+ "; \nPortafoglio: " + Utility.formatValueBigDecimal(admin.getPortafoglio()));
             }
             else{
                 Cliente cliente = (Cliente) utente;
-                System.out.println("ID: " + cliente.getId() + ", \nNome: " + cliente.getNome() + ", \nCognome: " + cliente.getCognome()+ ", \nEmail: " + cliente.getEmail()+ ", \nPassword: " + cliente.getPassword()+ ", \nTelefono: " + cliente.getTelefono()+ ", \nIndirizzo: " + cliente.getIndirizzo()+ ", \nPortafoglio: " + cliente.getPortafoglio());
+                System.out.println("ID: " + cliente.getId() + "; \nNome: " + cliente.getNome() + "; \nCognome: " + cliente.getCognome()+ "; \nEmail: " + cliente.getEmail()+ "; \nPassword: " + cliente.getPassword()+ "; \nTelefono: " + cliente.getTelefono()+ "; \nIndirizzo: " + cliente.getIndirizzo()+ "; \nPortafoglio: " + Utility.formatValueBigDecimal(cliente.getPortafoglio()));
             }
         }
         else{
@@ -722,11 +743,11 @@ public class View {
             for(Utente utente : utenti.values()){
                 if(utente instanceof Amministratore){
                     Amministratore admin = (Amministratore) utente;
-                    System.out.println("ID: " + admin.getId() + ", \nNome: " + admin.getNome() + ", \nCognome: " + admin.getCognome()+ ", \nEmail: " + admin.getEmail()+ ", \nPassword: " + admin.getPassword()+ ", \nTelefono: " + admin.getTelefono()+ ", \nIndirizzo: " + admin.getIndirizzo()+ ", \nCodice admin: " + admin.getCodeAdmin()+ ", \nPortafoglio: " + admin.getPortafoglio());
+                    System.out.println("ID: " + admin.getId() + "; \nNome: " + admin.getNome() + "; \nCognome: " + admin.getCognome()+ "; \nEmail: " + admin.getEmail()+ "; \nPassword: " + admin.getPassword()+ "; \nTelefono: " + admin.getTelefono()+ "; \nIndirizzo: " + admin.getIndirizzo()+ "; \nCodice admin: " + admin.getCodeAdmin()+ "; \nPortafoglio: " + Utility.formatValueBigDecimal(admin.getPortafoglio()));
                 }
                 else{
                     Cliente cliente = (Cliente) utente;
-                    System.out.println("ID: " + cliente.getId() + ", \nNome: " + cliente.getNome() + ", \nCognome: " + cliente.getCognome()+ ", \nEmail: " + cliente.getEmail()+ ", \nPassword: " + cliente.getPassword()+ ", \nTelefono: " + cliente.getTelefono()+ ", \nIndirizzo: " + cliente.getIndirizzo()+ ", \nPortafoglio: " + cliente.getPortafoglio());
+                    System.out.println("ID: " + cliente.getId() + "; \nNome: " + cliente.getNome() + "; \nCognome: " + cliente.getCognome()+ "; \nEmail: " + cliente.getEmail()+ "; \nPassword: " + cliente.getPassword()+ "; \nTelefono: " + cliente.getTelefono()+ "; \nIndirizzo: " + cliente.getIndirizzo()+ "; \nPortafoglio: " + Utility.formatValueBigDecimal(cliente.getPortafoglio()));
                 }
                 System.out.println("-----------------------------------------------------------");
             }

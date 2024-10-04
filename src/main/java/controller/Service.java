@@ -251,7 +251,7 @@ public class Service {
 
                 for(Ordine ordine : ordini.values()){
                     //il prodotto è più cruciale rispetto all'ordine, motivo per cui vengono rimborsati anche se gli ordini sono in stato divrso da RIFIUTATO
-                    if(ordine.getStato().getId() != 3 || ordine.getStato().getId() != 5){
+                    if(ordine.getStato().getId() != 3 && ordine.getStato().getId() != 5){
                         refundAfterDeleteOrder(ordine, ordine.getUtente());
                     }
                     else{
@@ -567,7 +567,7 @@ public class Service {
             Utility.msgInf("GEOSTORE", "Ordine trovato\n");
             if(Utility.insertString("Sei sicuro di voler eliminare quest'ordine?").equalsIgnoreCase("s")){
 
-                if(o.getStato().getId() == 1){
+                if(o.getStato().getId() == 1 || (!onlyOwnUser && (o.getStato().getId() != 3 && o.getStato().getId() != 5))){
                     //solo l'ordine con stato ELABORAZIONE si può effettuare il rimborso
                     Utente uOrd = o.getUtente();
                     refundAfterDeleteOrder(o, uOrd);

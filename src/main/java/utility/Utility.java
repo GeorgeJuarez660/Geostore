@@ -6,6 +6,9 @@ import src.main.java.model.MateriaRepository;
 import src.main.java.model.StatusRepository;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class Utility {
@@ -75,5 +78,19 @@ public class Utility {
 
         return word;
 
+    }
+
+    public static String formatValueBigDecimal(BigDecimal value){
+        String formattedValue = "";
+
+        DecimalFormatSymbols dfs = new DecimalFormatSymbols(Locale.ITALIAN);
+        DecimalFormat df = new DecimalFormat("###,##0.##", dfs);
+        formattedValue = df.format(value);
+
+        return formattedValue;
+    }
+
+    public static String formatValueInteger(Integer value){
+        return formatValueBigDecimal(BigDecimal.valueOf(value));
     }
 }
