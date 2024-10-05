@@ -3,43 +3,11 @@ package src.main.java.model;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-public class Cliente {
-    private Integer id = 0;
-    private static Integer count=0;
-    private String nome;
-    private String cognome;
+public class Cliente extends Utente {
     private String email;
-    private String telefono;
-    private String indirizzo;
+    private String password;
+    private BigDecimal portafoglio;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setCount() {
-        count++;
-        id = count;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getCognome() {
-        return cognome;
-    }
-
-    public void setCognome(String cognome) {
-        this.cognome = cognome;
-    }
 
     public String getEmail() {
         return email;
@@ -49,20 +17,20 @@ public class Cliente {
         this.email = email;
     }
 
-    public String getTelefono() {
-        return telefono;
+    public String getPassword() {
+        return password;
     }
 
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public String getIndirizzo() {
-        return indirizzo;
+    public BigDecimal getPortafoglio() {
+        return portafoglio;
     }
 
-    public void setIndirizzo(String indirizzo) {
-        this.indirizzo = indirizzo;
+    public void setPortafoglio(BigDecimal portafoglio) {
+        this.portafoglio = portafoglio;
     }
 
     public Cliente() {
@@ -73,32 +41,27 @@ public class Cliente {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Cliente cliente = (Cliente) o;
-        return Objects.equals(id, cliente.id) && Objects.equals(nome, cliente.nome) && Objects.equals(cognome, cliente.cognome) && Objects.equals(email, cliente.email) && Objects.equals(telefono, cliente.telefono) && Objects.equals(indirizzo, cliente.indirizzo);
+        return Objects.equals(email, cliente.email) && Objects.equals(password, cliente.password) && Objects.equals(portafoglio, cliente.portafoglio);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nome, cognome, email, telefono, indirizzo);
+        return Objects.hash(email, password, portafoglio);
     }
 
-    public Cliente(Integer id, String nome, String cognome, String email, String telefono, String indirizzo) {
-        this.id = id;
-        this.nome = nome;
-        this.cognome = cognome;
+    public Cliente(Integer id, String nome, String cognome, String telefono, String indirizzo, String email, String password, BigDecimal portafoglio) {
+        super(id, nome, cognome, telefono, indirizzo);
         this.email = email;
-        this.telefono = telefono;
-        this.indirizzo = indirizzo;
+        this.password = password;
+        this.portafoglio = portafoglio;
     }
 
     @Override
     public String toString() {
         return "Cliente{" +
-                "id=" + id +
-                ", nome='" + nome + '\'' +
-                ", cognome='" + cognome + '\'' +
-                ", email='" + email + '\'' +
-                ", telefono='" + telefono + '\'' +
-                ", indirizzo='" + indirizzo + '\'' +
+                "email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", portafoglio=" + portafoglio +
                 '}';
     }
 }

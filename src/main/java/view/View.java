@@ -4,25 +4,30 @@ import src.main.java.model.*;
 import src.main.java.utility.Utility;
 
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 
 public class View {
 
+    ProdottoRepository pr = new ProdottoRepository();
+    CategoriaRepository car = new CategoriaRepository();
+    MateriaRepository mr = new MateriaRepository();
+    DisponibilitaRepository dr = new DisponibilitaRepository();
+    StatusRepository sr = new StatusRepository();
+
     public int readMenuCliente(){
         System.out.println("***MENU GEOSTORE***\n");
         System.out.println("1) Profilo utente");
-        System.out.println("2) Visualizza prodotti");
-        System.out.println("3) Ordina prodotto");
-        System.out.println("4) Visualizza i tuoi ordini");
-        System.out.println("5) Elimina ordine");
-        System.out.println("6) Visualizza prodotti per categoria");
-        System.out.println("7) Visualizza prodotti per materia");
-        System.out.println("8) Visualizza prodotti disponibili");
-        System.out.println("9) Visualizza i tuoi ordini totali giornalieri");
+        System.out.println("2) Modifica profilo utente");
+        System.out.println("3) Visualizza prodotti");
+        System.out.println("4) Ordina prodotto");
+        System.out.println("5) Visualizza i tuoi ordini");
+        System.out.println("6) Elimina ordine");
+        System.out.println("7) Visualizza prodotti per categoria");
+        System.out.println("8) Visualizza prodotti per materia");
+        System.out.println("9) Visualizza prodotti disponibili");
+        System.out.println("10) Visualizza i tuoi ordini totali giornalieri");
 
         System.out.println("0) ESCI");
 
@@ -37,15 +42,14 @@ public class View {
         System.out.println("4) Visualizza prodotti");
         System.out.println("5) Crea/Modifica/Elimina prodotto");
         System.out.println("6) Ordina prodotto");
-        System.out.println("7) Visualizza i tuoi ordini");
-        System.out.println("8) Visualizza gli ordini");
-        System.out.println("9) Modifica/Elimina ordine");
-        System.out.println("10) Visualizza prodotti per categoria");
-        System.out.println("11) Visualizza prodotti per materia");
-        System.out.println("12) Visualizza prodotti disponibili");
-        System.out.println("13) Crea/Modifica/Elimina categoria");
-        System.out.println("14) Crea/Modifica/Elimina materia");
-        System.out.println("15) Visualizza ordini totali giornalieri");
+        System.out.println("7) Visualizza gli ordini");
+        System.out.println("8) Modifica/Elimina ordine");
+        System.out.println("9) Visualizza prodotti per categoria");
+        System.out.println("10) Visualizza prodotti per materia");
+        System.out.println("11) Visualizza prodotti disponibili");
+        System.out.println("12) Crea/Modifica/Elimina categoria");
+        System.out.println("13) Crea/Modifica/Elimina materia");
+        System.out.println("14) Visualizza ordini totali giornalieri");
 
         System.out.println("0) ESCI");
 
@@ -53,62 +57,111 @@ public class View {
     }
 
     public int readAdminOrUserMenu(){
-        System.out.println("***BENVENUTO SU GEOSTORE***\n");
-        System.out.println("***SEI UN CLIENTE O ADMIN?***");
+        System.out.println("***ACCEDI COME CLIENTE/ADMIN***");
         System.out.println("1) Cliente");
         System.out.println("2) Admin");
 
         return Utility.insertInt("******");
     }
 
-    public void maskCheckUser(Cliente c){
-        String email = Utility.insertString("Inserisci l'email cliente:");
+    public int registerOrLogin(){
+        System.out.println("***BENVENUTO SU GEOSTORE***\n");
+        System.out.println("1) Registrati");
+        System.out.println("2) Accedi");
+        System.out.println("0) ESCI");
 
-        if(!email.isEmpty()){
-            c.setEmail(email);
-        }
-        else{
-            c.setEmail(null);
-        }
 
-        if(c instanceof Amministratore){
-            Amministratore aC = (Amministratore) c;
+        return Utility.insertInt("******");
+    }
+
+    public void readDisponibilita(){
+        System.out.println("\n");
+
+        System.out.println("1) DISPONIBILE");
+        System.out.println("2) ARRIVO");
+        System.out.println("3) ESAURIMENTO");
+        System.out.println("4) ESAURITO");
+        System.out.println("5) N/A");
+
+        System.out.println("\n");
+    }
+    public void maskCheckUser(Utente u){
+
+        if(u instanceof Amministratore){
+            Amministratore aU = (Amministratore) u;
+
+            String email = Utility.insertString("Inserisci l'email cliente:");
+            String password = Utility.insertString("Inserisci la password cliente:");
             String codeAdmin = Utility.insertString("Inserisci il codice amministratore:");
 
-            if(!codeAdmin.isEmpty()){
-                aC.setCodeAdmin(codeAdmin);
+            if(!email.isEmpty()){
+                aU.setEmail(email);
             }
             else{
-                aC.setCodeAdmin(null);
+                aU.setEmail(null);
+            }
+
+            if(!password.isEmpty()){
+                aU.setPassword(password);
+            }
+            else{
+                aU.setPassword(null);
+            }
+
+            if(!codeAdmin.isEmpty()){
+                aU.setCodeAdmin(codeAdmin);
+            }
+            else{
+                aU.setCodeAdmin(null);
+            }
+        }
+        else if(u instanceof Cliente){
+            Cliente cU = (Cliente) u;
+
+            String email = Utility.insertString("Inserisci l'email cliente:");
+            String password = Utility.insertString("Inserisci la password cliente:");
+
+            if(!email.isEmpty()){
+                cU.setEmail(email);
+            }
+            else{
+                cU.setEmail(null);
+            }
+
+            if(!password.isEmpty()){
+                cU.setPassword(password);
+            }
+            else{
+                cU.setPassword(null);
             }
         }
     }
 
     public void maskObjViaCat(Categoria c){
-        String nome = Utility.insertString("Inserisci il nome categoria:");
+        Integer id = Utility.insertInt("Inserisci l'id categoria:");
 
-        if(!nome.isEmpty()){
-            c.setNome(nome);
+        if(id != null){
+            c.setId(id);
         }
         else{
-            c.setNome(null);
+            c.setId(0);
         }
 
     }
 
     public void maskObjViaMat(Materia m){
-        String nome = Utility.insertString("Inserisci il nome materia:");
+        Integer id = Utility.insertInt("Inserisci l'id materia:");
 
-        if(!nome.isEmpty()){
-            m.setNome(nome);
+        if(id != null){
+            m.setId(id);
         }
         else{
-            m.setNome(null);
+            m.setId(0);
         }
 
     }
 
-    public void maskInsertOrdine(Ordine o, Cliente cliente){
+    public void maskInsertOrdine(Ordine o, Utente utente){
         LocalDateTime currentDateTime = LocalDateTime.now();
         String strDateTime = String.valueOf(currentDateTime);
         strDateTime = strDateTime.substring(0, 19);
@@ -116,12 +169,14 @@ public class View {
 
         o.setData_ordine(Timestamp.valueOf(strDateTime));
         Stato stato = new Stato();
-        stato.setCode("ELABORAZIONE");
+        stato.setId(1);
         o.setStato(stato);
-        o.setCliente(cliente);
+        o.setUtente(utente);
+
         Prodotto prodotto = new Prodotto();
-        prodotto.setNome(Utility.insertString("Inserisci il nome prodotto"));
+        prodotto.setId(Utility.insertInt("Inserisci l'id prodotto"));
         o.setProdotto(prodotto);
+
         o.setQuantita(Utility.insertInt("Inserisci la quantità"));
     }
 
@@ -135,17 +190,25 @@ public class View {
         m.setCount();
     }
 
-    public void maskInsertUtente(Cliente c){
-        c.setNome(Utility.insertString("Inserisci il nome utente"));
-        c.setCognome(Utility.insertString("Inserisci il cognome utente"));
-        c.setEmail(Utility.insertString("Inserisci l'email utente"));
-        c.setTelefono(Utility.insertString("Inserisci il numero di telefono"));
-        c.setIndirizzo(Utility.insertString("Inserisci l'indirizzo"));
-        c.setCount();
+    public void maskInsertUtente(Utente u){
+        u.setNome(Utility.insertString("Inserisci il nome utente"));
+        u.setCognome(Utility.insertString("Inserisci il cognome utente"));
+        u.setTelefono(Utility.insertString("Inserisci il numero di telefono"));
+        u.setIndirizzo(Utility.insertString("Inserisci l'indirizzo"));
+        u.setCount();
 
-        if(c instanceof Amministratore){
-            Amministratore a = (Amministratore) c;
+        if(u instanceof Amministratore){
+            Amministratore a = (Amministratore) u;
+            a.setEmail(Utility.insertString("Inserisci l'email utente"));
+            a.setPassword(Utility.insertString("Inserisci la password utente"));
+            a.setPortafoglio(new BigDecimal(50));
             a.setCodeAdmin(Utility.insertString("Inserisci il codice amministratore"));
+        }
+        else if(u instanceof Cliente){
+            Cliente c = (Cliente) u;
+            c.setEmail(Utility.insertString("Inserisci l'email utente"));
+            c.setPassword(Utility.insertString("Inserisci la password utente"));
+            c.setPortafoglio(new BigDecimal(50));
         }
     }
 
@@ -153,88 +216,81 @@ public class View {
         p.setNome(Utility.insertString("Inserisci il nome prodotto"));
         p.setPrezzo(Utility.insertBigDecimal("Inserisci il prezzo unitario prodotto"));
         p.setQuantita_disp(Utility.insertInt("Inserisci la quantità disponibile prodotto"));
-        Categoria c = new Categoria();
-        c.setNome(Utility.insertString("Inserisci il nome categoria appartenente"));
-        p.setCategoria(c);
-        Materia m = new Materia();
-        m.setNome(Utility.insertString("Inserisci il nome materia appartenente"));
-        p.setMateria(m);
-        String dispn = Utility.insertString("Inserisci la disponibilità prodotto");
-        Disponibilita disp = new Disponibilita();
 
-        if(dispn.equalsIgnoreCase("DISPONIBILE")){
-            disp.setCode("DISPONIBILE");
-            p.setDisponibilita(disp);
-        }
-        else if(dispn.equalsIgnoreCase("ESAURITO")){
-            disp.setCode("ESAURITO");
-            p.setDisponibilita(disp);
-        }
-        else if(dispn.equalsIgnoreCase("ESAURIMENTO")){
-            disp.setCode("ESAURIMENTO");
-            p.setDisponibilita(disp);
-        }
-        else if(dispn.equalsIgnoreCase("ARRIVO")){
-            disp.setCode("ARRIVO");
-            p.setDisponibilita(disp);
-        }
-        else{
-            disp.setCode("N/A");
-            p.setDisponibilita(disp);
-        }
+        Categoria c = new Categoria();
+        printCategorie(car.getCategorieWithDB());
+        c.setId(Utility.insertInt("\nInserisci l'id categoria appartenente"));
+        p.setCategoria(c);
+
+        Materia m = new Materia();
+        printMaterie(mr.getMaterieWithDB());
+        m.setId(Utility.insertInt("\nInserisci l'id materia appartenente"));
+        p.setMateria(m);
+
+        Disponibilita d = new Disponibilita();
+        printDisponibilita(dr.getDisponibilitaWithDB());
+        d.setId(Utility.insertInt("\nInserisci l'id disponibilita prodotto"));
+        p.setDisponibilita(d);
 
         p.setCount();
     }
 
-    public Cliente maskUpdateUtente(Cliente cOld, Cliente cNew){
-        String nome = Utility.insertString("Inserisci il nome da " + cOld.getNome() + " a: ");
-        String cognome = Utility.insertString("Inserisci il cognome da " + cOld.getCognome() + " a: ");
-        String email = Utility.insertString("Inserisci l'email da " + cOld.getEmail() + " a: ");
-        String telefono = Utility.insertString("Inserisci il numero di telefono da " + cOld.getTelefono() + " a: ");
-        String indirizzo = Utility.insertString("Inserisci l'indirizzo da " + cOld.getIndirizzo() + " a: ");
-        cNew.setId(cOld.getId());
+    public Utente maskUpdateUtente(Utente uOld, Utente uNew){
+        String nome = Utility.insertString("Inserisci il nome da " + uOld.getNome() + " a: ");
+        String cognome = Utility.insertString("Inserisci il cognome da " + uOld.getCognome() + " a: ");
+        String telefono = Utility.insertString("Inserisci il numero di telefono da " + uOld.getTelefono() + " a: ");
+        String indirizzo = Utility.insertString("Inserisci l'indirizzo da " + uOld.getIndirizzo() + " a: ");
+        uNew.setId(uOld.getId());
 
         if(!nome.isEmpty()){
-            cNew.setNome(nome);
+            uNew.setNome(nome);
         }
         else{
-            cNew.setNome(cOld.getNome());
+            uNew.setNome(uOld.getNome());
         }
 
         if(!cognome.isEmpty()){
-            cNew.setCognome(cognome);
+            uNew.setCognome(cognome);
         }
         else{
-            cNew.setCognome(cOld.getCognome());
-        }
-
-        if(!email.isEmpty()){
-            cNew.setEmail(email);
-        }
-        else{
-            cNew.setEmail(cOld.getEmail());
+            uNew.setCognome(uOld.getCognome());
         }
 
         if(!telefono.isEmpty()){
-            cNew.setTelefono(telefono);
+            uNew.setTelefono(telefono);
         }
         else{
-            cNew.setTelefono(cOld.getTelefono());
+            uNew.setTelefono(uOld.getTelefono());
         }
 
         if(!indirizzo.isEmpty()){
-            cNew.setIndirizzo(indirizzo);
+            uNew.setIndirizzo(indirizzo);
         }
         else{
-            cNew.setIndirizzo(cOld.getIndirizzo());
+            uNew.setIndirizzo(uOld.getIndirizzo());
         }
 
-        if(cOld instanceof Amministratore){
-            Amministratore aOld = (Amministratore) cOld;
-            Amministratore aNew = (Amministratore) cNew;
+        if(uOld instanceof Amministratore){
+            Amministratore aOld = (Amministratore) uOld;
+            Amministratore aNew = (Amministratore) uNew;
 
+            String email = Utility.insertString("Inserisci l'email da " + aOld.getEmail() + " a: ");
+            String password = Utility.insertString("Inserisci la password da " + aOld.getPassword() + " a: ");
             String codeAdmin = Utility.insertString("Inserisci il codice amministratore da " + aOld.getCodeAdmin() + " a: ");
 
+            if(!email.isEmpty()){
+                aNew.setEmail(email);
+            }
+            else{
+                aNew.setEmail(aOld.getEmail());
+            }
+
+            if(!password.isEmpty()){
+                aNew.setPassword(password);
+            }
+            else{
+                aNew.setPassword(aOld.getPassword());
+            }
 
             if(!codeAdmin.isEmpty()) {
                 aNew.setCodeAdmin(codeAdmin);
@@ -242,17 +298,61 @@ public class View {
             else {
                 aNew.setCodeAdmin(aOld.getCodeAdmin());
             }
+
+            boolean flag;
+            do {
+                flag = false;
+                String portafoglio = Utility.insertString("Inserisci il portafoglio da " + Utility.formatValueBigDecimal(aOld.getPortafoglio()) + " a: ");
+                if(!portafoglio.isEmpty()) {
+                    try {
+                        aNew.setPortafoglio(new BigDecimal(portafoglio));
+                    }
+                    catch(NumberFormatException e){
+                        Utility.msgInf("GEOSTORE","ATTENZIONE: inserisci un numero valido");
+                        flag=true;
+                    }
+                    catch(Exception e) {
+                        Utility.msgInf("GEOSTORE","ERRORE");
+                        flag=true;
+                    }
+                }
+                else {
+                    aNew.setPortafoglio(aOld.getPortafoglio());
+                }
+            }while(flag);
         }
-        Cliente updateCl = null;
+        else if(uOld instanceof Cliente){
+            Cliente cOld = (Cliente) uOld;
+            Cliente cNew = (Cliente) uNew;
+
+            String email = Utility.insertString("Inserisci l'email da " + cOld.getEmail() + " a: ");
+            String password = Utility.insertString("Inserisci la password da " + cOld.getPassword() + " a: ");
+
+            if(!email.isEmpty()){
+                cNew.setEmail(email);
+            }
+            else{
+                cNew.setEmail(cOld.getEmail());
+            }
+
+            if(!password.isEmpty()){
+                cNew.setPassword(password);
+            }
+            else{
+                cNew.setPassword(cOld.getPassword());
+            }
+        }
+
+        Utente updateUt = null;
 
         if(Utility.insertString("Vuoi apportare modifiche?").equalsIgnoreCase("s")){
-            updateCl = cNew;
+            updateUt = uNew;
         }
         else{
-            updateCl = cOld;
+            updateUt = uOld;
         }
 
-        return updateCl;
+        return updateUt;
     }
 
     public Categoria maskUpdateCategoria(Categoria cOld, Categoria cNew){
@@ -301,9 +401,7 @@ public class View {
 
     public Prodotto maskUpdateProdotto(Prodotto pOld, Prodotto pNew){
         String nome = Utility.insertString("Inserisci il nome da " + pOld.getNome() + " a: ");
-        String disponibilita = Utility.insertString("Inserisci la disponibilità da " + pOld.getDisponibilita().fromIntToString(pOld.getDisponibilita().getId()) + " a: ");
-        String categoria = Utility.insertString("Inserisci la categoria da " + pOld.getCategoria().getNome() + " a: ");
-        String materia = Utility.insertString("Inserisci la materia da " + pOld.getMateria().getNome() + " a: ");
+
         pNew.setId(pOld.getId());
 
         if(!nome.isEmpty()){
@@ -314,9 +412,85 @@ public class View {
         }
 
         boolean flag;
+
+        Categoria categoria = new Categoria();
         do {
             flag = false;
-            String prezzo = Utility.insertString("Inserisci il prezzo unitario prodotto da " + pOld.getPrezzo() + " a: ");
+            printCategorie(car.getCategorieWithDB());
+            String cat = Utility.insertString("Inserisci l'id categoria da " + pOld.getCategoria().getNome() + " a: ");
+            if(!cat.isEmpty()) {
+                try {
+                    categoria.setId(Integer.parseInt(cat));
+                    pNew.setCategoria(categoria);
+                }
+                catch(NumberFormatException e){
+                    Utility.msgInf("GEOSTORE","ATTENZIONE: inserisci un numero valido");
+                    flag=true;
+                }
+                catch(Exception e) {
+                    Utility.msgInf("GEOSTORE","ERRORE");
+                    flag=true;
+                }
+            }
+            else {
+                categoria.setId(pOld.getCategoria().getId());
+                pNew.setCategoria(categoria);
+            }
+        }while(flag);
+
+        Materia materia = new Materia();
+        do {
+            flag = false;
+            printMaterie(mr.getMaterieWithDB());
+            String mat = Utility.insertString("Inserisci l'id materia da " + pOld.getMateria().getId() + " a: ");
+            if(!mat.isEmpty()) {
+                try {
+                    materia.setId(Integer.parseInt(mat));
+                    pNew.setMateria(materia);
+                }
+                catch(NumberFormatException e){
+                    Utility.msgInf("GEOSTORE","ATTENZIONE: inserisci un numero valido");
+                    flag=true;
+                }
+                catch(Exception e) {
+                    Utility.msgInf("GEOSTORE","ERRORE");
+                    flag=true;
+                }
+            }
+            else {
+                materia.setId(pOld.getMateria().getId());
+                pNew.setMateria(materia);
+            }
+        }while(flag);
+
+        Disponibilita disponibilita = new Disponibilita();
+        do {
+            flag = false;
+            printDisponibilita(dr.getDisponibilitaWithDB());
+            String disp = Utility.insertString("Inserisci l'id disponibilita da " + pOld.getDisponibilita().getId() + " a: ");
+            if(!disp.isEmpty()) {
+                try {
+                    disponibilita.setId(Integer.parseInt(disp));
+                    pNew.setDisponibilita(disponibilita);
+                }
+                catch(NumberFormatException e){
+                    Utility.msgInf("GEOSTORE","ATTENZIONE: inserisci un numero valido");
+                    flag=true;
+                }
+                catch(Exception e) {
+                    Utility.msgInf("GEOSTORE","ERRORE");
+                    flag=true;
+                }
+            }
+            else {
+                disponibilita.setId(pOld.getDisponibilita().getId());
+                pNew.setDisponibilita(disponibilita);
+            }
+        }while(flag);
+
+        do {
+            flag = false;
+            String prezzo = Utility.insertString("Inserisci il prezzo unitario prodotto da " + Utility.formatValueBigDecimal(pOld.getPrezzo()) + " a: ");
             if(!prezzo.isEmpty()) {
                 try {
                     pNew.setPrezzo(new BigDecimal(prezzo));
@@ -337,7 +511,7 @@ public class View {
 
         do {
             flag = false;
-            String quantita_disp = Utility.insertString("Inserisci la quantità disponibile da " + pOld.getQuantita_disp() + " a: ");
+            String quantita_disp = Utility.insertString("Inserisci la quantità disponibile da " + Utility.formatValueInteger(pOld.getQuantita_disp()) + " a: ");
             if(!quantita_disp.isEmpty()) {
                 try {
                     pNew.setQuantita_disp(Integer.parseInt(quantita_disp));
@@ -356,58 +530,6 @@ public class View {
             }
         }while(flag);
 
-
-        Disponibilita disp = new Disponibilita();
-
-        if(!disponibilita.isEmpty()){
-            if(disponibilita.equalsIgnoreCase("DISPONIBILE")){
-                disp.setCode("DISPONIBILE");
-                pNew.setDisponibilita(disp);
-            }
-            else if(disponibilita.equalsIgnoreCase("ESAURITO")){
-                disp.setCode("ESAURITO");
-                pNew.setDisponibilita(disp);
-            }
-            else if(disponibilita.equalsIgnoreCase("ESAURIMENTO")){
-                disp.setCode("ESAURIMENTO");
-                pNew.setDisponibilita(disp);
-            }
-            else if(disponibilita.equalsIgnoreCase("ARRIVO")){
-                disp.setCode("ARRIVO");
-                pNew.setDisponibilita(disp);
-            }
-            else if(disponibilita.equalsIgnoreCase("N/A")){
-                disp.setCode("N/A");
-                pNew.setDisponibilita(disp);
-            }
-            else{
-                disp.setCode(pOld.getDisponibilita().fromIntToString(pOld.getDisponibilita().getId()));
-                pNew.setDisponibilita(disp);
-            }
-        }
-        else{
-            disp.setCode(pOld.getDisponibilita().fromIntToString(pOld.getDisponibilita().getId()));
-            pNew.setDisponibilita(disp);
-        }
-
-        if(!categoria.isEmpty()){
-            Categoria c = new Categoria();
-            c.setNome(categoria);
-            pNew.setCategoria(c);
-        }
-        else{
-            pNew.setCategoria(pOld.getCategoria());
-        }
-
-        if(!materia.isEmpty()){
-            Materia m = new Materia();
-            m.setNome(materia);
-            pNew.setMateria(m);
-        }
-        else{
-            pNew.setMateria(pOld.getMateria());
-        }
-
         Prodotto updatePr = null;
 
         if(Utility.insertString("Vuoi apportare modifiche?").equalsIgnoreCase("s")){
@@ -421,14 +543,15 @@ public class View {
     }
 
     public Ordine maskUpdateOrdine(Ordine oOld, Ordine oNew){
-        String stato = Utility.insertString("Inserisci lo stato da " + oOld.getStato().fromIntToString(oOld.getStato().getId()) + " a: ");
+        oNew.setPrezzo_unitario(oOld.getPrezzo_unitario());
+        oNew.setData_ordine(oOld.getData_ordine());
         oNew.setId(oOld.getId());
 
         boolean flag;
 
         do {
             flag = false;
-            String quantita_ord = Utility.insertString("Inserisci la quantità ordinata da " + oOld.getQuantita() + " a: ");
+            String quantita_ord = Utility.insertString("Inserisci la quantità ordinata da " + Utility.formatValueInteger(oOld.getQuantita()) + " a: ");
             if(!quantita_ord.isEmpty()) {
                 try {
                     oNew.setQuantita(Integer.parseInt(quantita_ord));
@@ -447,29 +570,30 @@ public class View {
             }
         }while(flag);
 
-        Stato st = new Stato();
-        if(!stato.isEmpty()){
-            if(stato.equalsIgnoreCase("ELABORAZIONE")){
-                st.setCode("ELABORAZIONE");
-                oNew.setStato(st);
+        Stato stato = new Stato();
+        do {
+            flag = false;
+            printStatus(sr.getStatusWithDB());
+            String st = Utility.insertString("Inserisci l'id stato da " + oOld.getStato().getCode() + " a: ");
+            if(!st.isEmpty()) {
+                try {
+                    stato.setId(Integer.parseInt(st));
+                    oNew.setStato(stato);
+                }
+                catch(NumberFormatException e){
+                    Utility.msgInf("GEOSTORE","ATTENZIONE: inserisci un numero valido");
+                    flag=true;
+                }
+                catch(Exception e) {
+                    Utility.msgInf("GEOSTORE","ERRORE");
+                    flag=true;
+                }
             }
-            else if(stato.equalsIgnoreCase("ACCETTATO")){
-                st.setCode("ACCETTATO");
-                oNew.setStato(st);
+            else {
+                stato.setId(oOld.getStato().getId());
+                oNew.setStato(stato);
             }
-            else if(stato.equalsIgnoreCase("RIFIUTATO")){
-                st.setCode("RIFIUTATO");
-                oNew.setStato(st);
-            }
-            else{
-                st.setCode(oOld.getStato().fromIntToString(oOld.getStato().getId()));
-                oNew.setStato(st);
-            }
-        }
-        else{
-            st.setCode(oOld.getStato().fromIntToString(oOld.getStato().getId()));
-            oNew.setStato(st);
-        }
+        }while(flag);
 
         Ordine updateOrd = null;
 
@@ -485,10 +609,10 @@ public class View {
 
     public void printCategorie(HashMap<Integer, Categoria> categorie){
         if(!categorie.isEmpty()){
-            System.out.println("***CATEGORIE***\n");
+            System.out.println("***CATEGORIE DISPONIBILI***\n");
 
             for(Categoria categoria : categorie.values()){
-                System.out.println("ID: " + categoria.getId() + ", \nNome: " + categoria.getNome());
+                System.out.println("ID: " + categoria.getId() + "; \nNome: " + categoria.getNome());
                 System.out.println("-----------------------------------------------------------");
             }
         }
@@ -498,12 +622,57 @@ public class View {
 
     }
 
+    public void printMaterie(HashMap<Integer, Materia> materie){
+        if(!materie.isEmpty()){
+            System.out.println("***MATERIE DISPONIBILI***\n");
+
+            for(Materia materia : materie.values()){
+                System.out.println("ID: " + materia.getId() + "; \nNome: " + materia.getNome());
+                System.out.println("-----------------------------------------------------------");
+            }
+        }
+        else{
+            System.out.println("***NESSUNA MATERIA PRESENTE***\n");
+        }
+
+    }
+
+    public void printDisponibilita(HashMap<Integer, Disponibilita> disponibilitas){
+        if(!disponibilitas.isEmpty()){
+            System.out.println("***DISPONIBILITA PRESENTI***\n");
+
+            for(Disponibilita disponibilita : disponibilitas.values()){
+                System.out.println("ID: " + disponibilita.getId() + "; \nCodice: " + disponibilita.getCode());
+                System.out.println("-----------------------------------------------------------");
+            }
+        }
+        else{
+            System.out.println("***NESSUNA DISPONIBILITA PRESENTE***\n");
+        }
+
+    }
+
+    public void printStatus(HashMap<Integer, Stato> stati){
+        if(!stati.isEmpty()){
+            System.out.println("***STATI PRESENTI***\n");
+
+            for(Stato stato : stati.values()){
+                System.out.println("ID: " + stato.getId() + "; \nCodice: " + stato.getCode());
+                System.out.println("-----------------------------------------------------------");
+            }
+        }
+        else{
+            System.out.println("***NESSUN STATO PRESENTE***\n");
+        }
+
+    }
+
     public void printProdotti(HashMap<Integer, Prodotto> prodotti){
         if(!prodotti.isEmpty()){
             System.out.println("***PRODOTTI PRESENTI NEL GEOSTORE***\n");
 
             for(Prodotto prodotto : prodotti.values()){
-                System.out.println("ID: " + prodotto.getId() + ", \nNome: " + prodotto.getNome() + ", \nPrezzo: " + prodotto.getPrezzo()+ ", \nDisponibilità: " + prodotto.getDisponibilita().fromIntToString(prodotto.getDisponibilita().getId()) + ", \nCategoria: " + prodotto.getCategoria().getNome() + ", \nMateria: " + prodotto.getMateria().getNome() + ", \nQuantità disponibile: " + prodotto.getQuantita_disp());
+                System.out.println("ID: " + prodotto.getId() + "; \nNome: " + prodotto.getNome() + "; \nPrezzo: " + Utility.formatValueBigDecimal(prodotto.getPrezzo()) + "; \nDisponibilità: " + prodotto.getDisponibilita().getCode() + "; \nCategoria: " + prodotto.getCategoria().getNome() + "; \nMateria: " + prodotto.getMateria().getNome() + "; \nQuantità disponibile: " + Utility.formatValueInteger(prodotto.getQuantita_disp()));
                 System.out.println("-----------------------------------------------------------");
             }
         }
@@ -518,7 +687,7 @@ public class View {
             System.out.println("***ORDINI EFFETTUATI NEL GEOSTORE***\n");
 
             for(Ordine ordine : ordini.values()){
-                System.out.println("ID: " + ordine.getId() + ", \nNome cliente: " + ordine.getCliente().getNome() + ", \nCognome cliente: " + ordine.getCliente().getCognome() + ", \nNome prodotto: " + ordine.getProdotto().getNome() + ", \nData ordine: " + ordine.getData_ordine() + ", \nQuantità ordinata: " + ordine.getQuantita() + ", \nPrezzo unitario: " + ordine.getPrezzo_unitario()+ ", \nStato ordine: " + ordine.getStato().fromIntToString(ordine.getStato().getId()));
+                System.out.println("ID: " + ordine.getId() + "; \nNome utente: " + ordine.getUtente().getNome() + "; \nCognome utente: " + ordine.getUtente().getCognome() + "; \nNome prodotto: " + ordine.getProdotto().getNome() + "; \nData ordine: " + ordine.getData_ordine() + "; \nQuantità ordinata: " + Utility.formatValueInteger(ordine.getQuantita()) + "; \nPrezzo unitario: " + Utility.formatValueBigDecimal(ordine.getPrezzo_unitario()) + "; \nStato ordine: " + ordine.getStato().getCode());
                 System.out.println("-----------------------------------------------------------");
             }
         }
@@ -532,7 +701,7 @@ public class View {
         if(ordine != null && ordine.getPrezzo_unitario() != null){
             System.out.println("***ORDINI TOTALI EFFETTUATI NEL GIORNO " + ordine.getData_ordine().toString().substring(0, 10) + " SU GEOSTORE***\n");
 
-            System.out.println("Nome cliente: " + ordine.getCliente().getNome() + "\nCognome cliente: " + ordine.getCliente().getCognome() + ", \nData ordine totale: " + ordine.getData_ordine().toString().substring(0, 10) + ", \nPrezzo totale speso: " + ordine.getPrezzo_unitario());
+            System.out.println("Nome utente: " + ordine.getUtente().getNome() + "; \nCognome utente: " + ordine.getUtente().getCognome() + "; \nData ordine totale: " + ordine.getData_ordine().toString().substring(0, 10) + "; \nPrezzo totale speso: " + Utility.formatValueBigDecimal(ordine.getPrezzo_unitario()));
         }
         else{
             System.out.println("***NESSUN ORDINE TOTALE PRESENTE NEL GIORNO PRESTABILITO***\n");
@@ -541,7 +710,7 @@ public class View {
 
     public void printCategoria(Categoria categoria){
         if(categoria != null && categoria.getNome() != null){
-            System.out.println("ID: " + categoria.getId() + ", \nNome: " + categoria.getNome());
+            System.out.println("ID: " + categoria.getId() + "; \nNome: " + categoria.getNome());
         }
         else{
             System.out.println("***NESSUNA CATEGORIA***");
@@ -549,22 +718,37 @@ public class View {
 
     }
 
-    public void printUtente(Cliente cliente){
-        if(cliente != null && cliente.getNome() != null){
+    public void printUtente(Utente utente){
+        if(utente != null && utente.getNome() != null){
             System.out.println("***PROFILO UTENTE GEOSTORE***\n");
-            System.out.println("ID: " + cliente.getId() + ", \nNome: " + cliente.getNome() + ", \nCognome: " + cliente.getCognome()+ ", \nEmail: " + cliente.getEmail()+ ", \nTelefono: " + cliente.getTelefono()+ ", \nIndirizzo: " + cliente.getIndirizzo());
+
+            if(utente instanceof Amministratore){
+                Amministratore admin = (Amministratore) utente;
+                System.out.println("ID: " + admin.getId() + "; \nNome: " + admin.getNome() + "; \nCognome: " + admin.getCognome()+ "; \nEmail: " + admin.getEmail()+ "; \nPassword: " + admin.getPassword()+ "; \nTelefono: " + admin.getTelefono()+ "; \nIndirizzo: " + admin.getIndirizzo()+ "; \nCodice admin: " + admin.getCodeAdmin()+ "; \nPortafoglio: " + Utility.formatValueBigDecimal(admin.getPortafoglio()));
+            }
+            else{
+                Cliente cliente = (Cliente) utente;
+                System.out.println("ID: " + cliente.getId() + "; \nNome: " + cliente.getNome() + "; \nCognome: " + cliente.getCognome()+ "; \nEmail: " + cliente.getEmail()+ "; \nPassword: " + cliente.getPassword()+ "; \nTelefono: " + cliente.getTelefono()+ "; \nIndirizzo: " + cliente.getIndirizzo()+ "; \nPortafoglio: " + Utility.formatValueBigDecimal(cliente.getPortafoglio()));
+            }
         }
         else{
             System.out.println("***NESSUN PROFILO UTENTE GEOSTORE***\n");
         }
     }
 
-    public void printUtenti(HashMap<Integer, Cliente> clienti){
-        if(!clienti.isEmpty()){
+    public void printUtenti(HashMap<Integer, Utente> utenti){
+        if(!utenti.isEmpty()){
             System.out.println("***UTENTI SU GEOSTORE***\n");
 
-            for(Cliente cliente : clienti.values()){
-                System.out.println("ID: " + cliente.getId() + ", \nNome: " + cliente.getNome() + ", \nCognome: " + cliente.getCognome()+ ", \nEmail: " + cliente.getEmail()+ ", \nTelefono: " + cliente.getTelefono()+ ", \nIndirizzo: " + cliente.getIndirizzo());
+            for(Utente utente : utenti.values()){
+                if(utente instanceof Amministratore){
+                    Amministratore admin = (Amministratore) utente;
+                    System.out.println("ID: " + admin.getId() + "; \nNome: " + admin.getNome() + "; \nCognome: " + admin.getCognome()+ "; \nEmail: " + admin.getEmail()+ "; \nPassword: " + admin.getPassword()+ "; \nTelefono: " + admin.getTelefono()+ "; \nIndirizzo: " + admin.getIndirizzo()+ "; \nCodice admin: " + admin.getCodeAdmin()+ "; \nPortafoglio: " + Utility.formatValueBigDecimal(admin.getPortafoglio()));
+                }
+                else{
+                    Cliente cliente = (Cliente) utente;
+                    System.out.println("ID: " + cliente.getId() + "; \nNome: " + cliente.getNome() + "; \nCognome: " + cliente.getCognome()+ "; \nEmail: " + cliente.getEmail()+ "; \nPassword: " + cliente.getPassword()+ "; \nTelefono: " + cliente.getTelefono()+ "; \nIndirizzo: " + cliente.getIndirizzo()+ "; \nPortafoglio: " + Utility.formatValueBigDecimal(cliente.getPortafoglio()));
+                }
                 System.out.println("-----------------------------------------------------------");
             }
         }

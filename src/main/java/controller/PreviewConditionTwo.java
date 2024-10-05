@@ -107,9 +107,9 @@ public class PreviewConditionTwo {
                                    previewView.maskInsertCategoria(c);
                                    cr.insertCategoriaWithDB(c.getId(), c);
                                    break;
-                              case 3:
+                              /*case 3:
                                    Utility.msgInf("GEOSTORE", "Aggiornamento categoria");
-                                   c = cr.getCategoriaWithDB(Utility.insertString("Inserisci il nome categoria: "));
+                                   //c = cr.getCategoriaWithDB(Utility.insertString("Inserisci il nome categoria: "));
 
                                    if(c != null){
                                         Utility.msgInf("GEOSTORE", "Categoria trovata");
@@ -123,8 +123,8 @@ public class PreviewConditionTwo {
                                         Utility.msgInf("GEOSTORE", "Categoria non trovata");
                                    }
 
-                                   break;
-                              case 4:
+                                   break;*/
+                              /*case 4:
                                    Utility.msgInf("GEOSTORE", "Eliminazione categoria");
                                    c = cr.getCategoriaWithDB(Utility.insertString("Inserisci il nome categoria: "));
 
@@ -143,7 +143,7 @@ public class PreviewConditionTwo {
                                         Utility.msgInf("GEOSTORE", "Categoria non trovata");
                                    }
 
-                                   break;
+                                   break;*/
                               default:
                                    Utility.msgInf("GEOSTORE", "Non so cosa hai inserito");
                                    break;

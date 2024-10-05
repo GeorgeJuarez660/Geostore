@@ -1,11 +1,25 @@
 package src.main.java.utility;
 
+import src.main.java.model.CategoriaRepository;
+import src.main.java.model.DisponibilitaRepository;
+import src.main.java.model.MateriaRepository;
+import src.main.java.model.StatusRepository;
+
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class Utility {
 
     static Scanner input = new Scanner(System.in);
+
+    static CategoriaRepository car = new CategoriaRepository();
+    static MateriaRepository mr = new MateriaRepository();
+    static DisponibilitaRepository dr = new DisponibilitaRepository();
+    static StatusRepository sr = new StatusRepository();
+
 
     public static void msgInf(String owner, String text) //metodo di messaggio info
     {
@@ -64,5 +78,19 @@ public class Utility {
 
         return word;
 
+    }
+
+    public static String formatValueBigDecimal(BigDecimal value){
+        String formattedValue = "";
+
+        DecimalFormatSymbols dfs = new DecimalFormatSymbols(Locale.ITALIAN);
+        DecimalFormat df = new DecimalFormat("###,##0.##", dfs);
+        formattedValue = df.format(value);
+
+        return formattedValue;
+    }
+
+    public static String formatValueInteger(Integer value){
+        return formatValueBigDecimal(BigDecimal.valueOf(value));
     }
 }
