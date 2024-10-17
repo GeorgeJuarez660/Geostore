@@ -16,7 +16,7 @@ public class UtenteRepository implements utentiCRUD {
 
     @Override
     public int insertUtenteWithDB(Integer id, Utente u) {
-        String sql = "INSERT INTO `utenti`(`nome`, `cognome`,`email`,`password`,`telefono`, `indirizzo`, `portafoglio`,`codice_admin`) VALUES (?, ?, ?, ?, ?, ?, ?, ?) ";
+        String sql = "INSERT INTO `utenti`(`nome`, `cognome`, `sesso`, `data_nascita`, `email`, `password`, `telefono`, `indirizzo`, `portafoglio`, `codice_admin`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         int num = 0;
@@ -29,22 +29,24 @@ public class UtenteRepository implements utentiCRUD {
 
             preparedStatement.setString(1, u.getNome());
             preparedStatement.setString(2, u.getCognome());
-            preparedStatement.setString(5, u.getTelefono());
-            preparedStatement.setString(6, u.getIndirizzo());
+            preparedStatement.setString(3, u.getSesso());
+            preparedStatement.setDate(4, u.getDataNascita());
+            preparedStatement.setString(7, u.getTelefono());
+            preparedStatement.setString(8, u.getIndirizzo());
 
             if(u instanceof Amministratore){
                 Amministratore a = (Amministratore) u;
-                preparedStatement.setString(3, a.getEmail());
-                preparedStatement.setString(4, a.getPassword());
-                preparedStatement.setBigDecimal(7, a.getPortafoglio());
-                preparedStatement.setString(8, a.getCodeAdmin());
+                preparedStatement.setString(5, a.getEmail());
+                preparedStatement.setString(6, a.getPassword());
+                preparedStatement.setBigDecimal(9, a.getPortafoglio());
+                preparedStatement.setString(10, a.getCodeAdmin());
             }
             else if(u instanceof Cliente){
                 Cliente c = (Cliente) u;
-                preparedStatement.setString(3, c.getEmail());
-                preparedStatement.setString(4, c.getPassword());
-                preparedStatement.setBigDecimal(7, c.getPortafoglio());
-                preparedStatement.setString(8, null);
+                preparedStatement.setString(5, c.getEmail());
+                preparedStatement.setString(6, c.getPassword());
+                preparedStatement.setBigDecimal(9, c.getPortafoglio());
+                preparedStatement.setString(10, null);
             }
 
             num = preparedStatement.executeUpdate();
@@ -88,6 +90,8 @@ public class UtenteRepository implements utentiCRUD {
                     foundAm.setId(rs.getInt("id"));
                     foundAm.setNome(rs.getString("nome"));
                     foundAm.setCognome(rs.getString("cognome"));
+                    foundAm.setSesso(rs.getString("sesso"));
+                    foundAm.setDataNascita(rs.getDate("data_nascita"));
                     foundAm.setEmail(rs.getString("email"));
                     foundAm.setPassword(rs.getString("password"));
                     foundAm.setIndirizzo(rs.getString("indirizzo"));
@@ -101,6 +105,8 @@ public class UtenteRepository implements utentiCRUD {
                     foundCl.setId(rs.getInt("id"));
                     foundCl.setNome(rs.getString("nome"));
                     foundCl.setCognome(rs.getString("cognome"));
+                    foundCl.setSesso(rs.getString("sesso"));
+                    foundCl.setDataNascita(rs.getDate("data_nascita"));
                     foundCl.setEmail(rs.getString("email"));
                     foundCl.setPassword(rs.getString("password"));
                     foundCl.setIndirizzo(rs.getString("indirizzo"));
@@ -151,6 +157,8 @@ public class UtenteRepository implements utentiCRUD {
                     foundAdmin.setId(rs.getInt("id"));
                     foundAdmin.setNome(rs.getString("nome"));
                     foundAdmin.setCognome(rs.getString("cognome"));
+                    foundAdmin.setSesso(rs.getString("sesso"));
+                    foundAdmin.setDataNascita(rs.getDate("data_nascita"));
                     foundAdmin.setEmail(rs.getString("email"));
                     foundAdmin.setPassword(rs.getString("password"));
                     foundAdmin.setIndirizzo(rs.getString("indirizzo"));
@@ -164,6 +172,8 @@ public class UtenteRepository implements utentiCRUD {
                     foundCliente.setId(rs.getInt("id"));
                     foundCliente.setNome(rs.getString("nome"));
                     foundCliente.setCognome(rs.getString("cognome"));
+                    foundCliente.setSesso(rs.getString("sesso"));
+                    foundCliente.setDataNascita(rs.getDate("data_nascita"));
                     foundCliente.setEmail(rs.getString("email"));
                     foundCliente.setPassword(rs.getString("password"));
                     foundCliente.setIndirizzo(rs.getString("indirizzo"));
@@ -212,6 +222,8 @@ public class UtenteRepository implements utentiCRUD {
                 foundCliente.setId(rs.getInt("id"));
                 foundCliente.setNome(rs.getString("nome"));
                 foundCliente.setCognome(rs.getString("cognome"));
+                foundCliente.setSesso(rs.getString("sesso"));
+                foundCliente.setDataNascita(rs.getDate("data_nascita"));
                 foundCliente.setEmail(rs.getString("email"));
                 foundCliente.setPassword(rs.getString("password"));
                 foundCliente.setIndirizzo(rs.getString("indirizzo"));
@@ -274,6 +286,8 @@ public class UtenteRepository implements utentiCRUD {
                 foundAdmin.setId(rs.getInt("id"));
                 foundAdmin.setNome(rs.getString("nome"));
                 foundAdmin.setCognome(rs.getString("cognome"));
+                foundAdmin.setSesso(rs.getString("sesso"));
+                foundAdmin.setDataNascita(rs.getDate("data_nascita"));
                 foundAdmin.setEmail(rs.getString("email"));
                 foundAdmin.setPassword(rs.getString("password"));
                 foundAdmin.setIndirizzo(rs.getString("indirizzo"));
@@ -294,7 +308,7 @@ public class UtenteRepository implements utentiCRUD {
 
     @Override
     public int updateUtenteWithDB(Integer id, Utente newU) {
-        String sql = "UPDATE `utenti` SET `nome` = ?, `cognome` = ?, `email` = ?, `password` = ?, `telefono` = ?, `indirizzo` = ?, `codice_admin` = ?, `portafoglio` = ? WHERE id = ? ";
+        String sql = "UPDATE `utenti` SET `nome` = ?, `cognome` = ?, `sesso` = ?, `data_nascita` = ?, `email` = ?, `password` = ?, `telefono` = ?, `indirizzo` = ?, `codice_admin` = ?, `portafoglio` = ? WHERE id = ? ";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         int num = 0;
@@ -307,25 +321,27 @@ public class UtenteRepository implements utentiCRUD {
 
             preparedStatement.setString(1, newU.getNome());
             preparedStatement.setString(2, newU.getCognome());
-            preparedStatement.setString(5, newU.getTelefono());
-            preparedStatement.setString(6, newU.getIndirizzo());
+            preparedStatement.setString(3, newU.getSesso());
+            preparedStatement.setDate(4, newU.getDataNascita());
+            preparedStatement.setString(7, newU.getTelefono());
+            preparedStatement.setString(8, newU.getIndirizzo());
 
             if(newU instanceof Amministratore){
                 Amministratore newA = (Amministratore) newU;
-                preparedStatement.setString(3, newA.getEmail());
-                preparedStatement.setString(4, newA.getPassword());
-                preparedStatement.setString(7, newA.getCodeAdmin());
-                preparedStatement.setBigDecimal(8, newA.getPortafoglio());
+                preparedStatement.setString(5, newA.getEmail());
+                preparedStatement.setString(6, newA.getPassword());
+                preparedStatement.setString(9, newA.getCodeAdmin());
+                preparedStatement.setBigDecimal(10, newA.getPortafoglio());
             }
             else if(newU instanceof Cliente){
                 Cliente newC = (Cliente) newU;
-                preparedStatement.setString(3, newC.getEmail());
-                preparedStatement.setString(4, newC.getPassword());
-                preparedStatement.setString(7, null);
-                preparedStatement.setBigDecimal(8, newC.getPortafoglio());
+                preparedStatement.setString(5, newC.getEmail());
+                preparedStatement.setString(6, newC.getPassword());
+                preparedStatement.setString(9, null);
+                preparedStatement.setBigDecimal(10, newC.getPortafoglio());
             }
 
-            preparedStatement.setInt(9, id);
+            preparedStatement.setInt(11, id);
 
             num = preparedStatement.executeUpdate();
             //chiudi la connessione

@@ -1,5 +1,6 @@
 package src.main.java.model;
 
+import java.sql.Date;
 import java.util.Objects;
 
 public class Utente {
@@ -7,6 +8,8 @@ public class Utente {
     private static Integer count=0;
     private String nome;
     private String cognome;
+    private String sesso;
+    private Date dataNascita;
     private String telefono;
     private String indirizzo;
 
@@ -39,6 +42,22 @@ public class Utente {
         this.cognome = cognome;
     }
 
+    public String getSesso() {
+        return sesso;
+    }
+
+    public void setSesso(String sesso) {
+        this.sesso = sesso;
+    }
+
+    public Date getDataNascita() {
+        return dataNascita;
+    }
+
+    public void setDataNascita(Date dataNascita) {
+        this.dataNascita = dataNascita;
+    }
+
     public String getTelefono() {
         return telefono;
     }
@@ -63,18 +82,20 @@ public class Utente {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Utente cliente = (Utente) o;
-        return Objects.equals(id, cliente.id) && Objects.equals(nome, cliente.nome) && Objects.equals(cognome, cliente.cognome) && Objects.equals(telefono, cliente.telefono) && Objects.equals(indirizzo, cliente.indirizzo);
+        return Objects.equals(id, cliente.id) && Objects.equals(nome, cliente.nome) && Objects.equals(cognome, cliente.cognome) && Objects.equals(sesso, cliente.sesso) && Objects.equals(dataNascita, cliente.dataNascita) && Objects.equals(telefono, cliente.telefono) && Objects.equals(indirizzo, cliente.indirizzo);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nome, cognome, telefono, indirizzo);
+        return Objects.hash(id, nome, cognome, sesso, dataNascita, telefono, indirizzo);
     }
 
-    public Utente(Integer id, String nome, String cognome, String telefono, String indirizzo) {
+    public Utente(Integer id, String nome, String cognome, String sesso, Date dataNascita, String telefono, String indirizzo) {
         this.id = id;
         this.nome = nome;
         this.cognome = cognome;
+        this.sesso = sesso;
+        this.dataNascita = dataNascita;
         this.telefono = telefono;
         this.indirizzo = indirizzo;
     }
@@ -85,6 +106,8 @@ public class Utente {
                 "id=" + id +
                 ", nome='" + nome + '\'' +
                 ", cognome='" + cognome + '\'' +
+                ", sesso='" + sesso + '\'' +
+                ", dataNascita='" + dataNascita + '\'' +
                 ", telefono='" + telefono + '\'' +
                 ", indirizzo='" + indirizzo + '\'' +
                 '}';
