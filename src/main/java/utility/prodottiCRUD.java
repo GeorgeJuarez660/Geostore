@@ -6,7 +6,7 @@ import java.util.HashMap;
 
 public interface prodottiCRUD {
 
-    //Interfaccia dove dichiaro metodi astratti che mi serviranno per andare a implementarli nella classe OggettoRepository
+    //Interfaccia dove dichiaro metodi astratti che mi serviranno per andare a implementarli nella classe ProdottoRepository
 
     //metodi override per operazioni CRUD con database
     public int insertProdottoWithDB(Integer id, Prodotto p);
