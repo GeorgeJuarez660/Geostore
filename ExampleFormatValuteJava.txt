@@ -1,0 +1,11 @@
+//FORMAT VALUE
+    public static String formatValue(String value){
+        String formattedValue = "";
+
+        BigDecimal previewValue = new BigDecimal(value);
+        DecimalFormatSymbols dfs = new DecimalFormatSymbols(Locale.ITALIAN);
+        DecimalFormat df = new DecimalFormat("###,##0.##", dfs);
+        formattedValue = df.format(previewValue);
+
+        return formattedValue;
+    }
