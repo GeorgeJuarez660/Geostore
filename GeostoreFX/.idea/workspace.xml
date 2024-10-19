@@ -4,17 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8273ca0a-1299-4b65-b52d-47dc6a793eae" name="Changes" comment="managing">
+    <list default="true" id="8273ca0a-1299-4b65-b52d-47dc6a793eae" name="Changes" comment="AppJavaFx: creating example">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/geostorefx/HelloApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/controller/HelloApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/geostorefx/HelloController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/controller/HelloController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/org/scenes/hello-view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/org/scenes/hello-view.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/module-info.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/module-info.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/geostorefx/HelloApplication.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/geostorefx/HelloController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/scenes/hello-view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/scenes/hello-view.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/controller/HelloApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/controller/HelloApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/controller/TryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/controller/TryController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,12 +49,17 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "featureDev/desktop",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/giorg/OneDrive/Desktop/App/G&P/Java/Geostore"
+    "last_opened_file_path": "C:/Users/giorg/OneDrive/Desktop/App/G&P/Java/GeostoreFX/src/main/resources/org/scenes"
   }
 }]]></component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\giorg\OneDrive\Desktop\App\G&amp;P\Java\GeostoreFX\src\main\resources\org\scenes" />
+      <recent name="C:\Users\giorg\OneDrive\Desktop\App\G&amp;P\Java\GeostoreFX\src\main\resources\org\screens" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\giorg\OneDrive\Desktop\App\G&amp;P\Java\GeostoreFX\src\main\resources\org\scenes" />
+      <recent name="C:\Users\giorg\OneDrive\Desktop\App\G&amp;P\Java\GeostoreFX\src\main\resources\org\screens" />
       <recent name="C:\Users\giorg\OneDrive\Desktop\App\G&amp;P\Java\GeostoreFX\src\main\java\org\controller" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
@@ -126,13 +124,22 @@
       <option name="project" value="LOCAL" />
       <updated>1729329860766</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="AppJavaFx: creating example">
+      <option name="closed" value="true" />
+      <created>1729336256606</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1729336256606</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Desktop" />
     <MESSAGE value="managing" />
-    <option name="LAST_COMMIT_MESSAGE" value="managing" />
+    <MESSAGE value="AppJavaFx: creating example" />
+    <option name="LAST_COMMIT_MESSAGE" value="AppJavaFx: creating example" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -141,6 +148,21 @@
           <url>file://$PROJECT_DIR$/src/main/java/org/controller/HelloController.java</url>
           <line>4</line>
           <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/controller/TryController.java</url>
+          <line>17</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/controller/HelloApplication.java</url>
+          <line>19</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/controller/HelloApplication.java</url>
+          <line>21</line>
+          <option name="timeStamp" value="6" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
