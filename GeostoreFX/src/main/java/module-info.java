@@ -1,4 +1,4 @@
-module org.example.geostorefx {
+module info {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.web;
@@ -11,6 +11,6 @@ module org.example.geostorefx {
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
 
-    opens org.example.geostorefx to javafx.fxml;
-    exports org.example.geostorefx;
+    opens org.controller to javafx.fxml;
+    exports org.controller;
 }

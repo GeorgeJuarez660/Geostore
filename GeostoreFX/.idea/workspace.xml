@@ -6,10 +6,15 @@
   <component name="ChangeListManager">
     <list default="true" id="8273ca0a-1299-4b65-b52d-47dc6a793eae" name="Changes" comment="managing">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/controller/HelloApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/controller/HelloApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/controller/HelloController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/controller/HelloController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/org/scenes/hello-view.fxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/geostorefx/HelloApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/controller/HelloApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/geostorefx/HelloController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/controller/HelloController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/org/scenes/hello-view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/org/scenes/hello-view.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/module-info.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/module-info.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/geostorefx/HelloApplication.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/geostorefx/HelloController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/scenes/hello-view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/scenes/hello-view.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,6 +53,7 @@
     "Application.HelloApplication.executor": "Run",
     "Application.Unnamed.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "featureDev/desktop",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/giorg/OneDrive/Desktop/App/G&P/Java/Geostore"
@@ -58,10 +64,13 @@
       <recent name="C:\Users\giorg\OneDrive\Desktop\App\G&amp;P\Java\GeostoreFX\src\main\resources\org\scenes" />
       <recent name="C:\Users\giorg\OneDrive\Desktop\App\G&amp;P\Java\GeostoreFX\src\main\java\org\controller" />
     </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="org.controller" />
+    </key>
   </component>
   <component name="RunManager">
     <configuration name="HelloApplication" type="Application" factoryName="Application" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="org.example.geostorefx.HelloApplication" />
+      <option name="MAIN_CLASS_NAME" value="org.controller.HelloApplication" />
       <module name="GeostoreFX" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -109,12 +118,31 @@
       <option name="project" value="LOCAL" />
       <updated>1729328955253</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="managing">
+      <option name="closed" value="true" />
+      <created>1729329860766</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1729329860766</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Desktop" />
     <MESSAGE value="managing" />
     <option name="LAST_COMMIT_MESSAGE" value="managing" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/controller/HelloController.java</url>
+          <line>4</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
