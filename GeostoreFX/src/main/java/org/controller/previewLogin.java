@@ -20,8 +20,15 @@ public class previewLogin {
     @FXML
     protected void sending() {
 
+        String correctEmail = "aura";
+        String correctPassword = "aurora";
         if(!emailField.getText().isEmpty() && !passwordField.getText().isEmpty()){
-            checkingTitle.setText("Login Status: SUCCESS");
+            if(emailField.getText().equals(correctEmail) && passwordField.getText().equals(correctPassword)){
+                checkingTitle.setText("Login Status: SUCCESS");
+            }
+            else{
+                checkingTitle.setText("Login Status: FAIL");
+            }
         }
         else{
             checkingTitle.setText("Login Status: FAIL");
